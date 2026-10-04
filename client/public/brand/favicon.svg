@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#072661" />
+      <stop offset="100%" stop-color="#041B48" />
+    </linearGradient>
+
+    <!-- F Shadow / Depth -->
+    <linearGradient id="fShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D9E6F7" />
+      <stop offset="100%" stop-color="#FFFFFF" />
+    </linearGradient>
+
+    <!-- Arrow Gradient -->
+    <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00C853" />
+      <stop offset="100%" stop-color="#00E676" />
+    </linearGradient>
+  </defs>
+
+  <!-- Navy Squircle Rounded Rectangle Base -->
+  <rect x="16" y="16" width="480" height="480" rx="100" ry="100" fill="url(#bgGrad)" />
+
+  <!-- Main F Body (White with Left Bevel) -->
+  <!-- Left shaded side of F stem -->
+  <path d="M 124 136 C 124 125 133 116 144 116 L 190 116 L 190 396 L 144 396 C 133 396 124 387 124 376 Z" fill="#DDE7F5" />
+  
+  <!-- Main white F structure -->
+  <!-- Top bar of F -->
+  <path d="M 170 116 L 350 116 C 362 116 372 126 368 138 L 348 200 C 345 208 337 214 328 214 L 210 214 L 210 262 L 314 262 C 324 262 333 268 337 277 L 310 326 C 306 332 300 336 292 336 L 210 336 L 210 396 L 170 396 Z" fill="#FFFFFF" />
+
+  <!-- Rising Financial Growth Bars -->
+  <!-- Bar 1 (Left, Mint / Light Green) -->
+  <rect x="236" y="352" width="34" height="44" rx="6" fill="#5CE1A6" />
+
+  <!-- Bar 2 (Middle, Emerald Green) -->
+  <rect x="282" y="328" width="34" height="68" rx="6" fill="#10B981" />
+
+  <!-- Bar 3 (Right, Forest / Rich Green) -->
+  <rect x="328" y="296" width="34" height="100" rx="6" fill="#059669" />
+
+  <!-- Flowing Financial Upward Arrow Sweep -->
+  <path d="M 210 350 C 265 340 310 300 350 248 L 338 244 C 334 242 336 236 341 235 L 388 226 C 394 225 398 229 397 235 L 388 282 C 387 287 381 289 379 285 L 368 273 C 334 316 288 354 210 364 Z" fill="url(#arrowGrad)" />
+</svg>

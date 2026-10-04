@@ -1,0 +1,504 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Company {
+  id                    String          @id @default(uuid())
+  name                  String
+  legalName             String?
+  registrationNo        String?
+  pan                   String?
+  gstin                 String?
+  email                 String?
+  phone                 String?
+  logoUrl               String?
+  website               String?
+  address               String?
+  city                  String?
+  state                 String?
+  pincode               String?
+  country               String          @default("India")
+  currencySymbol        String          @default("₹")
+  currencyCode          String          @default("INR")
+  dateFormat            String          @default("DD/MM/YYYY")
+  defaultCommissionRate Decimal         @default(0.00)
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  users                 User[]
+  partners              Partner[]
+  clients               Client[]
+  investors             Investor[]
+  deals                 FinanceDeal[]
+  ledgerAccounts        LedgerAccount[]
+  expenses              Expense[]
+  notifications         Notification[]
+  auditLogs             AuditLog[]
+}
+
+model User {
+  id                 String          @id @default(uuid())
+  companyId          String
+  company            Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  email              String          @unique
+  password           String
+  fullName           String
+  phone              String?
+  role               String          @default("STAFF")
+  status             String          @default("ACTIVE")
+  lastLoginAt        DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  createdDeals       FinanceDeal[]   @relation("DealCreatedBy")
+  approvedDeals      FinanceDeal[]   @relation("DealApprovedBy")
+  repaymentsRecorded Repayment[]     @relation("RepaymentRecordedBy")
+  auditLogs          AuditLog[]
+
+  @@index([companyId])
+  @@index([email])
+}
+
+model Partner {
+  id                  String          @id @default(uuid())
+  companyId           String
+  company             Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  partnerCode         String          @unique
+  name                String
+  phone               String
+  email               String?
+  address             String?
+  pan                 String?
+  capitalContribution Decimal         @default(0.00)
+  sharePercentage     Decimal         @default(0.00)
+  status              String          @default("ACTIVE")
+  notes               String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  fundings            DealFunding[]
+  partnerReturns      PartnerReturn[]
+
+  @@index([companyId])
+}
+
+model Client {
+  id           String        @id @default(uuid())
+  companyId    String
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  clientCode   String        @unique
+  fullName     String
+  businessName String?
+  phone        String
+  email        String?
+  address      String?
+  city         String?
+  state        String?
+  pincode      String?
+  pan          String?
+  gstin        String?
+  businessType String?
+  industry     String?
+  status       String        @default("ACTIVE")
+  notes        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  deals        FinanceDeal[]
+  repayments   Repayment[]
+
+  @@index([companyId])
+  @@index([phone])
+}
+
+model Investor {
+  id            String           @id @default(uuid())
+  companyId     String
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  investorCode  String           @unique
+  name          String
+  phone         String
+  email         String?
+  address       String?
+  pan           String?
+  bankName      String?
+  bankAccountNo String?
+  ifscCode      String?
+  status        String           @default("ACTIVE")
+  notes         String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  fundings      DealFunding[]
+  returns       InvestorReturn[]
+
+  @@index([companyId])
+}
+
+model FinanceDeal {
+  id                    String              @id @default(uuid())
+  companyId             String
+  company               Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dealNumber            String              @unique
+  clientId              String
+  client                Client              @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  financeAmountRequired Decimal
+  financeAmountApproved Decimal
+
+  startDate             DateTime
+  endDate               DateTime
+
+  interestType          String              @default("FLAT")
+  interestRate          Decimal
+  totalInterest         Decimal             @default(0.00)
+  totalPayable          Decimal             @default(0.00)
+
+  repaymentFrequency    String              @default("MONTHLY")
+  numberOfRepayments    Int
+  installmentAmount     Decimal
+
+  // Running financial tracking
+  totalPrincipalRepaid  Decimal             @default(0.00)
+  totalInterestRepaid   Decimal             @default(0.00)
+  outstandingPrincipal  Decimal
+  outstandingTotal      Decimal
+
+  status                String              @default("DRAFT")
+  purpose               String?
+  notes                 String?
+
+  createdById           String
+  createdBy             User                @relation("DealCreatedBy", fields: [createdById], references: [id])
+  approvedById          String?
+  approvedBy            User?               @relation("DealApprovedBy", fields: [approvedById], references: [id])
+  approvedAt            DateTime?
+  activatedAt           DateTime?
+  completedAt           DateTime?
+
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  fundings              DealFunding[]
+  schedules             RepaymentSchedule[]
+  repayments            Repayment[]
+  distributionRules     DistributionRule[]
+  distributions         Distribution[]
+  transactions          Transaction[]
+
+  @@index([companyId])
+  @@index([clientId])
+  @@index([status])
+}
+
+model DealFunding {
+  id                 String        @id @default(uuid())
+  dealId             String
+  deal               FinanceDeal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  sourceType         String
+
+  partnerId          String?
+  partner            Partner?      @relation(fields: [partnerId], references: [id], onDelete: Restrict)
+
+  investorId         String?
+  investor           Investor?     @relation(fields: [investorId], references: [id], onDelete: Restrict)
+
+  amount             Decimal
+  percentage         Decimal
+  investmentDate     DateTime      @default(now())
+  expectedReturnRate Decimal       @default(0.00)
+
+  principalReturned  Decimal       @default(0.00)
+  interestEarned     Decimal       @default(0.00)
+
+  status             String        @default("COMMITTED")
+  notes              String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@index([dealId])
+  @@index([partnerId])
+  @@index([investorId])
+}
+
+model RepaymentSchedule {
+  id                String                @id @default(uuid())
+  dealId            String
+  deal              FinanceDeal           @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  installmentNumber Int
+  dueDate           DateTime
+
+  principalAmount   Decimal
+  interestAmount    Decimal
+  totalDue          Decimal
+
+  paidPrincipal     Decimal               @default(0.00)
+  paidInterest      Decimal               @default(0.00)
+  paidAmount        Decimal               @default(0.00)
+  balanceAmount     Decimal
+
+  status            String                @default("UPCOMING")
+  paidDate          DateTime?
+  notes             String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  allocations       RepaymentAllocation[]
+
+  @@unique([dealId, installmentNumber])
+  @@index([dealId])
+  @@index([dueDate])
+  @@index([status])
+}
+
+model Repayment {
+  id               String                @id @default(uuid())
+  receiptNumber    String                @unique
+  dealId           String
+  deal             FinanceDeal           @relation(fields: [dealId], references: [id], onDelete: Restrict)
+  clientId         String
+  client           Client                @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  paymentDate      DateTime
+  amountReceived   Decimal
+  principalPortion Decimal
+  interestPortion  Decimal
+
+  paymentMethod    String                @default("BANK_TRANSFER")
+  referenceNumber  String?
+  notes            String?
+  status           String                @default("PROCESSED")
+
+  recordedById     String
+  recordedBy       User                  @relation("RepaymentRecordedBy", fields: [recordedById], references: [id])
+
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  allocations      RepaymentAllocation[]
+  distributions    Distribution[]
+  transactions     Transaction[]
+
+  @@index([dealId])
+  @@index([clientId])
+  @@index([paymentDate])
+}
+
+model RepaymentAllocation {
+  id                 String            @id @default(uuid())
+  repaymentId        String
+  repayment          Repayment         @relation(fields: [repaymentId], references: [id], onDelete: Cascade)
+  scheduleId         String
+  schedule           RepaymentSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  allocatedPrincipal Decimal
+  allocatedInterest  Decimal
+  allocatedTotal     Decimal
+
+  createdAt          DateTime          @default(now())
+
+  @@index([repaymentId])
+  @@index([scheduleId])
+}
+
+model DistributionRule {
+  id                        String      @id @default(uuid())
+  dealId                    String
+  deal                      FinanceDeal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+  // Outside investor commission / return config
+  outsideInvestorReturnRate Decimal     @default(0.00)
+  companyCommissionRate     Decimal     @default(0.00)
+  partnerProfitShareRate    Decimal     @default(0.00)
+
+  isCustomRule              Boolean     @default(false)
+  ruleDescription           String?
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+
+  @@index([dealId])
+}
+
+model Distribution {
+  id                  String           @id @default(uuid())
+  dealId              String
+  deal                FinanceDeal      @relation(fields: [dealId], references: [id], onDelete: Restrict)
+  repaymentId         String
+  repayment           Repayment        @relation(fields: [repaymentId], references: [id], onDelete: Restrict)
+
+  totalPrincipalSplit Decimal
+  totalInterestSplit  Decimal
+  totalDistributed    Decimal
+
+  createdAt           DateTime         @default(now())
+
+  investorReturns     InvestorReturn[]
+  partnerReturns      PartnerReturn[]
+  companyProfits      CompanyProfit[]
+
+  @@index([dealId])
+  @@index([repaymentId])
+}
+
+model InvestorReturn {
+  id                String       @id @default(uuid())
+  distributionId    String
+  distribution      Distribution @relation(fields: [distributionId], references: [id], onDelete: Cascade)
+  investorId        String
+  investor          Investor     @relation(fields: [investorId], references: [id], onDelete: Restrict)
+
+  principalReturned Decimal
+  interestEarned    Decimal
+  totalPayout       Decimal
+
+  createdAt         DateTime     @default(now())
+
+  @@index([distributionId])
+  @@index([investorId])
+}
+
+model PartnerReturn {
+  id                String       @id @default(uuid())
+  distributionId    String
+  distribution      Distribution @relation(fields: [distributionId], references: [id], onDelete: Cascade)
+  partnerId         String
+  partner           Partner      @relation(fields: [partnerId], references: [id], onDelete: Restrict)
+
+  principalReturned Decimal
+  profitShare       Decimal
+  totalPayout       Decimal
+
+  createdAt         DateTime     @default(now())
+
+  @@index([distributionId])
+  @@index([partnerId])
+}
+
+model CompanyProfit {
+  id                     String       @id @default(uuid())
+  distributionId         String
+  distribution           Distribution @relation(fields: [distributionId], references: [id], onDelete: Cascade)
+
+  principalRecovered     Decimal
+  managementCommission   Decimal
+  retainedInterestMargin Decimal
+  totalCompanyProfit     Decimal
+
+  createdAt              DateTime     @default(now())
+
+  @@index([distributionId])
+}
+
+model Expense {
+  id            String   @id @default(uuid())
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title         String
+  category      String
+  amount        Decimal
+  paymentDate   DateTime
+  paymentMethod String   @default("BANK_TRANSFER")
+  referenceNo   String?
+  paidTo        String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([paymentDate])
+}
+
+model LedgerAccount {
+  id              String        @id @default(uuid())
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  accountCode     String        @unique
+  accountName     String
+  accountType     String
+  balance         Decimal       @default(0.00)
+  isSystemAccount Boolean       @default(false)
+  description     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  entries         LedgerEntry[]
+
+  @@index([companyId])
+}
+
+model Transaction {
+  id              String        @id @default(uuid())
+  dealId          String?
+  deal            FinanceDeal?  @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  repaymentId     String?
+  repayment       Repayment?    @relation(fields: [repaymentId], references: [id], onDelete: SetNull)
+  transactionNo   String        @unique
+  transactionType String
+  amount          Decimal
+  transactionDate DateTime
+  description     String
+  referenceNo     String?
+  createdAt       DateTime      @default(now())
+
+  ledgerEntries   LedgerEntry[]
+
+  @@index([dealId])
+  @@index([repaymentId])
+  @@index([transactionDate])
+}
+
+model LedgerEntry {
+  id            String        @id @default(uuid())
+  transactionId String
+  transaction   Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  accountId     String
+  account       LedgerAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  debit         Decimal       @default(0.00)
+  credit        Decimal       @default(0.00)
+  narration     String?
+  createdAt     DateTime      @default(now())
+
+  @@index([transactionId])
+  @@index([accountId])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  type       String
+  title      String
+  message    String
+  entityType String?
+  entityId   String?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([companyId])
+  @@index([isRead])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String
+  oldValues String?
+  newValues String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([companyId])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}

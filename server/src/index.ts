@@ -17,20 +17,23 @@ app.use(
       // Allow requests with no origin (like mobile apps, curl, health checks)
       if (!origin) return callback(null, true);
 
-      if (
-        config.corsOrigins.includes(origin) ||
-        config.corsOrigins.includes('*') ||
-        (config.nodeEnv === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1')))
-      ) {
+      // Exact match in configured origins
+      if (config.corsOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      // Check for Vercel preview/production domains
+      // Allow localhost in development only
+      if (config.nodeEnv === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+        return callback(null, true);
+      }
+
+      // Allow Vercel preview/production domains if configured with vercel.app
       if (config.corsOrigins.some((allowed) => allowed.includes('vercel.app')) && origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
 
-      return callback(null, true); // Fallback to allow if origins match
+      // Reject unknown origins
+      return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

@@ -28,6 +28,9 @@ if (config.nodeEnv === 'production') {
   if (!config.jwtSecret) {
     throw new Error('FATAL: JWT_SECRET environment variable is required in production.');
   }
+  if (!config.jwtRefreshSecret) {
+    throw new Error('FATAL: JWT_REFRESH_SECRET environment variable is required in production.');
+  }
   if (!process.env.DATABASE_URL) {
     console.warn('WARNING: DATABASE_URL environment variable is not explicitly set in production.');
   }

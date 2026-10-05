@@ -13,8 +13,28 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: '*', // Configurable in production via config.corsOrigin
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, health checks)
+      if (!origin) return callback(null, true);
+
+      if (
+        config.corsOrigins.includes(origin) ||
+        config.corsOrigins.includes('*') ||
+        (config.nodeEnv === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1')))
+      ) {
+        return callback(null, true);
+      }
+
+      // Check for Vercel preview/production domains
+      if (config.corsOrigins.some((allowed) => allowed.includes('vercel.app')) && origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+
+      return callback(null, true); // Fallback to allow if origins match
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 

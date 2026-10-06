@@ -3,38 +3,92 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 16px; /* 1rem = 16px, 1.125rem = 18px */
+    font-family: 'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif;
+    color: #1A1A1A;
+    background-color: #FAF7F2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased min-h-screen;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+    @apply bg-[#FAF7F2] text-[#1A1A1A] font-sans min-h-screen text-base leading-relaxed;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 3px solid #8B1A1A !important;
+    outline-offset: 2px !important;
+  }
+
+  /* High legibility headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-[#1A1A1A] tracking-tight;
   }
 }
 
-/* Custom scrollbar */
+@layer utilities {
+  /* Subtle Tamil culture decorative accent border (maroon + turmeric gold) */
+  .tamil-accent-top {
+    position: relative;
+  }
+  .tamil-accent-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #8B1A1A 0%, #8B1A1A 65%, #B7791F 65%, #B7791F 100%);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
+  /* 56px accessible touch target helper */
+  .touch-target-56 {
+    min-height: 56px;
+    min-width: 56px;
+  }
+}
+
+/* Custom accessible scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #EDE7DE;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: #A8A29E;
   border-radius: 9999px;
+  border: 2px solid #EDE7DE;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 1);
+  background: #78716C;
 }
 
-/* Print Stylesheet for Invoices / Repayment Schedules */
+/* Respect user reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessible Print Stylesheet */
 @media print {
   body {
     background: #ffffff !important;
-    color: #0f172a !important;
+    color: #000000 !important;
   }
   .no-print {
     display: none !important;

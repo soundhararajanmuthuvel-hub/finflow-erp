@@ -1,7 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCompanyProfile } from '../../context/CompanyProfileContext';
-import { Building2, Save, Users, CheckCircle2, AlertCircle, Globe, Mail, Phone, MapPin, CreditCard, Percent } from 'lucide-react';
+import {
+  Building2,
+  Save,
+  Users,
+  CheckCircle2,
+  AlertCircle,
+  Globe,
+  Mail,
+  Phone,
+  MapPin,
+  CreditCard,
+  Percent,
+} from 'lucide-react';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleCard,
+  AccessibleBanner,
+} from '../../components/common/AccessibleComponents';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -63,7 +81,7 @@ export const Settings: React.FC = () => {
         defaultCommissionRate: Number(defaultCommissionRate),
       });
       setSavedSuccess(true);
-      setTimeout(() => setSavedSuccess(false), 4000);
+      setTimeout(() => setSavedSuccess(false), 5000);
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to update company profile');
     } finally {
@@ -72,232 +90,196 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl font-black text-white tracking-tight">Company Profile & System Settings</h1>
-        <p className="text-xs text-slate-400 mt-1">
-          Configure dynamic business branding, letterhead details, legal identifiers, and financial defaults
+    <div className="max-w-5xl mx-auto space-y-8">
+      <div className="pb-6 border-b-2 border-[#D6CFC4]">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          Company Profile & System Settings
+        </h1>
+        <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          Configure dynamic business branding, letterhead details, and financial parameters
         </p>
       </div>
 
       {savedSuccess && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-400 text-xs font-bold shadow-md">
-          <CheckCircle2 className="h-5 w-5 shrink-0" />
-          <span>Company profile updated successfully! All screens, statements, and schedules have updated with new branding.</span>
-        </div>
+        <AccessibleBanner
+          type="success"
+          title="Company Profile Saved!"
+          message="All letterheads, schedules, statement documents, and sidebars have been dynamically updated with your new company information."
+        />
       )}
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-rose-400 text-xs font-bold">
-          <AlertCircle className="h-5 w-5 shrink-0" />
-          <span>{errorMsg}</span>
-        </div>
+        <AccessibleBanner
+          type="danger"
+          title="Update Error"
+          message={errorMsg}
+        />
       )}
 
       {/* Company Profile Form */}
-      <form onSubmit={handleSubmit} className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
-              <Building2 className="h-5 w-5" />
+      <AccessibleCard withTopAccent className="p-6 sm:p-10 space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#EDE7DE] pb-6">
+            <div className="flex items-center gap-3.5">
+              <div className="h-12 w-12 rounded-xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-bold">
+                <Building2 className="h-6 w-6 stroke-[2.3]" />
+              </div>
+              <div>
+                <h3 className="font-bold text-[#1A1A1A] text-xl">
+                  Company Branding & Letterhead
+                </h3>
+                <p className="text-base text-[#52525B] font-medium">
+                  Dynamic company name and contact info used across all official documents
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-white text-base">Company Branding & Letterhead</h3>
-              <p className="text-xs text-slate-400">Dynamic source of truth used across all documents, exports, and dashboards</p>
-            </div>
+            <AccessibleButton
+              type="submit"
+              variant="primary"
+              size="normal"
+              icon={Save}
+              isLoading={isSaving}
+            >
+              Save Profile
+            </AccessibleButton>
           </div>
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white text-xs font-bold shadow-glow transition-all disabled:opacity-50"
-          >
-            <Save className="h-4 w-4" />
-            <span>{isSaving ? 'Saving...' : 'Save Profile'}</span>
-          </button>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Company Name (Brand / Display Name) *
-            </label>
-            <input
-              type="text"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-base">
+            <AccessibleInput
+              label="Company Name (Brand / Display Name)"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. ABC Finance Solutions"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500"
+              placeholder="e.g. Sri Lakshmi Finance"
             />
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Legal Registered Entity Name
-            </label>
-            <input
-              type="text"
+            <AccessibleInput
+              label="Legal Registered Entity Name"
               value={legalName}
               onChange={(e) => setLegalName(e.target.value)}
-              placeholder="e.g. ABC Finance & Investments Pvt. Ltd."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              placeholder="e.g. Sri Lakshmi Finance & Investments Pvt. Ltd."
             />
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Logo URL / Image Link
-            </label>
-            <input
-              type="text"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://example.com/logo.png"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Official Website
-            </label>
-            <input
-              type="text"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              placeholder="www.abcfinance.in"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Official Email Address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="contact@abcfinance.in"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Official Phone / Helpline
-            </label>
-            <input
-              type="text"
+            <AccessibleInput
+              label="Official Phone / Helpline"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+91 98765 43210"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
-          </div>
 
-          <div className="sm:col-span-2">
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Office / Operating Address
-            </label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Suite 402, Financial Commercial Complex, BKC"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+            <AccessibleInput
+              label="Official Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="contact@srilakshmifinance.in"
             />
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              City
-            </label>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="Mumbai"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+            <AccessibleInput
+              label="Official Website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="www.srilakshmifinance.in"
             />
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              State & Pincode
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <input
-                type="text"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                placeholder="Maharashtra"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-              <input
-                type="text"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-                placeholder="400051"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+            <AccessibleInput
+              label="Logo URL / Image Link"
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder="https://example.com/logo.png"
+            />
+
+            <div className="sm:col-span-2">
+              <AccessibleInput
+                label="Office / Operating Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="42, South Masi Street, Madurai"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Currency Symbol
-            </label>
-            <input
-              type="text"
+            <AccessibleInput
+              label="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Madurai"
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <AccessibleInput
+                label="State"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                placeholder="Tamil Nadu"
+              />
+              <AccessibleInput
+                label="Pincode"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+                placeholder="625001"
+              />
+            </div>
+
+            <AccessibleInput
+              label="Currency Symbol"
               value={currencySymbol}
               onChange={(e) => setCurrencySymbol(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
-          </div>
 
-          <div>
-            <label className="block text-slate-300 font-semibold uppercase tracking-wider mb-1.5">
-              Standard Management Commission Default (%)
-            </label>
-            <input
+            <AccessibleInput
+              label="Standard Management Commission Default (%)"
               type="number"
               step="0.1"
               value={defaultCommissionRate}
               onChange={(e) => setDefaultCommissionRate(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
           </div>
-        </div>
-      </form>
+
+          <div className="flex justify-end pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
+              type="submit"
+              variant="primary"
+              size="normal"
+              icon={Save}
+              isLoading={isSaving}
+            >
+              Save Profile
+            </AccessibleButton>
+          </div>
+        </form>
+      </AccessibleCard>
 
       {/* Operator Session Details */}
-      <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
-            <Users className="h-5 w-5" />
+      <AccessibleCard withTopAccent className="p-6 sm:p-8 space-y-6">
+        <div className="flex items-center gap-3.5 pb-4 border-b-2 border-[#EDE7DE]">
+          <div className="h-12 w-12 rounded-xl bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE] flex items-center justify-center font-bold">
+            <Users className="h-6 w-6 stroke-[2.3]" />
           </div>
           <div>
-            <h3 className="font-bold text-white text-base">Active Operator Session</h3>
-            <p className="text-xs text-slate-400">Authenticated user identity and role authorizations</p>
+            <h3 className="font-bold text-[#1A1A1A] text-xl">Active Operator Session</h3>
+            <p className="text-base text-[#52525B] font-medium">
+              Authenticated user identity and role authorizations
+            </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-slate-500 uppercase text-[10px]">Operator Name</span>
-            <p className="font-bold text-white mt-1">{user?.fullName}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-base">
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#52525B] uppercase block">Operator Name</span>
+            <p className="font-extrabold text-[#1A1A1A] text-lg mt-1">{user?.fullName}</p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-slate-500 uppercase text-[10px]">Email Address</span>
-            <p className="font-bold text-white mt-1">{user?.email}</p>
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#52525B] uppercase block">Email Address</span>
+            <p className="font-bold text-[#1A1A1A] text-base mt-1">{user?.email}</p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-            <span className="text-slate-500 uppercase text-[10px]">Assigned Role</span>
-            <p className="font-bold text-emerald-400 uppercase mt-1">{user?.role}</p>
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#52525B] uppercase block">Assigned Role</span>
+            <p className="font-extrabold text-[#8B1A1A] uppercase text-base mt-1">{user?.role}</p>
           </div>
         </div>
-      </div>
+      </AccessibleCard>
     </div>
   );
 };
+
+export default Settings;

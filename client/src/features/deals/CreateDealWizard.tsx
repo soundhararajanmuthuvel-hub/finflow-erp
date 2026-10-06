@@ -13,9 +13,18 @@ import {
   Calendar,
   Users,
   ShieldAlert,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import apiClient from '../../api/client';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+  AccessibleBanner,
+} from '../../components/common/AccessibleComponents';
 
 export const CreateDealWizard: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +51,7 @@ export const CreateDealWizard: React.FC = () => {
     amount: number;
     expectedReturnRate: number;
   }>>([
-    { sourceType: 'COMPANY', amount: 50000, expectedReturnRate: 0 },
+    { sourceType: 'COMPANY', amount: 100000, expectedReturnRate: 0 },
   ]);
 
   // Distribution Rule
@@ -171,189 +180,164 @@ export const CreateDealWizard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 pb-12">
       {/* Top Header */}
       <div>
-        <h1 className="text-2xl font-black text-white tracking-tight">Create Finance Deal</h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">Create Finance Deal</h1>
+        <p className="text-base text-stone-600 font-medium mt-1">
           Multi-party capital syndication, outside investor allocation & automated schedule generation
         </p>
       </div>
 
       {/* Step Progress Bar */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-900 border border-slate-800">
-        {[
-          { num: 1, label: 'Client & Terms' },
-          { num: 2, label: 'Syndicate Funding' },
-          { num: 3, label: 'Profit Rules' },
-          { num: 4, label: 'Schedule & Submit' },
-        ].map((s) => (
-          <div key={s.num} className="flex items-center gap-3">
-            <div
-              className={`h-8 w-8 rounded-xl flex items-center justify-center font-bold text-xs ${
-                step === s.num
-                  ? 'bg-emerald-500 text-white shadow-glow'
-                  : step > s.num
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                  : 'bg-slate-800 text-slate-500'
-              }`}
-            >
-              {step > s.num ? <Check className="h-4 w-4" /> : s.num}
+      <AccessibleCard className="p-4 bg-white border-2 border-stone-200">
+        <div className="flex items-center justify-between">
+          {[
+            { num: 1, label: 'Client & Terms' },
+            { num: 2, label: 'Syndicate Funding' },
+            { num: 3, label: 'Profit Rules' },
+            { num: 4, label: 'Schedule & Submit' },
+          ].map((s) => (
+            <div key={s.num} className="flex items-center gap-3">
+              <div
+                className={`h-11 w-11 rounded-xl flex items-center justify-center font-bold text-base transition-colors ${
+                  step === s.num
+                    ? 'bg-maroon-800 text-white shadow-md'
+                    : step > s.num
+                    ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-600'
+                    : 'bg-stone-100 text-stone-600 border border-stone-300'
+                }`}
+              >
+                {step > s.num ? <Check className="h-6 w-6 stroke-[3]" /> : s.num}
+              </div>
+              <span
+                className={`text-base font-bold hidden sm:inline ${
+                  step === s.num ? 'text-maroon-900 font-extrabold' : step > s.num ? 'text-stone-800' : 'text-stone-500'
+                }`}
+              >
+                {s.label}
+              </span>
+              {s.num < 4 && <ChevronRight className="h-5 w-5 text-stone-400 hidden sm:inline" />}
             </div>
-            <span className={`text-xs font-semibold hidden sm:inline ${step === s.num ? 'text-white' : 'text-slate-500'}`}>
-              {s.label}
-            </span>
-            {s.num < 4 && <ChevronRight className="h-4 w-4 text-slate-700 hidden sm:inline" />}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </AccessibleCard>
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-rose-400 text-xs">
-          <AlertCircle className="h-5 w-5 shrink-0" />
-          <span>{errorMsg}</span>
-        </div>
+        <AccessibleBanner
+          variant="danger"
+          title="Validation Error"
+          message={errorMsg}
+          onClose={() => setErrorMsg(null)}
+        />
       )}
 
       {/* STEP 1: Client & Finance Terms */}
       {step === 1 && (
-        <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-          <h3 className="text-base font-bold text-white">Step 1: Client & Finance Terms</h3>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Select Client *
-            </label>
-            <select
-              value={clientId}
-              onChange={(e) => setClientId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            >
-              <option value="">Choose a client...</option>
-              {clientsData?.map((c: any) => (
-                <option key={c.id} value={c.id}>
-                  {c.fullName} ({c.businessName || 'Individual'}) - {c.phone}
-                </option>
-              ))}
-            </select>
+        <AccessibleCard className="p-6 sm:p-8 space-y-6">
+          <div className="border-b-2 border-stone-100 pb-4">
+            <h3 className="text-2xl font-bold text-stone-900">Step 1: Client & Finance Terms</h3>
+            <p className="text-base text-stone-600 mt-1">Select the borrowing client and define finance terms.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Finance Amount Required (₹)
-              </label>
-              <input
-                type="number"
-                value={financeAmountRequired}
-                onChange={(e) => setFinanceAmountRequired(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Finance Amount Approved (₹) *
-              </label>
-              <input
-                type="number"
-                value={financeAmountApproved}
-                onChange={(e) => setFinanceAmountApproved(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
+          <AccessibleSelect
+            label="Select Client"
+            required
+            value={clientId}
+            onChange={(e) => setClientId(e.target.value)}
+          >
+            <option value="">Choose a client...</option>
+            {clientsData?.map((c: any) => (
+              <option key={c.id} value={c.id}>
+                {c.fullName} ({c.businessName || 'Individual'}) - {c.phone}
+              </option>
+            ))}
+          </AccessibleSelect>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Interest Calculation Type
-              </label>
-              <select
-                value={interestType}
-                onChange={(e) => setInterestType(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="FLAT">Flat Interest</option>
-                <option value="FIXED_WEEKLY">Fixed Weekly Payment</option>
-                <option value="FIXED_MONTHLY">Fixed Monthly Payment</option>
-                <option value="PRINCIPAL_PLUS_INTEREST">Principal + Interest</option>
-                <option value="REDUCING_BALANCE">Reducing Balance (EMI)</option>
-                <option value="CUSTOM">Custom Schedule</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Annual Interest Rate (%)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={interestRate}
-                onChange={(e) => setInterestRate(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Repayment Frequency
-              </label>
-              <select
-                value={repaymentFrequency}
-                onChange={(e) => setRepaymentFrequency(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="WEEKLY">Weekly</option>
-                <option value="BI_WEEKLY">Bi-Weekly</option>
-                <option value="MONTHLY">Monthly</option>
-                <option value="DAILY">Daily</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Number of Repayments / Installments
-              </label>
-              <input
-                type="number"
-                value={numberOfRepayments}
-                onChange={(e) => setNumberOfRepayments(Number(e.target.value))}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Disbursement / Start Date
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Finance Purpose
-            </label>
-            <input
-              type="text"
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              placeholder="e.g. Working capital, expansion, equipment purchase..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Finance Amount Required (₹)"
+              type="number"
+              value={financeAmountRequired}
+              onChange={(e) => setFinanceAmountRequired(e.target.value)}
+            />
+            <AccessibleInput
+              label="Finance Amount Approved (₹)"
+              type="number"
+              required
+              value={financeAmountApproved}
+              onChange={(e) => {
+                setFinanceAmountApproved(e.target.value);
+                // Update default funding if only 1 item
+                if (fundings.length === 1 && fundings[0].sourceType === 'COMPANY') {
+                  setFundings([{ ...fundings[0], amount: Number(e.target.value) || 0 }]);
+                }
+              }}
             />
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-slate-800">
-            <button
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleSelect
+              label="Interest Calculation Type"
+              value={interestType}
+              onChange={(e) => setInterestType(e.target.value)}
+            >
+              <option value="FLAT">Flat Interest</option>
+              <option value="FIXED_WEEKLY">Fixed Weekly Payment</option>
+              <option value="FIXED_MONTHLY">Fixed Monthly Payment</option>
+              <option value="PRINCIPAL_PLUS_INTEREST">Principal + Interest</option>
+              <option value="REDUCING_BALANCE">Reducing Balance (EMI)</option>
+              <option value="CUSTOM">Custom Schedule</option>
+            </AccessibleSelect>
+
+            <AccessibleInput
+              label="Annual Interest Rate (%)"
+              type="number"
+              step="0.1"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+            />
+
+            <AccessibleSelect
+              label="Repayment Frequency"
+              value={repaymentFrequency}
+              onChange={(e) => setRepaymentFrequency(e.target.value)}
+            >
+              <option value="WEEKLY">Weekly</option>
+              <option value="BI_WEEKLY">Bi-Weekly</option>
+              <option value="MONTHLY">Monthly</option>
+              <option value="DAILY">Daily</option>
+            </AccessibleSelect>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Number of Repayments / Installments"
+              type="number"
+              value={numberOfRepayments}
+              onChange={(e) => setNumberOfRepayments(Number(e.target.value))}
+            />
+
+            <AccessibleInput
+              label="Disbursement / Start Date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+
+          <AccessibleInput
+            label="Finance Purpose"
+            type="text"
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            placeholder="e.g. Working capital, expansion, equipment purchase..."
+          />
+
+          <div className="flex justify-end pt-6 border-t-2 border-stone-200">
+            <AccessibleButton
               type="button"
+              variant="primary"
               onClick={() => {
                 if (!clientId) {
                   setErrorMsg('Please select a client');
@@ -362,60 +346,59 @@ export const CreateDealWizard: React.FC = () => {
                 setErrorMsg(null);
                 setStep(2);
               }}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-glow"
+              icon={<ChevronRight className="h-6 w-6" />}
             >
-              <span>Next: Syndicate Funding</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
+              Next: Syndicate Funding
+            </AccessibleButton>
           </div>
-        </div>
+        </AccessibleCard>
       )}
 
       {/* STEP 2: Multi-Party Syndicate Funding */}
       {step === 2 && (
-        <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-          <div className="flex items-center justify-between">
+        <AccessibleCard className="p-6 sm:p-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-stone-100 pb-4">
             <div>
-              <h3 className="text-base font-bold text-white">Step 2: Syndicate Funding Allocation</h3>
-              <p className="text-xs text-slate-400">
-                Split funding across Company Capital, Internal Partners, and Outside Investors
+              <h3 className="text-2xl font-bold text-stone-900">Step 2: Syndicate Funding Allocation</h3>
+              <p className="text-base text-stone-600 mt-1">
+                Split funding across Company Capital, Internal Partners, and Outside Investors.
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-xs text-slate-400">Approved Target:</span>
-              <p className="text-lg font-bold text-emerald-400">{formatCurrency(approvedAmountNum)}</p>
+            <div className="sm:text-right bg-stone-50 p-3.5 rounded-2xl border border-stone-200">
+              <span className="text-sm font-bold text-stone-600 uppercase block">Approved Target:</span>
+              <p className="text-2xl font-black text-maroon-800">{formatCurrency(approvedAmountNum)}</p>
             </div>
           </div>
 
           {/* Funding Status Indicator */}
           <div
-            className={`p-4 rounded-2xl border flex items-center justify-between text-xs ${
+            className={`p-4 rounded-2xl border-2 flex items-center justify-between text-base ${
               isFundingValid
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold'
+                : 'bg-amber-50 border-amber-500 text-amber-950 font-bold'
             }`}
           >
             <div>
-              <span className="font-bold">Total Allocated: {formatCurrency(totalFundedAmount)}</span>
-              <p className="text-[11px] opacity-80">
+              <span className="font-extrabold text-lg">Total Allocated: {formatCurrency(totalFundedAmount)}</span>
+              <p className="text-sm mt-0.5 opacity-90 font-medium">
                 {isFundingValid
-                  ? 'Funding matches 100% of approved finance amount'
-                  : `Remaining to allocate: ${formatCurrency(fundingDifference)}`}
+                  ? '✓ Funding matches 100% of approved finance amount'
+                  : `! Remaining to allocate: ${formatCurrency(fundingDifference)}`}
               </p>
             </div>
-            {!isFundingValid && <ShieldAlert className="h-5 w-5 text-amber-400" />}
+            {!isFundingValid && <ShieldAlert className="h-7 w-7 text-amber-600 shrink-0" />}
           </div>
 
           {/* Funding Rows */}
           <div className="space-y-4">
             {fundings.map((item, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+              <div key={idx} className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="h-6 w-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 rounded-full bg-maroon-800 text-white flex items-center justify-center text-sm font-bold">
                       {idx + 1}
                     </span>
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                    <span className="text-base font-bold text-stone-900 uppercase tracking-wide">
                       {item.sourceType.replace(/_/g, ' ')}
                     </span>
                   </div>
@@ -423,273 +406,250 @@ export const CreateDealWizard: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveFundingItem(idx)}
-                      className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/10"
+                      className="p-2 rounded-xl text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors"
+                      title="Remove Funding"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-5 w-5" />
                     </button>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
-                      Funding Source
-                    </label>
-                    <select
-                      value={item.sourceType}
-                      onChange={(e) => handleUpdateFunding(idx, 'sourceType', e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                    >
-                      <option value="COMPANY">Company Own Capital</option>
-                      <option value="PARTNER">Partner Capital</option>
-                      <option value="OUTSIDE_INVESTOR">Outside Investor</option>
-                    </select>
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <AccessibleSelect
+                    label="Funding Source"
+                    value={item.sourceType}
+                    onChange={(e) => handleUpdateFunding(idx, 'sourceType', e.target.value)}
+                  >
+                    <option value="COMPANY">Company Own Capital</option>
+                    <option value="PARTNER">Partner Capital</option>
+                    <option value="OUTSIDE_INVESTOR">Outside Investor</option>
+                  </AccessibleSelect>
 
                   {item.sourceType === 'PARTNER' && (
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
-                        Select Partner
-                      </label>
-                      <select
-                        value={item.partnerId || ''}
-                        onChange={(e) => handleUpdateFunding(idx, 'partnerId', e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                      >
-                        {partnersData?.map((p: any) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <AccessibleSelect
+                      label="Select Partner"
+                      value={item.partnerId || ''}
+                      onChange={(e) => handleUpdateFunding(idx, 'partnerId', e.target.value)}
+                    >
+                      {partnersData?.map((p: any) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </AccessibleSelect>
                   )}
 
                   {item.sourceType === 'OUTSIDE_INVESTOR' && (
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
-                        Select Investor
-                      </label>
-                      <select
-                        value={item.investorId || ''}
-                        onChange={(e) => handleUpdateFunding(idx, 'investorId', e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                      >
-                        {investorsData?.map((inv: any) => (
-                          <option key={inv.id} value={inv.id}>
-                            {inv.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <AccessibleSelect
+                      label="Select Investor"
+                      value={item.investorId || ''}
+                      onChange={(e) => handleUpdateFunding(idx, 'investorId', e.target.value)}
+                    >
+                      {investorsData?.map((inv: any) => (
+                        <option key={inv.id} value={inv.id}>
+                          {inv.name}
+                        </option>
+                      ))}
+                    </AccessibleSelect>
                   )}
 
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
-                      Funding Amount (₹)
-                    </label>
-                    <input
-                      type="number"
-                      value={item.amount}
-                      onChange={(e) => handleUpdateFunding(idx, 'amount', Number(e.target.value))}
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                    />
-                  </div>
+                  <AccessibleInput
+                    label="Funding Amount (₹)"
+                    type="number"
+                    value={item.amount}
+                    onChange={(e) => handleUpdateFunding(idx, 'amount', Number(e.target.value))}
+                  />
                 </div>
               </div>
             ))}
           </div>
 
           {/* Add Funding Source Buttons */}
-          <div className="flex flex-wrap gap-3">
-            <button
+          <div className="flex flex-wrap gap-3 pt-2">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => handleAddFundingItem('COMPANY')}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700"
+              icon={<Plus className="h-5 w-5 text-maroon-800" />}
             >
-              <Plus className="h-3.5 w-3.5 text-emerald-400" />
-              <span>+ Company Capital</span>
-            </button>
-            <button
+              + Company Capital
+            </AccessibleButton>
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => handleAddFundingItem('PARTNER')}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700"
+              icon={<Plus className="h-5 w-5 text-blue-800" />}
             >
-              <Plus className="h-3.5 w-3.5 text-blue-400" />
-              <span>+ Partner Capital</span>
-            </button>
-            <button
+              + Partner Capital
+            </AccessibleButton>
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => handleAddFundingItem('OUTSIDE_INVESTOR')}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700"
+              icon={<Plus className="h-5 w-5 text-purple-800" />}
             >
-              <Plus className="h-3.5 w-3.5 text-purple-400" />
-              <span>+ Outside Investor</span>
-            </button>
+              + Outside Investor
+            </AccessibleButton>
           </div>
 
-          <div className="flex justify-between pt-4 border-t border-slate-800">
-            <button
+          <div className="flex justify-between pt-6 border-t-2 border-stone-200">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setStep(1)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+              icon={<ChevronLeft className="h-6 w-6" />}
             >
-              <ChevronLeft className="h-4 w-4" />
-              <span>Back</span>
-            </button>
-            <button
+              Back
+            </AccessibleButton>
+            <AccessibleButton
               type="button"
+              variant="primary"
               disabled={!isFundingValid}
               onClick={() => {
                 setErrorMsg(null);
                 setStep(3);
               }}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-glow disabled:opacity-50"
+              icon={<ChevronRight className="h-6 w-6" />}
             >
-              <span>Next: Profit Rules</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
+              Next: Profit Rules
+            </AccessibleButton>
           </div>
-        </div>
+        </AccessibleCard>
       )}
 
       {/* STEP 3: Profit & Commission Rules */}
       {step === 3 && (
-        <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-          <h3 className="text-base font-bold text-white">Step 3: Profit & Commission Rules</h3>
-          <p className="text-xs text-slate-400">
-            Configure how collected repayment interest is distributed between Outside Investors, Company Commission, and Partners
-          </p>
+        <AccessibleCard className="p-6 sm:p-8 space-y-6">
+          <div className="border-b-2 border-stone-100 pb-4">
+            <h3 className="text-2xl font-bold text-stone-900">Step 3: Profit & Commission Rules</h3>
+            <p className="text-base text-stone-600 mt-1">
+              Configure how collected repayment interest is distributed between Outside Investors, Company Commission, and Partners.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-              <label className="block text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1.5">
-                Company Management Commission (%)
-              </label>
-              <input
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+              <AccessibleInput
+                label="Company Management Commission (%)"
                 type="number"
                 value={distributionRule.companyCommissionRate}
                 onChange={(e) =>
                   setDistributionRule({ ...distributionRule, companyCommissionRate: Number(e.target.value) })
                 }
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white"
               />
-              <p className="text-[11px] text-slate-500 mt-1">Company collection & admin fee on interest</p>
+              <p className="text-sm text-stone-500 font-medium mt-2">Company collection & admin fee on interest</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-              <label className="block text-xs font-semibold text-purple-400 uppercase tracking-wider mb-1.5">
-                Investor Return Target (%)
-              </label>
-              <input
+            <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+              <AccessibleInput
+                label="Investor Return Target (%)"
                 type="number"
                 value={distributionRule.outsideInvestorReturnRate}
                 onChange={(e) =>
                   setDistributionRule({ ...distributionRule, outsideInvestorReturnRate: Number(e.target.value) })
                 }
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white"
               />
-              <p className="text-[11px] text-slate-500 mt-1">Contracted ROI for external investors</p>
+              <p className="text-sm text-stone-500 font-medium mt-2">Contracted ROI for external investors</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-              <label className="block text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1.5">
-                Partner Profit Share (%)
-              </label>
-              <input
+            <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+              <AccessibleInput
+                label="Partner Profit Share (%)"
                 type="number"
                 value={distributionRule.partnerProfitShareRate}
                 onChange={(e) =>
                   setDistributionRule({ ...distributionRule, partnerProfitShareRate: Number(e.target.value) })
                 }
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white"
               />
-              <p className="text-[11px] text-slate-500 mt-1">Share allocated to partner equity pool</p>
+              <p className="text-sm text-stone-500 font-medium mt-2">Share allocated to partner equity pool</p>
             </div>
           </div>
 
-          <div className="flex justify-between pt-4 border-t border-slate-800">
-            <button
+          <div className="flex justify-between pt-6 border-t-2 border-stone-200">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setStep(2)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+              icon={<ChevronLeft className="h-6 w-6" />}
             >
-              <ChevronLeft className="h-4 w-4" />
-              <span>Back</span>
-            </button>
-            <button
+              Back
+            </AccessibleButton>
+            <AccessibleButton
               type="button"
+              variant="primary"
               onClick={() => {
                 handleFetchPreview();
                 setStep(4);
               }}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-glow"
+              icon={<ChevronRight className="h-6 w-6" />}
             >
-              <span>Next: Preview Schedule</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
+              Next: Preview Schedule
+            </AccessibleButton>
           </div>
-        </div>
+        </AccessibleCard>
       )}
 
       {/* STEP 4: Schedule Preview & Submit */}
       {step === 4 && (
-        <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-          <h3 className="text-base font-bold text-white">Step 4: Preview Repayment Schedule & Submit</h3>
+        <AccessibleCard className="p-6 sm:p-8 space-y-6">
+          <div className="border-b-2 border-stone-100 pb-4">
+            <h3 className="text-2xl font-bold text-stone-900">Step 4: Preview Repayment Schedule & Submit</h3>
+            <p className="text-base text-stone-600 mt-1">Review the calculated repayment installments and submit for approval.</p>
+          </div>
 
           {schedulePreview ? (
             <div className="space-y-6">
               {/* Financial Summary Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                  <span className="text-[11px] text-slate-500 uppercase">Approved Amount</span>
-                  <p className="text-base font-bold text-white mt-1">
+                <div className="p-4 rounded-2xl bg-stone-50 border-2 border-stone-200">
+                  <span className="text-sm font-bold text-stone-600 uppercase">Approved Amount</span>
+                  <p className="text-xl sm:text-2xl font-black text-stone-900 mt-1">
                     {formatCurrency(schedulePreview.totals.principal)}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                  <span className="text-[11px] text-slate-500 uppercase">Total Interest</span>
-                  <p className="text-base font-bold text-emerald-400 mt-1">
+                <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+                  <span className="text-sm font-bold text-emerald-800 uppercase">Total Interest</span>
+                  <p className="text-xl sm:text-2xl font-black text-emerald-800 mt-1">
                     {formatCurrency(schedulePreview.totals.totalInterest)}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                  <span className="text-[11px] text-slate-500 uppercase">Total Payable</span>
-                  <p className="text-base font-bold text-blue-400 mt-1">
+                <div className="p-4 rounded-2xl bg-blue-50 border-2 border-blue-200">
+                  <span className="text-sm font-bold text-blue-800 uppercase">Total Payable</span>
+                  <p className="text-xl sm:text-2xl font-black text-blue-900 mt-1">
                     {formatCurrency(schedulePreview.totals.totalPayable)}
                   </p>
                 </div>
-                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                  <span className="text-[11px] text-slate-500 uppercase">Installment Due</span>
-                  <p className="text-base font-bold text-teal-400 mt-1">
+                <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200">
+                  <span className="text-sm font-bold text-amber-800 uppercase">Installment Due</span>
+                  <p className="text-xl sm:text-2xl font-black text-amber-900 mt-1">
                     {formatCurrency(schedulePreview.totals.installmentAmount)}
                   </p>
                 </div>
               </div>
 
               {/* Installment Table Preview */}
-              <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-                <div className="max-h-64 overflow-y-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-900/90 text-slate-400 font-semibold sticky top-0 border-b border-slate-800">
+              <div className="overflow-hidden rounded-2xl border-2 border-stone-300 bg-white shadow-sm">
+                <div className="max-h-72 overflow-y-auto">
+                  <table className="w-full text-left text-base">
+                    <thead className="bg-stone-100 text-stone-800 font-bold sticky top-0 border-b-2 border-stone-200">
                       <tr>
-                        <th className="py-2.5 px-4">#</th>
-                        <th className="py-2.5 px-4">Due Date</th>
-                        <th className="py-2.5 px-4">Principal</th>
-                        <th className="py-2.5 px-4">Interest</th>
-                        <th className="py-2.5 px-4">Total Due</th>
+                        <th className="py-3 px-4">#</th>
+                        <th className="py-3 px-4">Due Date</th>
+                        <th className="py-3 px-4 text-right">Principal</th>
+                        <th className="py-3 px-4 text-right">Interest</th>
+                        <th className="py-3 px-4 text-right">Total Due</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                    <tbody className="divide-y divide-stone-200 text-stone-800">
                       {schedulePreview.schedule.map((row: any) => (
-                        <tr key={row.installmentNumber} className="hover:bg-slate-900/40">
-                          <td className="py-2 px-4 font-mono font-bold text-slate-400">
+                        <tr key={row.installmentNumber} className="hover:bg-stone-50">
+                          <td className="py-3 px-4 font-mono font-bold text-stone-600">
                             {row.installmentNumber}
                           </td>
-                          <td className="py-2 px-4">{formatDate(row.dueDate)}</td>
-                          <td className="py-2 px-4">{formatCurrency(row.principalAmount)}</td>
-                          <td className="py-2 px-4 text-emerald-400">{formatCurrency(row.interestAmount)}</td>
-                          <td className="py-2 px-4 font-bold text-white">{formatCurrency(row.totalDue)}</td>
+                          <td className="py-3 px-4 font-medium">{formatDate(row.dueDate)}</td>
+                          <td className="py-3 px-4 text-right font-mono">{formatCurrency(row.principalAmount)}</td>
+                          <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(row.interestAmount)}</td>
+                          <td className="py-3 px-4 text-right font-mono font-black text-stone-900">{formatCurrency(row.totalDue)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -698,29 +658,29 @@ export const CreateDealWizard: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="py-8 text-center text-xs text-slate-500">Generating preview...</div>
+            <div className="py-12 text-center text-base font-medium text-stone-500">Generating schedule preview...</div>
           )}
 
-          <div className="flex justify-between pt-4 border-t border-slate-800">
-            <button
+          <div className="flex justify-between pt-6 border-t-2 border-stone-200">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setStep(3)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+              icon={<ChevronLeft className="h-6 w-6" />}
             >
-              <ChevronLeft className="h-4 w-4" />
-              <span>Back</span>
-            </button>
-            <button
+              Back
+            </AccessibleButton>
+            <AccessibleButton
               type="button"
+              variant="primary"
               disabled={createDealMutation.isPending}
               onClick={handleSubmitDeal}
-              className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white font-bold text-xs uppercase tracking-wider shadow-glow disabled:opacity-50"
+              icon={<FileCheck className="h-6 w-6" />}
             >
-              <FileCheck className="h-4 w-4" />
-              <span>{createDealMutation.isPending ? 'Creating Deal...' : 'Submit Finance Deal for Approval'}</span>
-            </button>
+              {createDealMutation.isPending ? 'Creating Deal...' : 'Submit Finance Deal for Approval'}
+            </AccessibleButton>
           </div>
-        </div>
+        </AccessibleCard>
       )}
     </div>
   );

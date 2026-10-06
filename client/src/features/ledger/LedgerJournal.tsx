@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { BookOpen, Layers, CheckCircle } from 'lucide-react';
+import { BookOpen, Layers, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
 import apiClient from '../../api/client';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import {
+  AccessibleCard,
+  AccessibleEmptyState,
+} from '../../components/common/AccessibleComponents';
 
 export const LedgerJournal: React.FC = () => {
   const [activeView, setActiveView] = useState<'journal' | 'accounts'>('journal');
@@ -24,34 +28,36 @@ export const LedgerJournal: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8">
+      {/* Header & View Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Double-Entry Financial Ledger</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Immutable journal entries, chart of accounts & balanced debit/credit audit trail
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+            Double-Entry Financial Ledger
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+            Immutable general journal transactions, balanced debit/credit entries, and chart of accounts
           </p>
         </div>
 
         {/* View Switcher */}
-        <div className="flex bg-slate-900 border border-slate-800 rounded-2xl p-1">
+        <div className="flex bg-[#FAF7F2] border-2 border-[#D6CFC4] rounded-2xl p-1.5 shrink-0">
           <button
             onClick={() => setActiveView('journal')}
-            className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all ${
+            className={`h-12 px-5 text-base font-bold rounded-xl transition-all ${
               activeView === 'journal'
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#8B1A1A] text-white shadow-md'
+                : 'text-[#1A1A1A] hover:bg-[#EDE7DE]'
             }`}
           >
             General Journal
           </button>
           <button
             onClick={() => setActiveView('accounts')}
-            className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all ${
+            className={`h-12 px-5 text-base font-bold rounded-xl transition-all ${
               activeView === 'accounts'
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#8B1A1A] text-white shadow-md'
+                : 'text-[#1A1A1A] hover:bg-[#EDE7DE]'
             }`}
           >
             Chart of Accounts
@@ -60,54 +66,59 @@ export const LedgerJournal: React.FC = () => {
       </div>
 
       {activeView === 'journal' ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {txnsLoading ? (
-            <div className="py-12 text-center text-slate-500">Loading journal transactions...</div>
+            <div className="p-12 text-center text-lg font-bold text-[#52525B]">
+              Loading journal entries...
+            </div>
           ) : transactions?.length > 0 ? (
             transactions.map((txn: any) => (
-              <div
-                key={txn.id}
-                className="p-5 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-3"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-bold text-white bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
+              <AccessibleCard key={txn.id} withTopAccent className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#EDE7DE] pb-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-base font-bold text-[#8B1A1A] bg-[#FAF7F2] px-3.5 py-1.5 rounded-xl border border-[#D6CFC4]">
                       {txn.transactionNo}
                     </span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                    <span className="text-sm font-extrabold uppercase tracking-wider text-[#1F6B3A] bg-[#EAF5EE] px-3 py-1 rounded-lg border border-[#A7D9B7]">
                       {txn.transactionType.replace(/_/g, ' ')}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400">{formatDate(txn.transactionDate)}</span>
+                  <span className="text-base text-[#52525B] font-bold">
+                    {formatDate(txn.transactionDate)}
+                  </span>
                 </div>
 
-                <p className="text-xs text-slate-300">{txn.description}</p>
+                <p className="text-lg font-medium text-[#1A1A1A] leading-relaxed">
+                  {txn.description}
+                </p>
 
-                {/* Journal Double-Entry Lines */}
-                <div className="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-900/60 text-slate-400 font-semibold border-b border-slate-800">
+                {/* Journal Double-Entry Lines Table */}
+                <div className="rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] overflow-x-auto">
+                  <table className="w-full text-left text-base">
+                    <thead className="bg-white text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
                       <tr>
-                        <th className="py-2.5 px-4">Account Code & Title</th>
-                        <th className="py-2.5 px-4">Narration</th>
-                        <th className="py-2.5 px-4 text-right">Debit (Dr)</th>
-                        <th className="py-2.5 px-4 text-right">Credit (Cr)</th>
+                        <th className="py-3 px-5">Account Code & Title</th>
+                        <th className="py-3 px-5">Narration</th>
+                        <th className="py-3 px-5 text-right font-extrabold text-[#1F6B3A]">Debit (Dr)</th>
+                        <th className="py-3 px-5 text-right font-extrabold text-[#1E3A8A]">Credit (Cr)</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/40 text-slate-300 font-mono">
+                    <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
                       {txn.ledgerEntries?.map((entry: any) => (
-                        <tr key={entry.id} className="hover:bg-slate-900/30">
-                          <td className="py-2.5 px-4 text-white">
-                            <span className="text-emerald-400 font-bold">{entry.account?.accountCode}</span> -{' '}
-                            {entry.account?.accountName}
+                        <tr key={entry.id} className="hover:bg-white transition-colors">
+                          <td className="py-3.5 px-5 font-bold">
+                            <span className="text-[#8B1A1A] font-mono mr-2">
+                              {entry.account?.accountCode}
+                            </span>
+                            <span>{entry.account?.accountName}</span>
                           </td>
-                          <td className="py-2.5 px-4 text-slate-400 font-sans text-[11px]">
+                          <td className="py-3.5 px-5 text-[#52525B] text-sm font-medium">
                             {entry.narration || '—'}
                           </td>
-                          <td className="py-2.5 px-4 text-right text-emerald-400 font-bold">
+                          <td className="py-3.5 px-5 text-right font-extrabold text-lg text-[#1F6B3A]">
                             {Number(entry.debit) > 0 ? formatCurrency(entry.debit) : '—'}
                           </td>
-                          <td className="py-2.5 px-4 text-right text-blue-400 font-bold">
+                          <td className="py-3.5 px-5 text-right font-extrabold text-lg text-[#1E3A8A]">
                             {Number(entry.credit) > 0 ? formatCurrency(entry.credit) : '—'}
                           </td>
                         </tr>
@@ -115,45 +126,68 @@ export const LedgerJournal: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </AccessibleCard>
             ))
           ) : (
-            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center text-xs text-slate-500">
-              No transactions recorded in journal yet.
-            </div>
+            <AccessibleEmptyState
+              icon={BookOpen}
+              title="No ledger entries recorded yet"
+              description="Transactions will be automatically posted when deals are disbursed or repayments are recorded."
+            />
           )}
         </div>
       ) : (
         /* Chart of Accounts */
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 overflow-hidden shadow-xl">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800">
-              <tr>
-                <th className="py-3.5 px-5">Account Code</th>
-                <th className="py-3.5 px-5">Account Title</th>
-                <th className="py-3.5 px-5">Category / Type</th>
-                <th className="py-3.5 px-5 text-right">Current Balance</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300 font-mono">
-              {accounts?.map((acc: any) => (
-                <tr key={acc.id} className="hover:bg-slate-950/40">
-                  <td className="py-4 px-5 font-bold text-emerald-400">{acc.accountCode}</td>
-                  <td className="py-4 px-5 font-sans font-bold text-white">{acc.accountName}</td>
-                  <td className="py-4 px-5">
-                    <span className="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-[11px] font-semibold">
-                      {acc.accountType}
-                    </span>
-                  </td>
-                  <td className="py-4 px-5 text-right font-bold text-white">
-                    {formatCurrency(acc.balance)}
-                  </td>
+        <div className="rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-base">
+              <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
+                <tr>
+                  <th className="py-4 px-6 text-sm uppercase">Account Code</th>
+                  <th className="py-4 px-6 text-sm uppercase">Account Title</th>
+                  <th className="py-4 px-6 text-sm uppercase">Account Category</th>
+                  <th className="py-4 px-6 text-sm uppercase text-right">Current Balance</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+                {accountsLoading ? (
+                  <tr>
+                    <td colSpan={4} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                      Loading chart of accounts...
+                    </td>
+                  </tr>
+                ) : (
+                  accounts?.map((acc: any, index: number) => (
+                    <tr
+                      key={acc.id}
+                      className={`hover:bg-[#FAF7F2] transition-colors ${
+                        index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
+                      }`}
+                    >
+                      <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                        {acc.accountCode}
+                      </td>
+                      <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                        {acc.accountName}
+                      </td>
+                      <td className="py-5 px-6">
+                        <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A] uppercase">
+                          {acc.accountType}
+                        </span>
+                      </td>
+                      <td className="py-5 px-6 text-right font-extrabold text-xl text-[#1A1A1A]">
+                        {formatCurrency(acc.balance)}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
   );
 };
+
+export default LedgerJournal;

@@ -3,6 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { FileSpreadsheet, Download, Printer, Filter, Calendar } from 'lucide-react';
 import apiClient from '../../api/client';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+  AccessibleEmptyState,
+} from '../../components/common/AccessibleComponents';
 
 export const ReportsHub: React.FC = () => {
   const [reportType, setReportType] = useState('client-finance');
@@ -40,136 +47,132 @@ export const ReportsHub: React.FC = () => {
   };
 
   const reportOptions = [
-    { id: 'client-finance', label: '1. Client Finance & Outstanding Report' },
-    { id: 'investor-returns', label: '2. Outside Investor Capital & Return Report' },
-    { id: 'partner-capital', label: '3. Partner Equity & Profit Share Report' },
-    { id: 'company-profit', label: '4. Company Net Profit & Deal Margin Report' },
-    { id: 'collections', label: '5. Daily Repayments & Collection Statement' },
-    { id: 'overdue', label: '6. Portfolio Overdue & Aging Analysis Report' },
+    { value: 'client-finance', label: '1. Client Finance & Outstanding Portfolio Report' },
+    { value: 'investor-returns', label: '2. Outside Investor Capital & Return Report' },
+    { value: 'partner-capital', label: '3. Partner Equity & Profit Share Report' },
+    { value: 'company-profit', label: '4. Company Net Profit & Margin Report' },
+    { value: 'collections', label: '5. Repayments & Collection Statement' },
+    { value: 'overdue', label: '6. Portfolio Overdue & Aging Analysis Report' },
   ];
 
   return (
-    <div className="space-y-6 print-container">
+    <div className="space-y-8 print-container">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4] no-print">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Financial Intelligence & Reports</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Exportable audits, investor yield statements, collection ledgers and profit reconciliations
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+            Financial Intelligence & Reports
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+            Exportable audits, investor statements, collection ledgers, and profit reconciliations
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
+        <div className="flex flex-wrap items-center gap-3">
+          <AccessibleButton
+            variant="outline"
+            size="normal"
+            icon={Download}
             onClick={exportCSV}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all"
           >
-            <Download className="h-4 w-4 text-emerald-400" />
-            <span>Export CSV</span>
-          </button>
-          <button
+            Export CSV
+          </AccessibleButton>
+          <AccessibleButton
+            variant="primary"
+            size="normal"
+            icon={Printer}
             onClick={() => window.print()}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-all"
           >
-            <Printer className="h-4 w-4 text-blue-400" />
-            <span>Print Report</span>
-          </button>
+            Print Report
+          </AccessibleButton>
         </div>
       </div>
 
-      {/* Report Selector & Date Filters */}
-      <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row gap-4 justify-between items-center no-print">
-        <div className="w-full md:w-96">
-          <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">
-            Select Financial Report
-          </label>
-          <select
-            value={reportType}
-            onChange={(e) => setReportType(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-          >
-            {reportOptions.map((opt) => (
-              <option key={opt.id} value={opt.id}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Report Selector & Date Filters Card */}
+      <AccessibleCard withTopAccent className="p-6 sm:p-8 no-print space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <AccessibleSelect
+              label="Select Financial Report"
+              value={reportType}
+              onChange={(e) => setReportType(e.target.value)}
+              options={reportOptions}
+            />
+          </div>
 
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">From Date</label>
-            <input
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:col-span-2">
+            <AccessibleInput
+              label="From Date"
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
-          </div>
-          <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase mb-1">To Date</label>
-            <input
+            <AccessibleInput
+              label="To Date"
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
             />
           </div>
         </div>
-      </div>
+      </AccessibleCard>
 
       {/* Dynamic Report Table */}
-      <div className="rounded-3xl border border-slate-800 bg-slate-900 overflow-hidden shadow-xl">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-            {reportOptions.find((r) => r.id === reportType)?.label}
+      <div className="rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
+        <div className="p-5 border-b-2 border-[#EDE7DE] bg-[#FAF7F2] flex items-center justify-between">
+          <h3 className="text-lg font-bold text-[#1A1A1A]">
+            {reportOptions.find((r) => r.value === reportType)?.label}
           </h3>
-          <span className="text-[11px] text-slate-400">Total Records: {reportData?.length || 0}</span>
+          <span className="text-base font-bold text-[#8B1A1A]">
+            Total Records: {reportData?.length || 0}
+          </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800">
+          <table className="w-full text-left text-base">
+            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
                 {reportData?.length > 0 &&
                   Object.keys(reportData[0]).map((col) => (
-                    <th key={col} className="py-3 px-4 uppercase tracking-wider text-[11px]">
+                    <th key={col} className="py-4 px-5 uppercase text-sm tracking-wider">
                       {col.replace(/([A-Z])/g, ' $1')}
                     </th>
                   ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={10} className="py-8 text-center text-slate-500">
-                    Generating report calculations...
+                  <td colSpan={10} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                    Generating financial report...
                   </td>
                 </tr>
               ) : reportData?.length > 0 ? (
-                reportData.map((row: any, rIdx: number) => (
-                  <tr key={rIdx} className="hover:bg-slate-950/40">
-                    {Object.entries(row).map(([key, val]: any, cIdx: number) => {
+                reportData.map((row: any, i: number) => (
+                  <tr
+                    key={i}
+                    className={`hover:bg-[#FAF7F2] transition-colors ${
+                      i % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
+                    }`}
+                  >
+                    {Object.entries(row).map(([k, val]: [string, any], j: number) => {
                       const isMoney =
                         typeof val === 'number' &&
-                        (key.toLowerCase().includes('amount') ||
-                          key.toLowerCase().includes('repaid') ||
-                          key.toLowerCase().includes('balance') ||
-                          key.toLowerCase().includes('profit') ||
-                          key.toLowerCase().includes('invested') ||
-                          key.toLowerCase().includes('principal') ||
-                          key.toLowerCase().includes('interest') ||
-                          key.toLowerCase().includes('commission') ||
-                          key.toLowerCase().includes('payout'));
+                        (k.toLowerCase().includes('amount') ||
+                          k.toLowerCase().includes('capital') ||
+                          k.toLowerCase().includes('profit') ||
+                          k.toLowerCase().includes('interest') ||
+                          k.toLowerCase().includes('repaid') ||
+                          k.toLowerCase().includes('total'));
 
                       return (
-                        <td key={cIdx} className="py-3 px-4">
+                        <td key={j} className="py-4 px-5">
                           {isMoney ? (
-                            <span className="font-mono font-bold text-white">{formatCurrency(val)}</span>
-                          ) : key.toLowerCase().includes('date') ? (
-                            <span>{formatDate(val)}</span>
+                            <span className="font-bold text-[#1A1A1A] font-mono text-lg">
+                              {formatCurrency(val)}
+                            </span>
                           ) : (
-                            String(val ?? '—')
+                            <span className="font-semibold text-[#1A1A1A]">{String(val || '—')}</span>
                           )}
                         </td>
                       );
@@ -178,8 +181,12 @@ export const ReportsHub: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="py-8 text-center text-slate-500">
-                    No records found for the selected period.
+                  <td colSpan={10} className="py-12">
+                    <AccessibleEmptyState
+                      icon={FileSpreadsheet}
+                      title="No matching records found"
+                      description="Adjust date range or filter criteria to see financial activity."
+                    />
                   </td>
                 </tr>
               )}
@@ -190,3 +197,5 @@ export const ReportsHub: React.FC = () => {
     </div>
   );
 };
+
+export default ReportsHub;

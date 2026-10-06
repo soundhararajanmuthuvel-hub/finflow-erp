@@ -41,6 +41,12 @@ import { ClientPaymentScheduleModal } from '../documents/ClientPaymentScheduleMo
 import { InvestorStatementModal } from '../documents/InvestorStatementModal';
 import { useAuth } from '../../context/AuthContext';
 import { useCompanyProfile } from '../../context/CompanyProfileContext';
+import {
+  AccessibleButton,
+  AccessibleCard,
+  AccessibleInput,
+  AccessibleSelect,
+} from '../../components/common/AccessibleComponents';
 
 export const DealDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -154,34 +160,34 @@ export const DealDetail: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="h-10 w-10 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+        <div className="h-12 w-12 border-4 border-maroon-800/20 border-t-maroon-800 rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!deal) {
     return (
-      <div className="text-center py-16 bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-lg mx-auto space-y-4">
-        <AlertCircle className="h-12 w-12 text-amber-400 mx-auto" />
-        <h3 className="text-lg font-bold text-white">Finance Deal Not Found</h3>
-        <p className="text-xs text-slate-400">The requested finance syndication deal does not exist or has been deleted.</p>
-        <div className="flex justify-center gap-3 pt-2">
-          <button
+      <AccessibleCard className="p-8 max-w-lg mx-auto text-center space-y-4">
+        <AlertCircle className="h-14 w-14 text-amber-600 mx-auto" />
+        <h3 className="text-2xl font-bold text-stone-900">Finance Deal Not Found</h3>
+        <p className="text-base text-stone-600">The requested finance syndication deal does not exist or has been deleted.</p>
+        <div className="flex flex-wrap justify-center gap-3 pt-4">
+          <AccessibleButton
+            variant="outline"
             onClick={() => navigate('/deals')}
-            className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all"
           >
             Go to Deal Portfolio
-          </button>
-          <button
+          </AccessibleButton>
+          <AccessibleButton
+            variant="primary"
             onClick={() => resetDemoMutation.mutate()}
             disabled={resetDemoMutation.isPending}
-            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5"
+            icon={<RefreshCw className={`h-5 w-5 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />}
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />
-            <span>Load Demo Deal</span>
-          </button>
+            Load Demo Deal
+          </AccessibleButton>
         </div>
-      </div>
+      </AccessibleCard>
     );
   }
 
@@ -252,238 +258,236 @@ export const DealDetail: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       {/* ========================================================================= */}
       {/* 1. TOP SECTION: CLIENT, DEAL ID, STATUS & CORE VALUES */}
       {/* ========================================================================= */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-1.5">
+      <AccessibleCard className="p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+          <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs font-mono font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              <span className="text-base font-mono font-black text-maroon-900 bg-maroon-50 px-3.5 py-1.5 rounded-xl border-2 border-maroon-200">
                 {deal.dealNumber}
               </span>
               <StatusBadge status={deal.status} />
               {isDemoDeal && (
-                <span className="text-[11px] font-black text-amber-300 bg-amber-500/15 px-2.5 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" />
+                <span className="text-sm font-black text-amber-900 bg-amber-100 px-3 py-1 rounded-xl border-2 border-amber-300 flex items-center gap-1.5">
+                  <Sparkles className="h-4 w-4" />
                   DEMO DATA
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-black text-white">{deal.client?.fullName}</h1>
-            <p className="text-xs text-slate-400">
-              {deal.client?.businessName ? <span className="text-slate-300 font-semibold">{deal.client.businessName} • </span> : null}
-              {deal.purpose || 'Working Capital Syndication'} • Started: <span className="text-slate-300">{formatDate(deal.startDate)}</span>
+            <h1 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">{deal.client?.fullName}</h1>
+            <p className="text-base text-stone-600 font-medium">
+              {deal.client?.businessName ? <span className="text-stone-900 font-bold">{deal.client.businessName} • </span> : null}
+              {deal.purpose || 'Working Capital Syndication'} • Started: <span className="text-stone-900 font-bold">{formatDate(deal.startDate)}</span>
             </p>
           </div>
 
           {/* Top Actions */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
+          <div className="flex flex-wrap items-center gap-3">
+            <AccessibleButton
+              variant="outline"
               onClick={() => resetDemoMutation.mutate()}
               disabled={resetDemoMutation.isPending}
-              title="Regenerates dynamic test deal relative to today's date"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 text-xs font-bold border border-slate-700 transition-all disabled:opacity-50"
+              icon={<RefreshCw className={`h-5 w-5 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />}
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />
-              <span>Reset Demo Data</span>
-            </button>
+              Reset Demo
+            </AccessibleButton>
 
-            {/* Print Client Schedule Button (Requirement 7 & 17) */}
-            <button
+            <AccessibleButton
+              variant="outline"
               onClick={() => setClientScheduleModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 hover:text-emerald-300 text-xs font-bold border border-emerald-500/30 transition-all shadow-sm"
+              icon={<FileSpreadsheet className="h-5 w-5 text-emerald-700" />}
             >
-              <FileSpreadsheet className="h-3.5 w-3.5" />
-              <span>Print Client Schedule</span>
-            </button>
+              Print Client Schedule
+            </AccessibleButton>
 
-            {/* Investor Statements Button (Requirement 9 & 17) */}
             {investorFunding.length > 0 && (
-              <button
+              <AccessibleButton
+                variant="outline"
                 onClick={() => {
                   setSelectedInvestorForStatement(investorFunding[0]?.investorId);
                   setInvestorStatementModalOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 hover:text-purple-300 text-xs font-bold border border-purple-500/30 transition-all shadow-sm"
+                icon={<TrendingUp className="h-5 w-5 text-purple-700" />}
               >
-                <TrendingUp className="h-3.5 w-3.5" />
-                <span>Investor Statements</span>
-              </button>
+                Investor Statements
+              </AccessibleButton>
             )}
 
-            <button
+            <AccessibleButton
+              variant="outline"
               onClick={handleOpenEdit}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 text-xs font-bold border border-slate-700 transition-all"
+              icon={<Edit2 className="h-5 w-5" />}
             >
-              <Edit2 className="h-3.5 w-3.5" />
-              <span>Edit Deal</span>
-            </button>
+              Edit Deal
+            </AccessibleButton>
 
-            <button
+            <AccessibleButton
+              variant="danger"
               onClick={() => setIsDeleteModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-rose-400 hover:text-rose-300 text-xs font-bold border border-slate-700 transition-all"
+              icon={<Trash2 className="h-5 w-5" />}
             >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span>Delete</span>
-            </button>
+              Delete
+            </AccessibleButton>
 
             {deal.status === 'PENDING_APPROVAL' && (
-              <button
+              <AccessibleButton
+                variant="primary"
                 onClick={() => approveMutation.mutate()}
                 disabled={approveMutation.isPending}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-sm transition-all disabled:opacity-50"
+                icon={<CheckCircle2 className="h-5 w-5" />}
               >
-                <CheckCircle2 className="h-4 w-4" />
-                <span>Approve Deal</span>
-              </button>
+                Approve Deal
+              </AccessibleButton>
             )}
 
             {deal.status === 'APPROVED' && (
-              <button
+              <AccessibleButton
+                variant="primary"
                 onClick={() => activateMutation.mutate()}
                 disabled={activateMutation.isPending}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white text-xs font-bold shadow-glow transition-all disabled:opacity-50"
+                icon={<PlayCircle className="h-5 w-5" />}
               >
-                <PlayCircle className="h-4 w-4" />
-                <span>Activate & Disburse</span>
-              </button>
+                Activate & Disburse
+              </AccessibleButton>
             )}
 
             {(deal.status === 'ACTIVE' || deal.status === 'OVERDUE') && (
-              <button
+              <AccessibleButton
+                variant="primary"
                 onClick={() => setRepaymentModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white text-xs font-bold shadow-glow transition-all"
+                icon={<Receipt className="h-5 w-5" />}
               >
-                <Receipt className="h-4 w-4" />
-                <span>+ Record Collection</span>
-              </button>
+                + Record Collection
+              </AccessibleButton>
             )}
           </div>
         </div>
 
         {/* Financial Header 4-KPI Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-800">
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Finance Amount</span>
-            <p className="text-xl font-black text-white mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">Required: {formatCurrency(deal.financeAmountRequired)}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t-2 border-stone-200">
+          <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+            <span className="text-sm text-stone-600 font-bold uppercase tracking-wider block">Finance Amount</span>
+            <p className="text-3xl font-black text-stone-900 mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
+            <p className="text-sm text-stone-500 font-medium mt-1">Required: {formatCurrency(deal.financeAmountRequired)}</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] text-blue-400 font-bold uppercase tracking-wider">Total Payable</span>
-            <p className="text-xl font-black text-blue-300 mt-1">{formatCurrency(totalPayable)}</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+          <div className="p-5 rounded-2xl bg-blue-50 border-2 border-blue-200">
+            <span className="text-sm text-blue-900 font-bold uppercase tracking-wider block">Total Payable</span>
+            <p className="text-3xl font-black text-blue-950 mt-1">{formatCurrency(totalPayable)}</p>
+            <p className="text-sm text-blue-800 font-medium mt-1">
               {deal.numberOfRepayments} × {formatCurrency(deal.installmentAmount)} ({deal.repaymentFrequency})
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">Total Collected</span>
-            <p className="text-xl font-black text-emerald-300 mt-1">{formatCurrency(totalCollected)}</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+          <div className="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+            <span className="text-sm text-emerald-900 font-bold uppercase tracking-wider block">Total Collected</span>
+            <p className="text-3xl font-black text-emerald-950 mt-1">{formatCurrency(totalCollected)}</p>
+            <p className="text-sm text-emerald-800 font-medium mt-1">
               Principal: {formatCurrency(principalRepaid)} • Interest: {formatCurrency(interestRepaid)}
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] text-amber-400 font-bold uppercase tracking-wider">Outstanding</span>
-            <p className="text-xl font-black text-amber-300 mt-1">{formatCurrency(outstandingTotal)}</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">Principal Remaining: {formatCurrency(outstandingPrincipal)}</p>
+          <div className="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200">
+            <span className="text-sm text-amber-900 font-bold uppercase tracking-wider block">Outstanding</span>
+            <p className="text-3xl font-black text-amber-950 mt-1">{formatCurrency(outstandingTotal)}</p>
+            <p className="text-sm text-amber-800 font-medium mt-1">Principal Remaining: {formatCurrency(outstandingPrincipal)}</p>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 2. FUNDING SUMMARY & ALLOCATION VISUALIZATION BAR (REQUIREMENT 4) */}
+        {/* 2. FUNDING SUMMARY & ALLOCATION VISUALIZATION BAR */}
         {/* ========================================================================= */}
-        <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+        <div className="p-6 rounded-2xl bg-stone-50 border-2 border-stone-200 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-xs font-black text-white uppercase tracking-wider">
+                <DollarSign className="h-5 w-5 text-maroon-800" />
+                <h3 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
                   Syndicate Funding Allocation Summary
                 </h3>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                Total Required: <span className="text-white font-bold">{formatCurrency(approvedAmount)}</span> • Total Funded: <span className="text-emerald-400 font-bold">{formatCurrency(totalFunded)} ({fundedPercent.toFixed(1)}%)</span>
+              <p className="text-sm text-stone-600 mt-1">
+                Total Required: <span className="text-stone-900 font-bold">{formatCurrency(approvedAmount)}</span> • Total Funded:{' '}
+                <span className="text-emerald-800 font-extrabold">{formatCurrency(totalFunded)} ({fundedPercent.toFixed(1)}%)</span>
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
+            <div>
+              <AccessibleButton
+                variant="outline"
                 onClick={() => setAddFundingModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all"
+                icon={<PlusCircle className="h-5 w-5 text-emerald-700" />}
               >
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span>+ Add Funding Participant</span>
-              </button>
+                + Add Funding Participant
+              </AccessibleButton>
             </div>
           </div>
 
           {/* Progress Bar Visualization */}
-          <div className="w-full bg-slate-900 h-3.5 rounded-full overflow-hidden flex border border-slate-800">
+          <div className="w-full bg-stone-200 h-5 rounded-full overflow-hidden flex border-2 border-stone-300">
             <div
               style={{ width: `${companyPct}%` }}
-              className="bg-emerald-500 h-full transition-all duration-500 hover:brightness-110"
+              className="bg-emerald-600 h-full transition-all duration-500"
               title={`Company Capital: ${formatCurrency(companyTotal)} (${companyPct.toFixed(1)}%)`}
             />
             <div
               style={{ width: `${investorPct}%` }}
-              className="bg-purple-500 h-full transition-all duration-500 hover:brightness-110"
+              className="bg-purple-600 h-full transition-all duration-500"
               title={`Outside Investors: ${formatCurrency(investorTotal)} (${investorPct.toFixed(1)}%)`}
             />
             <div
               style={{ width: `${partnerPct}%` }}
-              className="bg-cyan-500 h-full transition-all duration-500 hover:brightness-110"
+              className="bg-blue-600 h-full transition-all duration-500"
               title={`Company Partners: ${formatCurrency(partnerTotal)} (${partnerPct.toFixed(1)}%)`}
             />
           </div>
 
           {/* Participant Breakdown Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800/80 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-3 h-3 rounded-full bg-emerald-500" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-base">
+            <div className="p-4 rounded-xl bg-white border-2 border-emerald-200 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 rounded-full bg-emerald-600 shrink-0" />
                 <div>
-                  <p className="font-bold text-white">Company Capital</p>
-                  <p className="text-[11px] text-slate-400">{companyPct.toFixed(1)}% Allocation</p>
+                  <p className="font-bold text-stone-900">Company Capital</p>
+                  <p className="text-sm text-stone-500 font-medium">{companyPct.toFixed(1)}% Allocation</p>
                 </div>
               </div>
-              <p className="font-black text-emerald-400 font-mono">{formatCurrency(companyTotal)}</p>
+              <p className="font-black text-emerald-900 font-mono text-lg">{formatCurrency(companyTotal)}</p>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800/80 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-3 h-3 rounded-full bg-purple-500" />
+            <div className="p-4 rounded-xl bg-white border-2 border-purple-200 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 rounded-full bg-purple-600 shrink-0" />
                 <div>
-                  <p className="font-bold text-white">Outside Investors</p>
-                  <p className="text-[11px] text-slate-400">{investorFunding.length} Participants ({investorPct.toFixed(1)}%)</p>
+                  <p className="font-bold text-stone-900">Outside Investors</p>
+                  <p className="text-sm text-stone-500 font-medium">{investorFunding.length} Participants ({investorPct.toFixed(1)}%)</p>
                 </div>
               </div>
-              <p className="font-black text-purple-300 font-mono">{formatCurrency(investorTotal)}</p>
+              <p className="font-black text-purple-900 font-mono text-lg">{formatCurrency(investorTotal)}</p>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800/80 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-3 h-3 rounded-full bg-cyan-500" />
+            <div className="p-4 rounded-xl bg-white border-2 border-blue-200 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 rounded-full bg-blue-600 shrink-0" />
                 <div>
-                  <p className="font-bold text-white">Company Partners</p>
-                  <p className="text-[11px] text-slate-400">{partnerFunding.length} Partners ({partnerPct.toFixed(1)}%)</p>
+                  <p className="font-bold text-stone-900">Company Partners</p>
+                  <p className="text-sm text-stone-500 font-medium">{partnerFunding.length} Partners ({partnerPct.toFixed(1)}%)</p>
                 </div>
               </div>
-              <p className="font-black text-cyan-300 font-mono">{formatCurrency(partnerTotal)}</p>
+              <p className="font-black text-blue-900 font-mono text-lg">{formatCurrency(partnerTotal)}</p>
             </div>
           </div>
         </div>
-      </div>
+      </AccessibleCard>
 
       {/* ========================================================================= */}
-      {/* 3. 9 DEDICATED TABS NAVIGATION (REQUIREMENT 5) */}
+      {/* 3. 9 DEDICATED TABS NAVIGATION */}
       {/* ========================================================================= */}
-      <div className="border-b border-slate-800">
-        <nav className="flex space-x-1 sm:space-x-2 overflow-x-auto pb-px">
+      <div className="border-b-2 border-stone-200 overflow-x-auto">
+        <nav className="flex space-x-2 pb-px min-w-max">
           {tabs.map((t) => {
             const Icon = t.icon;
             const isActive = activeTab === t.id;
@@ -491,13 +495,13 @@ export const DealDetail: React.FC = () => {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-xs font-bold rounded-t-2xl transition-all border-b-2 whitespace-nowrap ${
+                className={`flex items-center gap-2.5 px-5 py-3.5 text-base font-bold rounded-t-2xl transition-all border-b-4 ${
                   isActive
-                    ? 'text-emerald-400 border-emerald-500 bg-slate-900 shadow-md'
-                    : 'text-slate-400 border-transparent hover:text-slate-200 hover:border-slate-700'
+                    ? 'text-maroon-900 border-maroon-800 bg-white shadow-sm'
+                    : 'text-stone-600 border-transparent hover:text-stone-900 hover:bg-stone-100'
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className={`h-5 w-5 ${isActive ? 'text-maroon-800' : 'text-stone-500'}`} />
                 <span>{t.label}</span>
               </button>
             );
@@ -506,133 +510,133 @@ export const DealDetail: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 1: OVERVIEW (REQUIREMENT 6 - 14 FINANCIAL METRICS) */}
+      {/* TAB 1: OVERVIEW */}
       {/* ========================================================================= */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-slate-400 font-semibold uppercase">1. Finance Amount</span>
-              <p className="text-lg font-bold text-white mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-slate-400 font-semibold uppercase">2. Disbursed Amount</span>
-              <p className="text-lg font-bold text-white mt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <AccessibleCard className="p-5">
+              <span className="text-sm text-stone-500 font-bold uppercase">1. Finance Amount</span>
+              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5">
+              <span className="text-sm text-stone-500 font-bold uppercase">2. Disbursed Amount</span>
+              <p className="text-2xl font-black text-stone-900 mt-1">
                 {deal.status === 'ACTIVE' || deal.status === 'COMPLETED' || deal.status === 'OVERDUE'
                   ? formatCurrency(deal.financeAmountApproved)
                   : '₹0.00 (Pending)'}
               </p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-blue-400 font-semibold uppercase">3. Total Payable</span>
-              <p className="text-lg font-bold text-blue-300 mt-1">{formatCurrency(deal.totalPayable)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-emerald-400 font-semibold uppercase">4. Total Collected</span>
-              <p className="text-lg font-bold text-emerald-300 mt-1">{formatCurrency(totalCollected)}</p>
-            </div>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-blue-50 border-blue-200">
+              <span className="text-sm text-blue-900 font-bold uppercase">3. Total Payable</span>
+              <p className="text-2xl font-black text-blue-950 mt-1">{formatCurrency(deal.totalPayable)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
+              <span className="text-sm text-emerald-900 font-bold uppercase">4. Total Collected</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(totalCollected)}</p>
+            </AccessibleCard>
 
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-slate-400 font-semibold uppercase">5. Principal Collected</span>
-              <p className="text-lg font-bold text-white mt-1">{formatCurrency(principalRepaid)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-emerald-400 font-semibold uppercase">6. Interest Collected</span>
-              <p className="text-lg font-bold text-emerald-300 mt-1">{formatCurrency(interestRepaid)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-amber-400 font-semibold uppercase">7. Outstanding Principal</span>
-              <p className="text-lg font-bold text-amber-300 mt-1">{formatCurrency(outstandingPrincipal)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-amber-400 font-semibold uppercase">8. Outstanding Interest</span>
-              <p className="text-lg font-bold text-amber-300 mt-1">
+            <AccessibleCard className="p-5">
+              <span className="text-sm text-stone-500 font-bold uppercase">5. Principal Collected</span>
+              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(principalRepaid)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
+              <span className="text-sm text-emerald-900 font-bold uppercase">6. Interest Collected</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(interestRepaid)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-amber-50 border-amber-200">
+              <span className="text-sm text-amber-900 font-bold uppercase">7. Outstanding Principal</span>
+              <p className="text-2xl font-black text-amber-950 mt-1">{formatCurrency(outstandingPrincipal)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-amber-50 border-amber-200">
+              <span className="text-sm text-amber-900 font-bold uppercase">8. Outstanding Interest</span>
+              <p className="text-2xl font-black text-amber-950 mt-1">
                 {formatCurrency(Math.max(0, Number(deal.totalInterest || 0) - interestRepaid))}
               </p>
-            </div>
+            </AccessibleCard>
 
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-teal-400 font-semibold uppercase">9. Company Commission</span>
-              <p className="text-lg font-bold text-teal-300 mt-1">{formatCurrency(totalCompanyCommission)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-purple-400 font-semibold uppercase">10. Investor Returns</span>
-              <p className="text-lg font-bold text-purple-300 mt-1">{formatCurrency(totalInvestorReturns)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-cyan-400 font-semibold uppercase">11. Partner Profit Share</span>
-              <p className="text-lg font-bold text-cyan-300 mt-1">{formatCurrency(totalPartnerProfits)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[11px] text-emerald-400 font-semibold uppercase">12. Company Net Profit</span>
-              <p className="text-lg font-bold text-emerald-300 mt-1">{formatCurrency(totalCompanyProfit)}</p>
-            </div>
+            <AccessibleCard className="p-5">
+              <span className="text-sm text-stone-600 font-bold uppercase">9. Company Commission</span>
+              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(totalCompanyCommission)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-purple-50 border-purple-200">
+              <span className="text-sm text-purple-900 font-bold uppercase">10. Investor Returns</span>
+              <p className="text-2xl font-black text-purple-950 mt-1">{formatCurrency(totalInvestorReturns)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-blue-50 border-blue-200">
+              <span className="text-sm text-blue-900 font-bold uppercase">11. Partner Profit Share</span>
+              <p className="text-2xl font-black text-blue-950 mt-1">{formatCurrency(totalPartnerProfits)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
+              <span className="text-sm text-emerald-900 font-bold uppercase">12. Company Net Profit</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(totalCompanyProfit)}</p>
+            </AccessibleCard>
           </div>
 
           {/* Collection Status Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleCard className="p-6">
+              <span className="text-sm text-stone-500 font-bold uppercase tracking-wider block mb-1">
                 Next Collection Due
               </span>
               {nextPendingSchedule ? (
                 <div>
-                  <p className="text-lg font-bold text-white font-mono">{formatCurrency(nextPendingSchedule.totalDue)}</p>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Installment #{nextPendingSchedule.installmentNumber} • Due Date: <span className="text-emerald-400 font-bold">{formatDate(nextPendingSchedule.dueDate)}</span>
+                  <p className="text-2xl font-black text-stone-900 font-mono">{formatCurrency(nextPendingSchedule.totalDue)}</p>
+                  <p className="text-base text-stone-600 mt-1 font-medium">
+                    Installment #{nextPendingSchedule.installmentNumber} • Due Date: <span className="text-maroon-900 font-bold">{formatDate(nextPendingSchedule.dueDate)}</span>
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-emerald-400 font-bold mt-2">All installments fully settled!</p>
+                <p className="text-base text-emerald-800 font-bold mt-2">All installments fully settled!</p>
               )}
-            </div>
+            </AccessibleCard>
 
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">
+            <AccessibleCard className="p-6">
+              <span className="text-sm text-stone-500 font-bold uppercase tracking-wider block mb-1">
                 Repayment Frequency
               </span>
-              <p className="text-lg font-bold text-white uppercase">{deal.repaymentFrequency}</p>
-              <p className="text-xs text-slate-400 mt-1">
-                Method: <span className="text-slate-200 font-semibold">{deal.interestType}</span> • Rate: <span className="text-emerald-400 font-bold">{deal.interestRate}%</span>
+              <p className="text-2xl font-black text-stone-900 uppercase">{deal.repaymentFrequency}</p>
+              <p className="text-base text-stone-600 mt-1 font-medium">
+                Method: <span className="text-stone-900 font-semibold">{deal.interestType}</span> • Rate: <span className="text-maroon-900 font-bold">{deal.interestRate}%</span>
               </p>
-            </div>
+            </AccessibleCard>
 
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-xs text-rose-400 font-bold uppercase tracking-wider block mb-1">
+            <AccessibleCard className="p-6 bg-red-50 border-red-200">
+              <span className="text-sm text-red-900 font-bold uppercase tracking-wider block mb-1">
                 Overdue Balance
               </span>
-              <p className="text-lg font-bold text-rose-400 font-mono">{formatCurrency(overdueAmount)}</p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-2xl font-black text-red-900 font-mono">{formatCurrency(overdueAmount)}</p>
+              <p className="text-base text-red-800 mt-1 font-medium">
                 {overdueSchedules.length > 0 ? `${overdueSchedules.length} installment(s) currently overdue` : 'No overdue payments'}
               </p>
-            </div>
+            </AccessibleCard>
           </div>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: FUNDING (REQUIREMENT 7) */}
+      {/* TAB 2: FUNDING */}
       {/* ========================================================================= */}
       {activeTab === 'funding' && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h3 className="text-2xl font-extrabold text-stone-900">
               Syndicate Funding Participants Table
             </h3>
-            <button
+            <AccessibleButton
+              variant="primary"
               onClick={() => setAddFundingModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-glow transition-all"
+              icon={<PlusCircle className="h-5 w-5" />}
             >
-              <PlusCircle className="h-4 w-4" />
-              <span>+ Add Funding Participant</span>
-            </button>
+              + Add Funding Participant
+            </AccessibleButton>
           </div>
 
-          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
+          <AccessibleCard className="overflow-hidden p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 uppercase font-bold">
+                  <tr className="border-b-2 border-stone-200 bg-stone-100 text-stone-800 font-bold">
                     <th className="p-4">Participant</th>
                     <th className="p-4">Funding Type</th>
                     <th className="p-4 text-right">Contributed Amount</th>
@@ -645,7 +649,7 @@ export const DealDetail: React.FC = () => {
                     <th className="p-4 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-stone-200 text-stone-800">
                   {deal.fundings?.map((f: any) => {
                     const participantName =
                       f.sourceType === 'COMPANY'
@@ -668,17 +672,17 @@ export const DealDetail: React.FC = () => {
                     const pendingPrinc = Math.max(0, amount - princRet);
 
                     return (
-                      <tr key={f.id} className="hover:bg-slate-800/40">
-                        <td className="p-4 font-bold text-white">{participantName}</td>
-                        <td className="p-4 text-slate-400">{typeLabel}</td>
-                        <td className="p-4 text-right font-mono font-bold text-white">{formatCurrency(f.amount)}</td>
-                        <td className="p-4 text-right font-bold text-emerald-400">{Number(f.percentage).toFixed(2)}%</td>
-                        <td className="p-4 text-right font-mono text-slate-200">{formatCurrency(princRet)}</td>
-                        <td className="p-4 text-right font-mono text-emerald-300">{formatCurrency(intEarned)}</td>
-                        <td className="p-4 text-right font-mono font-bold text-teal-300">{formatCurrency(totRet)}</td>
-                        <td className="p-4 text-right font-mono text-amber-300">{formatCurrency(pendingPrinc)}</td>
+                      <tr key={f.id} className="hover:bg-stone-50">
+                        <td className="p-4 font-bold text-stone-900">{participantName}</td>
+                        <td className="p-4 text-stone-600 font-medium">{typeLabel}</td>
+                        <td className="p-4 text-right font-mono font-black text-stone-900">{formatCurrency(f.amount)}</td>
+                        <td className="p-4 text-right font-bold text-maroon-900">{Number(f.percentage).toFixed(2)}%</td>
+                        <td className="p-4 text-right font-mono text-stone-700">{formatCurrency(princRet)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(intEarned)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-stone-900">{formatCurrency(totRet)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-amber-900">{formatCurrency(pendingPrinc)}</td>
                         <td className="p-4 text-center">
-                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-800 border border-stone-300">
                             {f.status}
                           </span>
                         </td>
@@ -687,10 +691,10 @@ export const DealDetail: React.FC = () => {
                             <button
                               onClick={() => deleteFundingMutation.mutate(f.id)}
                               disabled={deleteFundingMutation.isPending}
-                              className="text-slate-500 hover:text-rose-400 transition-colors p-1"
+                              className="text-stone-400 hover:text-red-700 p-2 rounded-lg transition-colors"
                               title="Remove funding"
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <Trash2 className="h-5 w-5" />
                             </button>
                           )}
                         </td>
@@ -700,39 +704,39 @@ export const DealDetail: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </AccessibleCard>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 3: REPAYMENT PLAN (REQUIREMENT 8) */}
+      {/* TAB 3: REPAYMENT PLAN */}
       {/* ========================================================================= */}
       {activeTab === 'schedule' && (
         <div className="space-y-6">
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <AccessibleCard className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-base">
             <div>
-              <span className="text-slate-500 font-semibold uppercase">Repayment Method</span>
-              <p className="font-bold text-white mt-0.5">{deal.interestType}</p>
+              <span className="text-sm text-stone-500 font-bold uppercase">Repayment Method</span>
+              <p className="font-black text-stone-900 mt-1">{deal.interestType}</p>
             </div>
             <div>
-              <span className="text-slate-500 font-semibold uppercase">Frequency</span>
-              <p className="font-bold text-emerald-400 mt-0.5 uppercase">{deal.repaymentFrequency}</p>
+              <span className="text-sm text-stone-500 font-bold uppercase">Frequency</span>
+              <p className="font-black text-maroon-900 mt-1 uppercase">{deal.repaymentFrequency}</p>
             </div>
             <div>
-              <span className="text-slate-500 font-semibold uppercase">Installment Amount</span>
-              <p className="font-bold text-white mt-0.5">{formatCurrency(deal.installmentAmount)}</p>
+              <span className="text-sm text-stone-500 font-bold uppercase">Installment Amount</span>
+              <p className="font-black text-stone-900 mt-1">{formatCurrency(deal.installmentAmount)}</p>
             </div>
             <div>
-              <span className="text-slate-500 font-semibold uppercase">Total Installments</span>
-              <p className="font-bold text-white mt-0.5">{deal.numberOfRepayments} Periodic Payments</p>
+              <span className="text-sm text-stone-500 font-bold uppercase">Total Installments</span>
+              <p className="font-black text-stone-900 mt-1">{deal.numberOfRepayments} Periodic Payments</p>
             </div>
-          </div>
+          </AccessibleCard>
 
-          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
+          <AccessibleCard className="overflow-hidden p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 uppercase font-bold">
+                  <tr className="border-b-2 border-stone-200 bg-stone-100 text-stone-800 font-bold">
                     <th className="p-4">Installment #</th>
                     <th className="p-4">Due Date</th>
                     <th className="p-4 text-right">Principal</th>
@@ -743,18 +747,18 @@ export const DealDetail: React.FC = () => {
                     <th className="p-4 text-center">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-stone-200 text-stone-800">
                   {deal.schedules?.map((sch: any) => (
-                    <tr key={sch.id} className="hover:bg-slate-800/40">
-                      <td className="p-4 font-mono font-bold text-slate-300">
+                    <tr key={sch.id} className="hover:bg-stone-50">
+                      <td className="p-4 font-mono font-bold text-stone-700">
                         {deal.repaymentFrequency === 'WEEKLY' ? `Week ${sch.installmentNumber}` : `#${sch.installmentNumber}`}
                       </td>
-                      <td className="p-4 text-slate-300 font-medium">{formatDate(sch.dueDate)}</td>
-                      <td className="p-4 text-right font-mono text-slate-300">{formatCurrency(sch.principalAmount)}</td>
-                      <td className="p-4 text-right font-mono text-emerald-400">{formatCurrency(sch.interestAmount)}</td>
-                      <td className="p-4 text-right font-mono font-bold text-white">{formatCurrency(sch.totalDue)}</td>
-                      <td className="p-4 text-right font-mono font-bold text-emerald-400">{formatCurrency(sch.paidAmount)}</td>
-                      <td className="p-4 text-right font-mono font-bold text-amber-300">{formatCurrency(sch.balanceAmount)}</td>
+                      <td className="p-4 font-medium">{formatDate(sch.dueDate)}</td>
+                      <td className="p-4 text-right font-mono font-medium">{formatCurrency(sch.principalAmount)}</td>
+                      <td className="p-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(sch.interestAmount)}</td>
+                      <td className="p-4 text-right font-mono font-black text-stone-900">{formatCurrency(sch.totalDue)}</td>
+                      <td className="p-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(sch.paidAmount)}</td>
+                      <td className="p-4 text-right font-mono font-bold text-amber-900">{formatCurrency(sch.balanceAmount)}</td>
                       <td className="p-4 text-center">
                         <StatusBadge status={sch.status} />
                       </td>
@@ -763,36 +767,36 @@ export const DealDetail: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </AccessibleCard>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 4: COLLECTIONS (REQUIREMENT 9 & 10) */}
+      {/* TAB 4: COLLECTIONS */}
       {/* ========================================================================= */}
       {activeTab === 'repayments' && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-2xl font-extrabold text-stone-900">
                 Recorded Repayment Collections
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">Click any collection record to view full transaction drawer and waterfall breakdown</p>
+              <p className="text-base text-stone-600 mt-1">Click any collection record to view full transaction drawer and waterfall breakdown.</p>
             </div>
-            <button
+            <AccessibleButton
+              variant="primary"
               onClick={() => setRepaymentModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs shadow-glow transition-all"
+              icon={<Receipt className="h-5 w-5" />}
             >
-              <Receipt className="h-4 w-4" />
-              <span>+ Record Collection</span>
-            </button>
+              + Record Collection
+            </AccessibleButton>
           </div>
 
-          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
+          <AccessibleCard className="overflow-hidden p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b border-slate-800 bg-slate-950/60 text-[11px] text-slate-400 uppercase font-bold">
+                  <tr className="border-b-2 border-stone-200 bg-stone-100 text-stone-800 font-bold">
                     <th className="p-4">Receipt #</th>
                     <th className="p-4">Payment Date</th>
                     <th className="p-4 text-right">Amount Received</th>
@@ -804,26 +808,26 @@ export const DealDetail: React.FC = () => {
                     <th className="p-4 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-stone-200 text-stone-800">
                   {deal.repayments?.map((rep: any) => (
                     <tr
                       key={rep.id}
                       onClick={() => setSelectedRepaymentForDetail(rep)}
-                      className="hover:bg-slate-800/60 cursor-pointer transition-all"
+                      className="hover:bg-amber-50/50 cursor-pointer transition-colors"
                     >
-                      <td className="p-4 font-mono font-bold text-emerald-400 flex items-center gap-1.5">
-                        <Receipt className="h-3.5 w-3.5" />
+                      <td className="p-4 font-mono font-bold text-maroon-900 flex items-center gap-2">
+                        <Receipt className="h-4 w-4" />
                         <span>{rep.receiptNumber}</span>
                       </td>
-                      <td className="p-4 text-slate-300 font-medium">{formatDate(rep.paymentDate)}</td>
-                      <td className="p-4 text-right font-mono font-bold text-white text-sm">{formatCurrency(rep.amountReceived)}</td>
-                      <td className="p-4 text-right font-mono text-blue-300">{formatCurrency(rep.principalPortion)}</td>
-                      <td className="p-4 text-right font-mono text-emerald-400">{formatCurrency(rep.interestPortion)}</td>
-                      <td className="p-4 text-slate-300 font-semibold">{rep.paymentMethod}</td>
-                      <td className="p-4 font-mono text-slate-400">{rep.referenceNumber || '-'}</td>
-                      <td className="p-4 text-slate-400">{rep.recordedBy?.fullName || 'Staff'}</td>
+                      <td className="p-4 font-medium">{formatDate(rep.paymentDate)}</td>
+                      <td className="p-4 text-right font-mono font-black text-stone-900 text-lg">{formatCurrency(rep.amountReceived)}</td>
+                      <td className="p-4 text-right font-mono text-blue-900 font-medium">{formatCurrency(rep.principalPortion)}</td>
+                      <td className="p-4 text-right font-mono text-emerald-800 font-bold">{formatCurrency(rep.interestPortion)}</td>
+                      <td className="p-4 font-semibold">{rep.paymentMethod}</td>
+                      <td className="p-4 font-mono text-stone-600">{rep.referenceNumber || '-'}</td>
+                      <td className="p-4 text-stone-600 font-medium">{rep.recordedBy?.fullName || 'Staff'}</td>
                       <td className="p-4 text-center">
-                        <span className="text-emerald-400 text-xs font-bold hover:underline">
+                        <span className="text-maroon-900 text-sm font-bold underline hover:text-maroon-700">
                           View Breakdown →
                         </span>
                       </td>
@@ -831,7 +835,7 @@ export const DealDetail: React.FC = () => {
                   ))}
                   {(!deal.repayments || deal.repayments.length === 0) && (
                     <tr>
-                      <td colSpan={9} className="p-8 text-center text-slate-500">
+                      <td colSpan={9} className="p-12 text-center text-base font-medium text-stone-500">
                         No repayments collected yet for this deal.
                       </td>
                     </tr>
@@ -839,20 +843,20 @@ export const DealDetail: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </AccessibleCard>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 5: INVESTORS (REQUIREMENT 11) */}
+      {/* TAB 5: INVESTORS */}
       {/* ========================================================================= */}
       {activeTab === 'investors' && (
         <div className="space-y-6">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h3 className="text-2xl font-extrabold text-stone-900">
             Outside Investor Syndication Returns
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {investorFunding.map((invF: any) => {
               const invested = Number(invF.amount || 0);
               const princReturned = Number(invF.principalReturned || 0);
@@ -861,59 +865,59 @@ export const DealDetail: React.FC = () => {
               const pending = Math.max(0, invested - princReturned);
 
               return (
-                <div key={invF.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 shadow-xl">
+                <AccessibleCard key={invF.id} className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-white">{invF.investor?.name || 'Outside Investor'}</h4>
-                      <p className="text-[11px] text-purple-400 font-semibold">{invF.investor?.investorCode || 'INV'}</p>
+                      <h4 className="text-lg font-bold text-stone-900">{invF.investor?.name || 'Outside Investor'}</h4>
+                      <p className="text-sm text-purple-800 font-bold">{invF.investor?.investorCode || 'INV'}</p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                    <span className="px-3 py-1 rounded-full text-xs font-black bg-purple-100 text-purple-900 border border-purple-300">
                       {Number(invF.percentage).toFixed(1)}% Share
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-800">
+                  <div className="grid grid-cols-2 gap-3 text-base pt-3 border-t-2 border-stone-100">
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Invested</span>
-                      <p className="font-bold text-white font-mono mt-0.5">{formatCurrency(invested)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Invested</span>
+                      <p className="font-mono font-black text-stone-900 mt-0.5">{formatCurrency(invested)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Principal Returned</span>
-                      <p className="font-bold text-slate-200 font-mono mt-0.5">{formatCurrency(princReturned)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Principal Returned</span>
+                      <p className="font-mono font-bold text-stone-700 mt-0.5">{formatCurrency(princReturned)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Interest Earned</span>
-                      <p className="font-bold text-emerald-400 font-mono mt-0.5">{formatCurrency(intEarned)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Interest Earned</span>
+                      <p className="font-mono font-bold text-emerald-800 mt-0.5">{formatCurrency(intEarned)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Pending Principal</span>
-                      <p className="font-bold text-amber-300 font-mono mt-0.5">{formatCurrency(pending)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Pending Principal</span>
+                      <p className="font-mono font-bold text-amber-900 mt-0.5">{formatCurrency(pending)}</p>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex justify-between items-center text-xs">
-                    <span className="text-slate-400 font-semibold">Total Payout Settled</span>
-                    <span className="font-black text-purple-200 font-mono text-sm">{formatCurrency(totalRet)}</span>
+                  <div className="p-4 rounded-xl bg-purple-50 border-2 border-purple-200 flex justify-between items-center text-base">
+                    <span className="text-purple-950 font-bold">Total Payout Settled</span>
+                    <span className="font-black text-purple-950 font-mono text-lg">{formatCurrency(totalRet)}</span>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                    <button
-                      type="button"
+                  <div className="pt-2">
+                    <AccessibleButton
+                      variant="outline"
+                      className="w-full"
                       onClick={() => {
                         setSelectedInvestorForStatement(invF.investorId);
                         setInvestorStatementModalOpen(true);
                       }}
-                      className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 hover:text-white border border-purple-500/30 text-xs font-bold transition-all shadow-sm"
+                      icon={<TrendingUp className="h-5 w-5 text-purple-700" />}
                     >
-                      <TrendingUp className="h-3.5 w-3.5" />
-                      <span>View Statement / Export</span>
-                    </button>
+                      View Statement / Export
+                    </AccessibleButton>
                   </div>
-                </div>
+                </AccessibleCard>
               );
             })}
             {investorFunding.length === 0 && (
-              <div className="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-500">
+              <div className="col-span-full p-12 text-center bg-white border-2 border-stone-200 rounded-3xl text-stone-500 font-medium text-base">
                 No outside investors configured for this deal.
               </div>
             )}
@@ -922,15 +926,15 @@ export const DealDetail: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 6: PARTNERS (REQUIREMENT 12) */}
+      {/* TAB 6: PARTNERS */}
       {/* ========================================================================= */}
       {activeTab === 'partners' && (
         <div className="space-y-6">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h3 className="text-2xl font-extrabold text-stone-900">
             Company Partners Equity & Deployed Capital
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {partnerFunding.map((prtF: any) => {
               const capital = Number(prtF.amount || 0);
               const princReturned = Number(prtF.principalReturned || 0);
@@ -939,45 +943,45 @@ export const DealDetail: React.FC = () => {
               const pending = Math.max(0, capital - princReturned);
 
               return (
-                <div key={prtF.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 shadow-xl">
+                <AccessibleCard key={prtF.id} className="p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-white">{prtF.partner?.name || 'Partner'}</h4>
-                      <p className="text-[11px] text-cyan-400 font-semibold">{prtF.partner?.partnerCode || 'PRT'}</p>
+                      <h4 className="text-lg font-bold text-stone-900">{prtF.partner?.name || 'Partner'}</h4>
+                      <p className="text-sm text-blue-800 font-bold">{prtF.partner?.partnerCode || 'PRT'}</p>
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                    <span className="px-3 py-1 rounded-full text-xs font-black bg-blue-100 text-blue-900 border border-blue-300">
                       {Number(prtF.percentage).toFixed(1)}% Share
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs pt-2 border-t border-slate-800">
+                  <div className="grid grid-cols-2 gap-3 text-base pt-3 border-t-2 border-stone-100">
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Capital Deployed</span>
-                      <p className="font-bold text-white font-mono mt-0.5">{formatCurrency(capital)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Capital Deployed</span>
+                      <p className="font-mono font-black text-stone-900 mt-0.5">{formatCurrency(capital)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Principal Returned</span>
-                      <p className="font-bold text-slate-200 font-mono mt-0.5">{formatCurrency(princReturned)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Principal Returned</span>
+                      <p className="font-mono font-bold text-stone-700 mt-0.5">{formatCurrency(princReturned)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Profit Share Earned</span>
-                      <p className="font-bold text-cyan-300 font-mono mt-0.5">{formatCurrency(profitShare)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Profit Share Earned</span>
+                      <p className="font-mono font-bold text-blue-900 mt-0.5">{formatCurrency(profitShare)}</p>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-semibold uppercase">Pending Capital</span>
-                      <p className="font-bold text-amber-300 font-mono mt-0.5">{formatCurrency(pending)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase block">Pending Capital</span>
+                      <p className="font-mono font-bold text-amber-900 mt-0.5">{formatCurrency(pending)}</p>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80 flex justify-between items-center text-xs">
-                    <span className="text-slate-400 font-semibold">Total Payout Settled</span>
-                    <span className="font-black text-cyan-200 font-mono text-sm">{formatCurrency(totalRet)}</span>
+                  <div className="p-4 rounded-xl bg-blue-50 border-2 border-blue-200 flex justify-between items-center text-base">
+                    <span className="text-blue-950 font-bold">Total Payout Settled</span>
+                    <span className="font-black text-blue-950 font-mono text-lg">{formatCurrency(totalRet)}</span>
                   </div>
-                </div>
+                </AccessibleCard>
               );
             })}
             {partnerFunding.length === 0 && (
-              <div className="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-500">
+              <div className="col-span-full p-12 text-center bg-white border-2 border-stone-200 rounded-3xl text-stone-500 font-medium text-base">
                 No company partners allocated in this deal syndication.
               </div>
             )}
@@ -986,44 +990,44 @@ export const DealDetail: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 7: PROFIT DISTRIBUTION (REQUIREMENT 12) */}
+      {/* TAB 7: PROFIT DISTRIBUTION */}
       {/* ========================================================================= */}
       {activeTab === 'distribution' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-slate-400 font-bold uppercase">Interest Received</span>
-              <p className="text-lg font-black text-white mt-1">{formatCurrency(interestRepaid)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-teal-400 font-bold uppercase">Company Commission</span>
-              <p className="text-lg font-black text-teal-300 mt-1">{formatCurrency(totalCompanyCommission)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-purple-400 font-bold uppercase">Investor Return</span>
-              <p className="text-lg font-black text-purple-300 mt-1">{formatCurrency(totalInvestorReturns)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-              <span className="text-[10px] text-cyan-400 font-bold uppercase">Partner Profit</span>
-              <p className="text-lg font-black text-cyan-300 mt-1">{formatCurrency(totalPartnerProfits)}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
-              <span className="text-[10px] text-emerald-400 font-bold uppercase">Company Net Profit</span>
-              <p className="text-lg font-black text-emerald-300 mt-1">{formatCurrency(totalCompanyProfit)}</p>
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            <AccessibleCard className="p-4">
+              <span className="text-xs text-stone-500 font-bold uppercase">Interest Received</span>
+              <p className="text-xl font-black text-stone-900 mt-1">{formatCurrency(interestRepaid)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-4">
+              <span className="text-xs text-stone-600 font-bold uppercase">Company Commission</span>
+              <p className="text-xl font-black text-stone-900 mt-1">{formatCurrency(totalCompanyCommission)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-4 bg-purple-50 border-purple-200">
+              <span className="text-xs text-purple-900 font-bold uppercase">Investor Return</span>
+              <p className="text-xl font-black text-purple-950 mt-1">{formatCurrency(totalInvestorReturns)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-4 bg-blue-50 border-blue-200">
+              <span className="text-xs text-blue-900 font-bold uppercase">Partner Profit</span>
+              <p className="text-xl font-black text-blue-950 mt-1">{formatCurrency(totalPartnerProfits)}</p>
+            </AccessibleCard>
+            <AccessibleCard className="p-4 bg-emerald-50 border-emerald-200">
+              <span className="text-xs text-emerald-900 font-bold uppercase">Company Net Profit</span>
+              <p className="text-xl font-black text-emerald-950 mt-1">{formatCurrency(totalCompanyProfit)}</p>
+            </AccessibleCard>
           </div>
 
-          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl">
-            <div className="p-4 bg-slate-950/60 border-b border-slate-800 flex items-center justify-between">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+          <AccessibleCard className="overflow-hidden p-0">
+            <div className="p-5 bg-stone-100 border-b-2 border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
                 Distribution Snapshots History
               </h4>
-              <span className="text-[11px] text-slate-400">All calculations locked immutably per collection</span>
+              <span className="text-sm text-stone-600 font-medium">All calculations locked immutably per collection</span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b border-slate-800 text-[11px] text-slate-400 uppercase font-bold">
+                  <tr className="border-b-2 border-stone-200 bg-stone-50 text-stone-800 font-bold">
                     <th className="p-4">Receipt #</th>
                     <th className="p-4 text-right">Principal Split</th>
                     <th className="p-4 text-right">Interest Split</th>
@@ -1033,26 +1037,26 @@ export const DealDetail: React.FC = () => {
                     <th className="p-4 text-right">Total Distributed</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-stone-200 text-stone-800">
                   {deal.distributions?.map((dist: any) => {
                     const compProf = dist.companyProfits?.[0];
                     const invTotal = dist.investorReturns?.reduce((s: number, i: any) => s + Number(i.totalPayout || 0), 0) || 0;
 
                     return (
-                      <tr key={dist.id} className="hover:bg-slate-800/40">
-                        <td className="p-4 font-mono font-bold text-emerald-400">{dist.repayment?.receiptNumber || 'RCP'}</td>
-                        <td className="p-4 text-right font-mono text-slate-300">{formatCurrency(dist.totalPrincipalSplit)}</td>
-                        <td className="p-4 text-right font-mono text-emerald-400">{formatCurrency(dist.totalInterestSplit)}</td>
-                        <td className="p-4 text-right font-mono text-purple-300">{formatCurrency(invTotal)}</td>
-                        <td className="p-4 text-right font-mono text-teal-300">{formatCurrency(compProf?.managementCommission || 0)}</td>
-                        <td className="p-4 text-right font-mono font-bold text-emerald-300">{formatCurrency(compProf?.totalCompanyProfit || 0)}</td>
-                        <td className="p-4 text-right font-mono font-bold text-white">{formatCurrency(dist.totalDistributed)}</td>
+                      <tr key={dist.id} className="hover:bg-stone-50">
+                        <td className="p-4 font-mono font-bold text-maroon-900">{dist.repayment?.receiptNumber || 'RCP'}</td>
+                        <td className="p-4 text-right font-mono font-medium">{formatCurrency(dist.totalPrincipalSplit)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(dist.totalInterestSplit)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-purple-900">{formatCurrency(invTotal)}</td>
+                        <td className="p-4 text-right font-mono font-medium">{formatCurrency(compProf?.managementCommission || 0)}</td>
+                        <td className="p-4 text-right font-mono font-black text-emerald-900">{formatCurrency(compProf?.totalCompanyProfit || 0)}</td>
+                        <td className="p-4 text-right font-mono font-black text-stone-900">{formatCurrency(dist.totalDistributed)}</td>
                       </tr>
                     );
                   })}
                   {(!deal.distributions || deal.distributions.length === 0) && (
                     <tr>
-                      <td colSpan={7} className="p-8 text-center text-slate-500">
+                      <td colSpan={7} className="p-12 text-center text-base font-medium text-stone-500">
                         No profit distribution snapshots generated yet.
                       </td>
                     </tr>
@@ -1060,53 +1064,53 @@ export const DealDetail: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          </div>
+          </AccessibleCard>
         </div>
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 8: LEDGER (JOURNAL ENTRIES) */}
+      {/* TAB 8: LEDGER */}
       {/* ========================================================================= */}
       {activeTab === 'ledger' && (
         <div className="space-y-6">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h3 className="text-2xl font-extrabold text-stone-900">
             Deal Double-Entry Accounting Journal
           </h3>
 
           <div className="space-y-4">
             {deal.transactions?.map((t: any) => (
-              <div key={t.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 shadow-xl">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <AccessibleCard key={t.id} className="p-6 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-stone-200 pb-3">
                   <div>
-                    <span className="text-xs font-mono font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+                    <span className="text-sm font-mono font-bold text-blue-900 bg-blue-100 px-3 py-1 rounded-xl border border-blue-300">
                       {t.transactionNo}
                     </span>
-                    <span className="text-xs text-white font-bold ml-2.5">{t.description}</span>
+                    <span className="text-base text-stone-900 font-bold ml-3">{t.description}</span>
                   </div>
-                  <span className="text-xs text-slate-400 font-mono">{formatDate(t.transactionDate)}</span>
+                  <span className="text-sm text-stone-500 font-mono font-bold">{formatDate(t.transactionDate)}</span>
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
+                  <table className="w-full text-left text-base">
                     <thead>
-                      <tr className="text-[11px] text-slate-500 uppercase font-semibold">
+                      <tr className="text-sm text-stone-600 uppercase font-bold border-b border-stone-200">
                         <th className="pb-2">Account Code & Name</th>
                         <th className="pb-2">Narration</th>
                         <th className="pb-2 text-right">Debit (Dr)</th>
                         <th className="pb-2 text-right">Credit (Cr)</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-stone-100 text-stone-800">
                       {t.ledgerEntries?.map((entry: any, i: number) => (
-                        <tr key={i} className="hover:bg-slate-800/30">
-                          <td className="py-2 font-mono font-bold text-slate-300">
+                        <tr key={i} className="hover:bg-stone-50">
+                          <td className="py-2.5 font-mono font-bold text-stone-900">
                             {entry.account?.accountCode} - {entry.account?.accountName}
                           </td>
-                          <td className="py-2 text-slate-400">{entry.narration}</td>
-                          <td className="py-2 text-right font-mono font-bold text-emerald-400">
+                          <td className="py-2.5 text-stone-600">{entry.narration}</td>
+                          <td className="py-2.5 text-right font-mono font-bold text-emerald-800">
                             {Number(entry.debit) > 0 ? formatCurrency(entry.debit) : '-'}
                           </td>
-                          <td className="py-2 text-right font-mono font-bold text-blue-400">
+                          <td className="py-2.5 text-right font-mono font-bold text-blue-900">
                             {Number(entry.credit) > 0 ? formatCurrency(entry.credit) : '-'}
                           </td>
                         </tr>
@@ -1114,10 +1118,10 @@ export const DealDetail: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </AccessibleCard>
             ))}
             {(!deal.transactions || deal.transactions.length === 0) && (
-              <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-500">
+              <div className="p-12 text-center bg-white border-2 border-stone-200 rounded-3xl text-stone-500 font-medium text-base">
                 No ledger transactions posted yet for this deal.
               </div>
             )}
@@ -1126,34 +1130,34 @@ export const DealDetail: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 9: AUDIT (TIMELINE & LOGS) */}
+      {/* TAB 9: AUDIT */}
       {/* ========================================================================= */}
       {activeTab === 'audit' && (
         <div className="space-y-6">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h3 className="text-2xl font-extrabold text-stone-900">
             Deal Audit History & Creation Details
           </h3>
 
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 shadow-xl text-xs">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-slate-500 font-semibold uppercase">Created By</span>
-                <p className="font-bold text-white mt-1">{deal.createdBy?.fullName || 'System Admin'}</p>
-                <p className="text-[11px] text-slate-400 mt-0.5">Role: {deal.createdBy?.role || 'SUPER_ADMIN'} • Created: {formatDate(deal.createdAt)}</p>
+          <AccessibleCard className="p-6 space-y-6 text-base">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+                <span className="text-xs text-stone-500 font-bold uppercase block">Created By</span>
+                <p className="text-lg font-bold text-stone-900 mt-1">{deal.createdBy?.fullName || 'System Admin'}</p>
+                <p className="text-sm text-stone-600 mt-0.5">Role: {deal.createdBy?.role || 'SUPER_ADMIN'} • Created: {formatDate(deal.createdAt)}</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-slate-500 font-semibold uppercase">Approved By</span>
-                <p className="font-bold text-emerald-400 mt-1">{deal.approvedBy?.fullName || 'Chief Investment Officer'}</p>
-                <p className="text-[11px] text-slate-400 mt-0.5">Approved Date: {deal.approvedAt ? formatDate(deal.approvedAt) : 'Pending'}</p>
+              <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+                <span className="text-xs text-stone-500 font-bold uppercase block">Approved By</span>
+                <p className="text-lg font-bold text-emerald-900 mt-1">{deal.approvedBy?.fullName || 'Chief Investment Officer'}</p>
+                <p className="text-sm text-stone-600 mt-0.5">Approved Date: {deal.approvedAt ? formatDate(deal.approvedAt) : 'Pending'}</p>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-              <span className="text-slate-500 font-semibold uppercase block mb-1">Deal Purpose & Audit Notes</span>
-              <p className="text-slate-300 font-medium">{deal.notes || deal.purpose || 'Standard private finance syndication deal.'}</p>
+            <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
+              <span className="text-xs text-stone-500 font-bold uppercase block mb-1">Deal Purpose & Audit Notes</span>
+              <p className="text-stone-800 font-medium leading-relaxed">{deal.notes || deal.purpose || 'Standard private finance syndication deal.'}</p>
             </div>
-          </div>
+          </AccessibleCard>
         </div>
       )}
 
@@ -1194,65 +1198,55 @@ export const DealDetail: React.FC = () => {
         subtitle={`Updating Deal ${deal.dealNumber}`}
         maxWidth="md"
       >
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Deal Purpose
-            </label>
-            <input
-              type="text"
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
+        <form onSubmit={handleUpdate} className="space-y-5">
+          <AccessibleInput
+            label="Deal Purpose"
+            type="text"
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+          />
+
+          <AccessibleSelect
+            label="Deal Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="DRAFT">DRAFT</option>
+            <option value="PENDING_APPROVAL">PENDING_APPROVAL</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="OVERDUE">OVERDUE</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </AccessibleSelect>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Deal Status
-            </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            >
-              <option value="DRAFT">DRAFT</option>
-              <option value="PENDING_APPROVAL">PENDING_APPROVAL</option>
-              <option value="APPROVED">APPROVED</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="COMPLETED">COMPLETED</option>
-              <option value="OVERDUE">OVERDUE</option>
-              <option value="CANCELLED">CANCELLED</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-base font-semibold text-stone-800 mb-2">
               Internal Remarks & Notes
             </label>
             <textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-white border-2 border-stone-300 rounded-xl px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-4 focus:ring-maroon-800/20"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="flex items-center justify-end gap-3 pt-6 border-t-2 border-stone-200">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
+              variant="primary"
               disabled={updateDealMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm disabled:opacity-50"
             >
               {updateDealMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </button>
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -1267,14 +1261,14 @@ export const DealDetail: React.FC = () => {
         isLoading={deleteDealMutation.isPending}
       />
 
-      {/* Type 1: Client Payment Schedule Modal (Client-facing branded letterhead) */}
+      {/* Type 1: Client Payment Schedule Modal */}
       <ClientPaymentScheduleModal
         isOpen={clientScheduleModalOpen}
         onClose={() => setClientScheduleModalOpen(false)}
         deal={deal}
       />
 
-      {/* Type 2: Investor Payment Statement Modal (Internal/Investor-facing statement) */}
+      {/* Type 2: Investor Payment Statement Modal */}
       <InvestorStatementModal
         isOpen={investorStatementModalOpen}
         onClose={() => setInvestorStatementModalOpen(false)}

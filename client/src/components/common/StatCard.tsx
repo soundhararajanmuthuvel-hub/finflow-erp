@@ -1,5 +1,5 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import clsx from 'clsx';
 
 interface StatCardProps {
@@ -11,7 +11,8 @@ interface StatCardProps {
     value: string;
     isPositive: boolean;
   };
-  colorScheme?: 'emerald' | 'blue' | 'purple' | 'amber' | 'rose' | 'slate';
+  colorScheme?: 'maroon' | 'emerald' | 'blue' | 'purple' | 'amber' | 'rose' | 'slate';
+  onClick?: () => void;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -20,39 +21,52 @@ export const StatCard: React.FC<StatCardProps> = ({
   subtitle,
   icon: Icon,
   trend,
-  colorScheme = 'emerald',
+  colorScheme = 'maroon',
+  onClick,
 }) => {
   const getColors = () => {
     switch (colorScheme) {
+      case 'maroon':
+        return {
+          cardBorder: 'border-[#D6CFC4] hover:border-[#8B1A1A]',
+          iconBg: 'bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF]',
+          accentBar: 'bg-[#8B1A1A]',
+        };
       case 'emerald':
         return {
-          bg: 'from-emerald-500/10 to-transparent border-emerald-500/20',
-          iconBg: 'bg-emerald-500/20 text-emerald-400',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#1F6B3A]',
+          iconBg: 'bg-[#EAF5EE] text-[#1F6B3A] border-2 border-[#A7D9B7]',
+          accentBar: 'bg-[#1F6B3A]',
         };
       case 'blue':
         return {
-          bg: 'from-blue-500/10 to-transparent border-blue-500/20',
-          iconBg: 'bg-blue-500/20 text-blue-400',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#1E3A8A]',
+          iconBg: 'bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE]',
+          accentBar: 'bg-[#1E3A8A]',
         };
       case 'purple':
         return {
-          bg: 'from-purple-500/10 to-transparent border-purple-500/20',
-          iconBg: 'bg-purple-500/20 text-purple-400',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#6B21A8]',
+          iconBg: 'bg-[#F3E8FF] text-[#6B21A8] border-2 border-[#D8B4FE]',
+          accentBar: 'bg-[#6B21A8]',
         };
       case 'amber':
         return {
-          bg: 'from-amber-500/10 to-transparent border-amber-500/20',
-          iconBg: 'bg-amber-500/20 text-amber-400',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#B45309]',
+          iconBg: 'bg-[#FEF3C7] text-[#B45309] border-2 border-[#FDE68A]',
+          accentBar: 'bg-[#B45309]',
         };
       case 'rose':
         return {
-          bg: 'from-rose-500/10 to-transparent border-rose-500/20',
-          iconBg: 'bg-rose-500/20 text-rose-400',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#B91C1C]',
+          iconBg: 'bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA]',
+          accentBar: 'bg-[#B91C1C]',
         };
       default:
         return {
-          bg: 'from-slate-500/10 to-transparent border-slate-700/50',
-          iconBg: 'bg-slate-800 text-slate-300',
+          cardBorder: 'border-[#D6CFC4] hover:border-[#3F3F46]',
+          iconBg: 'bg-[#F4F4F5] text-[#18181B] border-2 border-[#D4D4D8]',
+          accentBar: 'bg-[#3F3F46]',
         };
     }
   };
@@ -61,28 +75,50 @@ export const StatCard: React.FC<StatCardProps> = ({
 
   return (
     <div
+      onClick={onClick}
       className={clsx(
-        'relative overflow-hidden rounded-2xl bg-gradient-to-b p-5 border shadow-card transition-all duration-300 hover:border-slate-600 bg-slate-900/60 backdrop-blur-md',
-        colors.bg
+        'relative bg-white rounded-2xl p-6 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between overflow-hidden',
+        colors.cardBorder,
+        onClick && 'cursor-pointer hover:shadow-warm-lg'
       )}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">{title}</p>
-          <h3 className="mt-2 text-2xl font-bold tracking-tight text-white">{value}</h3>
-          {subtitle && <p className="mt-1 text-xs text-slate-400">{subtitle}</p>}
+      {/* Top Accent Strip */}
+      <div className={clsx('absolute top-0 left-0 right-0 h-1.5', colors.accentBar)} />
+
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-base sm:text-lg font-bold text-[#3F3F46] tracking-wide uppercase leading-snug">
+            {title}
+          </p>
+          <div className="mt-3 text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight truncate leading-tight">
+            {value}
+          </div>
+          {subtitle && (
+            <p className="mt-2 text-base font-semibold text-[#52525B] leading-relaxed">
+              {subtitle}
+            </p>
+          )}
         </div>
-        <div className={clsx('rounded-xl p-3 shadow-inner', colors.iconBg)}>
-          <Icon className="h-6 w-6" />
+
+        <div className={clsx('rounded-xl p-3.5 shrink-0 shadow-sm', colors.iconBg)}>
+          <Icon className="h-7 w-7 stroke-[2.2]" aria-hidden="true" />
         </div>
       </div>
 
       {trend && (
-        <div className="mt-4 flex items-center gap-1.5 text-xs">
-          <span className={trend.isPositive ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
-            {trend.value}
-          </span>
-          <span className="text-slate-500">vs last month</span>
+        <div className="mt-4 pt-3 border-t border-[#EDE7DE] flex items-center gap-2 text-base font-bold">
+          {trend.isPositive ? (
+            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2 py-0.5 rounded-md">
+              <ArrowUpRight className="h-5 w-5" />
+              {trend.value}
+            </span>
+          ) : (
+            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2 py-0.5 rounded-md">
+              <ArrowDownRight className="h-5 w-5" />
+              {trend.value}
+            </span>
+          )}
+          <span className="text-[#52525B] font-medium">vs last period</span>
         </div>
       )}
     </div>

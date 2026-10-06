@@ -3,7 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Modal } from '../../components/common/Modal';
 import apiClient from '../../api/client';
 import { formatCurrency } from '../../utils/formatters';
-import { AlertCircle, PlusCircle } from 'lucide-react';
+import { AlertCircle, PlusCircle, Building2, User, TrendingUp } from 'lucide-react';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+} from '../../components/common/AccessibleComponents';
 
 interface AddFundingModalProps {
   isOpen: boolean;
@@ -75,7 +80,7 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
 
     if (numAmount > remainingCap) {
       setErrorMsg(
-        `Amount (₹${numAmount}) exceeds remaining unallocated funding capacity of ₹${remainingCap}`
+        `Amount (${formatCurrency(numAmount)}) exceeds remaining unallocated funding capacity of ${formatCurrency(remainingCap)}`
       );
       return;
     }
@@ -101,9 +106,9 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
   };
 
   const handleClose = () => {
-    setErrorMsg(null);
     setAmount('');
     setNotes('');
+    setErrorMsg(null);
     onClose();
   };
 
@@ -111,145 +116,138 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Add Funding Participant"
-      subtitle={`Approved Deal: ${formatCurrency(approvedAmount)} • Remaining unallocated: ${formatCurrency(remainingCap)}`}
-      maxWidth="lg"
+      title="Add Capital Participant"
+      subtitle="Allocate funding tranche from company, partner, or outside investor"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Remaining Capacity Card */}
+        <div className="p-5 rounded-2xl bg-[#EFF6FF] border-2 border-[#BFDBFE] flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-[#1E3A8A] uppercase tracking-wider block">
+              Remaining Unfunded Gap
+            </span>
+            <p className="text-2xl font-black text-[#1E3A8A] mt-0.5">
+              {formatCurrency(remainingCap)}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-xs font-bold text-[#52525B] uppercase tracking-wider block">
+              Deal Approved Total
+            </span>
+            <p className="text-lg font-bold text-[#1A1A1A]">{formatCurrency(approvedAmount)}</p>
+          </div>
+        </div>
+
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-2 text-rose-400 text-xs">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+          <div
+            role="alert"
+            className="p-4 rounded-2xl bg-[#FEE2E2] border-2 border-[#FECACA] text-[#B91C1C] flex items-start gap-3 text-base font-bold"
+          >
+            <AlertCircle className="h-6 w-6 shrink-0 mt-0.5 stroke-[2.3]" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-            Participant Funding Type
+        {/* Source Type Radios */}
+        <div className="space-y-2">
+          <label className="block text-base sm:text-lg font-bold text-[#1A1A1A]">
+            Capital Source Category (Required)
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { id: 'COMPANY', label: 'Company Capital' },
-              { id: 'PARTNER', label: 'Company Partner' },
-              { id: 'OUTSIDE_INVESTOR', label: 'Outside Investor' },
-            ].map((t) => (
+              { type: 'OUTSIDE_INVESTOR', label: 'Outside Investor', icon: TrendingUp },
+              { type: 'PARTNER', label: 'Company Partner', icon: User },
+              { type: 'COMPANY', label: 'Company Capital', icon: Building2 },
+            ].map((st) => (
               <button
+                key={st.type}
                 type="button"
-                key={t.id}
-                onClick={() => setSourceType(t.id as any)}
-                className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all text-center ${
-                  sourceType === t.id
-                    ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                onClick={() => setSourceType(st.type as any)}
+                className={`h-16 px-4 rounded-xl border-2 font-bold text-base flex items-center justify-center gap-2.5 transition-all ${
+                  sourceType === st.type
+                    ? 'bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-md'
+                    : 'bg-white text-[#1A1A1A] border-[#D6CFC4] hover:border-[#8B1A1A]'
                 }`}
               >
-                {t.label}
+                <st.icon className="h-5 w-5 stroke-[2.3]" />
+                <span>{st.label}</span>
               </button>
             ))}
           </div>
         </div>
 
+        {/* Participant Selection */}
         {sourceType === 'PARTNER' && (
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Select Partner
-            </label>
-            <select
-              value={partnerId}
-              onChange={(e) => setPartnerId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              required
-            >
-              <option value="">Select a partner...</option>
-              {partners?.map((p: any) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} ({p.partnerCode})
-                </option>
-              ))}
-            </select>
-          </div>
+          <AccessibleSelect
+            label="Select Company Partner"
+            required
+            value={partnerId}
+            onChange={(e) => setPartnerId(e.target.value)}
+          >
+            <option value="">-- Choose registered partner --</option>
+            {partners?.map((p: any) => (
+              <option key={p.id} value={p.id}>
+                {p.name} ({p.partnerCode})
+              </option>
+            ))}
+          </AccessibleSelect>
         )}
 
         {sourceType === 'OUTSIDE_INVESTOR' && (
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Select Outside Investor
-            </label>
-            <select
-              value={investorId}
-              onChange={(e) => setInvestorId(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              required
-            >
-              <option value="">Select an investor...</option>
-              {investors?.map((inv: any) => (
-                <option key={inv.id} value={inv.id}>
-                  {inv.name} ({inv.investorCode})
-                </option>
-              ))}
-            </select>
-          </div>
+          <AccessibleSelect
+            label="Select Outside Investor"
+            required
+            value={investorId}
+            onChange={(e) => setInvestorId(e.target.value)}
+          >
+            <option value="">-- Choose registered investor --</option>
+            {investors?.map((inv: any) => (
+              <option key={inv.id} value={inv.id}>
+                {inv.name} ({inv.investorCode})
+              </option>
+            ))}
+          </AccessibleSelect>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Funding Amount (₹) *
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              required
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="e.g. 25000"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
+        {/* Amount & Expected Return Rate */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <AccessibleInput
+            label="Funding Amount (₹)"
+            type="number"
+            required
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="e.g. 50000"
+            max={remainingCap}
+          />
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Expected Return Rate (% p.a.)
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              value={expectedReturnRate}
-              onChange={(e) => setExpectedReturnRate(e.target.value)}
-              placeholder="e.g. 12"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-            Notes / Syndication Terms
-          </label>
-          <textarea
-            rows={2}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="e.g. Committed capital for 10-week cycle"
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-emerald-500"
+          <AccessibleInput
+            label="Expected ROI Return Rate (%)"
+            type="number"
+            value={expectedReturnRate}
+            onChange={(e) => setExpectedReturnRate(e.target.value)}
+            placeholder="12"
           />
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
-          >
+        <AccessibleInput
+          label="Internal Notes / Covenants"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="e.g. Committed via Cheque / Bank Transfer"
+        />
+
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <AccessibleButton type="button" variant="outline" onClick={handleClose}>
             Cancel
-          </button>
-          <button
+          </AccessibleButton>
+          <AccessibleButton
             type="submit"
-            disabled={addFundingMutation.isPending}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+            variant="primary"
+            isLoading={addFundingMutation.isPending}
           >
-            {addFundingMutation.isPending ? 'Allocating...' : 'Add Funding Participant'}
-          </button>
+            Commit Capital
+          </AccessibleButton>
         </div>
       </form>
     </Modal>

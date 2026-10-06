@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { TrendingUp, ArrowLeft, Edit2, Trash2, CreditCard, ArrowUpRight } from 'lucide-react';
+import {
+  TrendingUp,
+  ArrowLeft,
+  ArrowRight,
+  Edit2,
+  Trash2,
+  CreditCard,
+  Building2,
+  Briefcase,
+  Phone,
+  Mail,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 import { StatusBadge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+} from '../../components/common/AccessibleComponents';
 import { formatCurrency, formatPercentage } from '../../utils/formatters';
 
 export const InvestorDetail: React.FC = () => {
@@ -84,14 +101,19 @@ export const InvestorDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="h-10 w-10 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+        <div className="h-14 w-14 border-4 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
+        <p className="text-xl font-bold text-[#1A1A1A]">Loading investor profile...</p>
       </div>
     );
   }
 
   if (!investor) {
-    return <div className="text-center py-12 text-slate-400">Investor not found</div>;
+    return (
+      <div className="text-center py-16 text-xl font-bold text-[#52525B]">
+        Investor record not found
+      </div>
+    );
   }
 
   const summary = investor.portfolioSummary || {
@@ -104,139 +126,182 @@ export const InvestorDetail: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Back button & Header Actions */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Navigation Breadcrumb & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => navigate('/investors')}
-          className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-lg font-bold text-[#8B1A1A] hover:underline"
         >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Investors</span>
+          <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
+          <span>Back to Investor Directory</span>
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <button
+        <div className="flex items-center gap-3">
+          <AccessibleButton
+            variant="outline"
+            size="compact"
+            icon={Edit2}
             onClick={handleOpenEdit}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 text-xs font-bold border border-slate-700 transition-all"
           >
-            <Edit2 className="h-3.5 w-3.5" />
-            <span>Edit Investor</span>
-          </button>
-          <button
+            Edit Profile
+          </AccessibleButton>
+          <AccessibleButton
+            variant="danger"
+            size="compact"
+            icon={Trash2}
             onClick={() => setIsDeleteModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-rose-400 hover:text-rose-300 text-xs font-bold border border-slate-700 transition-all"
           >
-            <Trash2 className="h-3.5 w-3.5" />
-            <span>Delete</span>
-          </button>
+            Delete
+          </AccessibleButton>
         </div>
       </div>
 
-      {/* Banner */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex items-start gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold text-lg">
-            <TrendingUp className="h-7 w-7" />
-          </div>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-white">{investor.name}</h1>
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-purple-400 font-semibold">
-                {investor.investorCode}
-              </span>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                investor.status === 'ACTIVE'
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-              }`}>
-                {investor.status || 'ACTIVE'}
-              </span>
+      {/* Investor Profile Banner Card */}
+      <AccessibleCard withTopAccent className="p-6 sm:p-8">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-start gap-4 sm:gap-5">
+            <div className="h-16 w-16 rounded-2xl bg-[#F3E8FF] text-[#6B21A8] border-2 border-[#D8B4FE] flex items-center justify-center font-black text-2xl shrink-0">
+              <TrendingUp className="h-8 w-8 stroke-[2.3]" />
             </div>
-            <p className="text-xs text-slate-400 mt-1">
-              Outside Capital Partner • Phone: {investor.phone} {investor.email ? `• ${investor.email}` : ''}
-            </p>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A]">
+                  {investor.name}
+                </h1>
+                <span className="font-mono text-sm px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#6B21A8] font-bold">
+                  {investor.investorCode}
+                </span>
+                <StatusBadge status={investor.status || 'ACTIVE'} size="md" />
+              </div>
+              <p className="text-base sm:text-lg font-bold text-[#52525B] mt-1">
+                Outside Capital Partner • Phone: {investor.phone} {investor.email ? `• ${investor.email}` : ''}
+              </p>
+            </div>
+          </div>
+
+          {/* Bank Details Strip */}
+          <div className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] flex items-center gap-4 text-base">
+            <CreditCard className="h-8 w-8 text-[#8B1A1A] shrink-0" />
+            <div>
+              <p className="font-bold text-[#1A1A1A] text-lg">
+                {investor.bankName || 'Bank Not Configured'}
+              </p>
+              <p className="text-[#52525B] font-mono text-sm font-semibold mt-0.5">
+                A/C: {investor.bankAccountNo || '—'} • IFSC: {investor.ifscCode || '—'}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Bank Details Strip */}
-        <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs flex items-center gap-4">
-          <CreditCard className="h-6 w-6 text-purple-400 shrink-0" />
-          <div>
-            <p className="font-bold text-white">{investor.bankName || 'Bank Not Configured'}</p>
-            <p className="text-slate-400 font-mono text-[11px]">
-              A/C: {investor.bankAccountNo || '—'} • IFSC: {investor.ifscCode || '—'}
+        {/* Aggregate Financial Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#52525B] uppercase">Total Capital Deployed</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#6B21A8] mt-1">
+              {formatCurrency(summary.totalInvested)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
+            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Principal Recovered</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+              {formatCurrency(summary.principalReturned)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Total ROI Earned</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+              {formatCurrency(summary.interestEarned)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
+            <span className="text-xs font-bold text-[#B45309] uppercase">Pending Capital</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1">
+              {formatCurrency(summary.pendingPrincipal)}
             </p>
           </div>
         </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Total Capital Deployed</span>
-          <p className="text-lg font-bold text-white mt-1">{formatCurrency(summary.totalInvested)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Principal Recovered</span>
-          <p className="text-lg font-bold text-emerald-400 mt-1">{formatCurrency(summary.principalReturned)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Total ROI Earned</span>
-          <p className="text-lg font-bold text-purple-400 mt-1">{formatCurrency(summary.interestEarned)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Pending Capital</span>
-          <p className="text-lg font-bold text-amber-400 mt-1">{formatCurrency(summary.pendingPrincipal)}</p>
-        </div>
-      </div>
+      </AccessibleCard>
 
       {/* Deals Participated */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-          Deal Participations ({investor.fundings?.length || 0})
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800">
-              <tr>
-                <th className="py-3 px-4">Deal Number</th>
-                <th className="py-3 px-4">Client Name</th>
-                <th className="py-3 px-4">Invested Amount</th>
-                <th className="py-3 px-4">Share %</th>
-                <th className="py-3 px-4">Principal Recovered</th>
-                <th className="py-3 px-4">Interest Earned</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">View Deal</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {investor.fundings?.map((f: any) => (
-                <tr key={f.id} className="hover:bg-slate-950/40">
-                  <td className="py-3 px-4 font-mono font-bold text-white">{f.deal.dealNumber}</td>
-                  <td className="py-3 px-4 font-semibold text-slate-200">{f.deal.client?.fullName}</td>
-                  <td className="py-3 px-4 font-bold text-white">{formatCurrency(f.amount)}</td>
-                  <td className="py-3 px-4 text-purple-400 font-semibold">{formatPercentage(f.percentage)}</td>
-                  <td className="py-3 px-4 text-emerald-400 font-semibold">{formatCurrency(f.principalReturned)}</td>
-                  <td className="py-3 px-4 text-teal-400 font-semibold">{formatCurrency(f.interestEarned)}</td>
-                  <td className="py-3 px-4">
-                    <StatusBadge status={f.deal.status} />
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <button
-                      onClick={() => navigate(`/deals/${f.deal.id}`)}
-                      className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                    >
-                      <ArrowUpRight className="h-4 w-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <AccessibleCard withTopAccent className="space-y-6">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-center gap-3">
+            <Briefcase className="h-6 w-6 text-[#8B1A1A] stroke-[2.3]" />
+            <h3 className="text-2xl font-bold text-[#1A1A1A]">
+              Deal Participations ({investor.fundings?.length || 0} Deals)
+            </h3>
+          </div>
         </div>
-      </div>
+
+        {investor.fundings && investor.fundings.length > 0 ? (
+          <div className="overflow-x-auto rounded-xl border-2 border-[#D6CFC4]">
+            <table className="w-full text-left text-base">
+              <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
+                <tr>
+                  <th className="py-4 px-5 text-sm uppercase">Deal Number</th>
+                  <th className="py-4 px-5 text-sm uppercase">Client Name</th>
+                  <th className="py-4 px-5 text-sm uppercase">Invested Amount</th>
+                  <th className="py-4 px-5 text-sm uppercase">Share %</th>
+                  <th className="py-4 px-5 text-sm uppercase">Principal Recovered</th>
+                  <th className="py-4 px-5 text-sm uppercase">Interest Earned</th>
+                  <th className="py-4 px-5 text-sm uppercase">Status</th>
+                  <th className="py-4 px-5 text-sm uppercase text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+                {investor.fundings.map((f: any) => (
+                  <tr
+                    key={f.id}
+                    onClick={() => navigate(`/deals/${f.deal?.id}`)}
+                    className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
+                  >
+                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg">
+                      {f.deal?.dealNumber}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-lg">
+                      {f.deal?.client?.fullName}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-lg text-[#6B21A8]">
+                      {formatCurrency(f.amount)}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-[#1A1A1A]">
+                      {formatPercentage(f.percentage)}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                      {formatCurrency(f.principalReturned)}
+                    </td>
+                    <td className="py-4 px-5 font-extrabold text-lg text-[#1F6B3A]">
+                      {formatCurrency(f.interestEarned)}
+                    </td>
+                    <td className="py-4 px-5">
+                      <StatusBadge status={f.deal?.status} size="sm" />
+                    </td>
+                    <td className="py-4 px-5 text-right">
+                      <AccessibleButton
+                        variant="secondary"
+                        size="compact"
+                        icon={ArrowRight}
+                        iconPosition="right"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/deals/${f.deal?.id}`);
+                        }}
+                      >
+                        View
+                      </AccessibleButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-10 text-base font-semibold text-[#52525B]">
+            No deal syndications recorded for this investor yet.
+          </div>
+        )}
+      </AccessibleCard>
 
       {/* Edit Investor Modal */}
       <Modal
@@ -245,100 +310,79 @@ export const InvestorDetail: React.FC = () => {
         title="Edit Investor Profile"
         subtitle={`Updating information for ${investor.investorCode}`}
       >
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Investor Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Investor Full Name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Email Address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Bank Name
-              </label>
-              <input
-                type="text"
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Account Number
-              </label>
-              <input
-                type="text"
-                value={bankAccountNo}
-                onChange={(e) => setBankAccountNo(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="BLOCKED">BLOCKED</option>
-              </select>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="Bank Name"
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Bank Account Number"
+              value={bankAccountNo}
+              onChange={(e) => setBankAccountNo(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="IFSC Code"
+              value={ifscCode}
+              onChange={(e) => setIfscCode(e.target.value)}
+            />
+          </div>
+
+          <AccessibleSelect
+            label="Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            options={[
+              { value: 'ACTIVE', label: 'ACTIVE' },
+              { value: 'INACTIVE', label: 'INACTIVE' },
+              { value: 'BLOCKED', label: 'BLOCKED' },
+            ]}
+          />
+
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={updateInvestorMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={updateInvestorMutation.isPending}
             >
-              {updateInvestorMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </button>
+              Save Changes
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -356,3 +400,5 @@ export const InvestorDetail: React.FC = () => {
     </div>
   );
 };
+
+export default InvestorDetail;

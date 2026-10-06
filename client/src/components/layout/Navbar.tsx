@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Bell, Search, LogOut } from 'lucide-react';
+import { Bell, Search, LogOut, Menu, X, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../../api/client';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onOpenMobileMenu?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
   const { user, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -20,69 +24,97 @@ export const Navbar: React.FC = () => {
   const unreadCount = notificationsData?.filter((n: any) => !n.isRead).length || 0;
 
   return (
-    <header className="h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 flex items-center justify-between px-6 sticky top-0 z-30">
-      {/* Global Quick Search */}
-      <div className="flex items-center gap-3 w-96">
+    <header className="h-20 bg-white border-b-2 border-[#D6CFC4] flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30 shadow-sm">
+      {/* Left Area: Mobile Menu Toggle & Global Search */}
+      <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xl">
+        {onOpenMobileMenu && (
+          <button
+            onClick={onOpenMobileMenu}
+            className="lg:hidden h-12 w-12 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] flex items-center justify-center text-[#1A1A1A] shrink-0"
+            aria-label="Open Navigation Menu"
+          >
+            <Menu className="h-6 w-6 stroke-[2.3]" />
+          </button>
+        )}
+
         <div className="relative w-full">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#52525B] stroke-[2.2]" />
           <input
             type="text"
-            placeholder="Search deals, clients, investors, receipts..."
-            className="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+            placeholder="Search deals, clients, investors..."
+            className="w-full h-12 bg-[#FAF7F2] border-2 border-[#D6CFC4] rounded-xl pl-12 pr-4 text-base text-[#1A1A1A] placeholder-[#71717A] focus:outline-none focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 transition-all"
           />
         </div>
       </div>
 
-      {/* Right Controls */}
-      <div className="flex items-center gap-4">
+      {/* Right Area: In-App Notifications & Sign Out */}
+      <div className="flex items-center gap-3 sm:gap-4 ml-4">
         {/* In-App Notifications */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="relative h-12 px-3 sm:px-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] text-[#1A1A1A] flex items-center gap-2 font-bold text-base transition-colors"
+            aria-label="Notifications"
           >
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 text-[#8B1A1A] stroke-[2.3]" />
+            <span className="hidden sm:inline">Alerts</span>
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-slate-900" />
+              <span className="inline-flex items-center justify-center bg-[#B91C1C] text-white text-xs font-black rounded-full h-6 min-w-[24px] px-1.5 shadow-sm">
+                {unreadCount}
+              </span>
             )}
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-4 z-50">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">Notifications</h4>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">
-                  {unreadCount} new
-                </span>
+            <div className="absolute right-0 mt-3 w-84 sm:w-96 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-modal p-5 z-50">
+              <div className="flex items-center justify-between pb-3 border-b-2 border-[#EDE7DE]">
+                <h4 className="text-base font-bold text-[#1A1A1A] uppercase tracking-wider">
+                  Notifications & Alerts
+                </h4>
+                <button
+                  onClick={() => setShowNotifications(false)}
+                  className="p-1 rounded-lg text-[#52525B] hover:text-[#1A1A1A]"
+                >
+                  <X className="h-5 w-5 stroke-[2.5]" />
+                </button>
               </div>
-              <div className="mt-2 space-y-2 max-h-64 overflow-y-auto">
+
+              <div className="mt-3 space-y-2.5 max-h-80 overflow-y-auto">
                 {notificationsData && notificationsData.length > 0 ? (
-                  notificationsData.slice(0, 5).map((n: any) => (
-                    <div key={n.id} className="p-2.5 rounded-xl bg-slate-950/50 border border-slate-800/80 text-xs">
-                      <p className="font-semibold text-slate-200">{n.title}</p>
-                      <p className="text-slate-400 text-[11px] mt-0.5">{n.message}</p>
+                  notificationsData.slice(0, 6).map((n: any) => (
+                    <div
+                      key={n.id}
+                      className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#EDE7DE] text-base"
+                    >
+                      <p className="font-bold text-[#1A1A1A]">{n.title}</p>
+                      <p className="text-[#52525B] text-sm font-medium mt-1">{n.message}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-slate-500 text-center py-4">No recent notifications</p>
+                  <div className="text-center py-6 text-base font-semibold text-[#52525B]">
+                    <CheckCircle2 className="h-8 w-8 text-[#1F6B3A] mx-auto mb-2 stroke-[2]" />
+                    No unread notifications
+                  </div>
                 )}
               </div>
             </div>
           )}
         </div>
 
-        {/* User Info & Logout */}
-        <div className="flex items-center gap-3 border-l border-slate-800 pl-4">
-          <div className="text-right hidden sm:block">
-            <p className="text-xs font-bold text-white">{user?.fullName}</p>
-            <p className="text-[10px] text-emerald-400 uppercase tracking-widest">{user?.role}</p>
+        {/* User Info & Prominent Sign Out Button */}
+        <div className="flex items-center gap-3 border-l-2 border-[#EDE7DE] pl-3 sm:pl-4">
+          <div className="text-right hidden md:block">
+            <p className="text-base font-bold text-[#1A1A1A] leading-tight">{user?.fullName}</p>
+            <p className="text-xs font-bold text-[#8B1A1A] uppercase tracking-wider">{user?.role}</p>
           </div>
+
           <button
             onClick={logout}
             title="Sign Out"
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+            className="h-12 px-4 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-base flex items-center gap-2 shadow-sm transition-all cursor-pointer"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-5 w-5 stroke-[2.5]" />
+            <span className="hidden sm:inline">Sign Out</span>
           </button>
         </div>
       </div>

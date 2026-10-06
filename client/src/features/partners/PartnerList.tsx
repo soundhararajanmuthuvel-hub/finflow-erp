@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Plus, Landmark, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Landmark, Edit2, Trash2, Phone, Mail, Percent, Wallet } from 'lucide-react';
 import apiClient from '../../api/client';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
+import { StatusBadge } from '../../components/common/Badge';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+  AccessibleEmptyState,
+} from '../../components/common/AccessibleComponents';
 import { formatCurrency, formatPercentage } from '../../utils/formatters';
 
 export const PartnerList: React.FC = () => {
@@ -126,92 +134,180 @@ export const PartnerList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Company Partners & Capital</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage company co-owners, equity shares, capital deployment across deals and profit drawings
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+            Company Partners & Capital
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+            Manage company co-owners, equity ownership shares, and partner profit distributions
           </p>
         </div>
-        <button
+        <AccessibleButton
+          variant="primary"
+          size="normal"
+          icon={Plus}
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white text-xs font-bold shadow-glow transition-all"
         >
-          <Plus className="h-4 w-4" />
-          <span>Add Partner</span>
-        </button>
+          Add New Partner
+        </AccessibleButton>
       </div>
 
-      {/* Partners Grid Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Desktop / Tablet High-Contrast Table View */}
+      <div className="hidden md:block rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-base">
+            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
+              <tr>
+                <th className="py-4 px-6 text-sm uppercase">Partner Code</th>
+                <th className="py-4 px-6 text-sm uppercase">Partner Name</th>
+                <th className="py-4 px-6 text-sm uppercase">Contact</th>
+                <th className="py-4 px-6 text-sm uppercase">Capital Contributed</th>
+                <th className="py-4 px-6 text-sm uppercase">Equity Share %</th>
+                <th className="py-4 px-6 text-sm uppercase">Status</th>
+                <th className="py-4 px-6 text-sm uppercase text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                    Loading partner records...
+                  </td>
+                </tr>
+              ) : partners?.length > 0 ? (
+                partners.map((p: any, index: number) => (
+                  <tr
+                    key={p.id}
+                    className={`hover:bg-[#FAF7F2] transition-colors ${
+                      index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
+                    }`}
+                  >
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                      {p.partnerCode}
+                    </td>
+                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                      {p.name}
+                    </td>
+                    <td className="py-5 px-6">
+                      <p className="font-bold text-[#1A1A1A]">{p.phone}</p>
+                      <p className="text-sm text-[#52525B] mt-0.5">{p.email || '—'}</p>
+                    </td>
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#1E3A8A]">
+                      {formatCurrency(p.capitalContribution)}
+                    </td>
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A]">
+                      {formatPercentage(p.sharePercentage)}
+                    </td>
+                    <td className="py-5 px-6">
+                      <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
+                    </td>
+                    <td className="py-5 px-6 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          title="Edit Partner"
+                          onClick={() => handleOpenEdit(p)}
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                        >
+                          <Edit2 className="h-4 w-4 stroke-[2.3]" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          title="Delete Partner"
+                          onClick={() => handleOpenDelete(p)}
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                        >
+                          <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="py-12">
+                    <AccessibleEmptyState
+                      icon={Landmark}
+                      title="No partners registered"
+                      description="Add company partners and equity stakeholders to record capital contribution."
+                      actionText="Add New Partner"
+                      onAction={handleOpenCreate}
+                      actionIcon={Plus}
+                    />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile Stacked Card View (<768px) */}
+      <div className="md:hidden space-y-4">
         {isLoading ? (
-          <div className="col-span-3 py-12 text-center text-slate-500">Loading partners...</div>
-        ) : partners?.map((p: any) => (
-          <div
-            key={p.id}
-            className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4 hover:border-slate-700 transition-all flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
-                    <Landmark className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white text-sm">{p.name}</h3>
-                    <span className="font-mono text-[11px] text-slate-400">{p.partnerCode}</span>
-                  </div>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
-                  {formatPercentage(p.sharePercentage)} Equity
-                </span>
-              </div>
-
-              <div className="divide-y divide-slate-800/60 text-xs pt-3">
-                <div className="py-2 flex justify-between">
-                  <span className="text-slate-500">Contact:</span>
-                  <span className="font-medium text-slate-300">{p.phone}</span>
-                </div>
-                <div className="py-2 flex justify-between">
-                  <span className="text-slate-500">Base Capital:</span>
-                  <span className="font-bold text-white">{formatCurrency(p.capitalContribution)}</span>
-                </div>
-                <div className="py-2 flex justify-between">
-                  <span className="text-slate-500">Deals Funded:</span>
-                  <span className="font-bold text-blue-400">{formatCurrency(p.totalInvested)}</span>
-                </div>
-                <div className="py-2 flex justify-between">
-                  <span className="text-slate-500">Principal Returned:</span>
-                  <span className="font-bold text-emerald-400">{formatCurrency(p.principalReturned)}</span>
-                </div>
-                <div className="py-2 flex justify-between">
-                  <span className="text-slate-500">Profit Earned:</span>
-                  <span className="font-bold text-teal-400">{formatCurrency(p.profitEarned)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Admin Action buttons */}
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800/80">
-              <button
-                onClick={() => handleOpenEdit(p)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-blue-400 text-xs font-semibold transition-colors"
-              >
-                <Edit2 className="h-3.5 w-3.5" />
-                <span>Edit</span>
-              </button>
-              <button
-                onClick={() => handleOpenDelete(p)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-rose-400 text-xs font-semibold transition-colors"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>Delete</span>
-              </button>
-            </div>
+          <div className="p-8 text-center text-lg font-bold text-[#52525B]">
+            Loading partner records...
           </div>
-        ))}
+        ) : partners?.length > 0 ? (
+          partners.map((p: any) => (
+            <AccessibleCard key={p.id} className="p-5">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b-2 border-[#EDE7DE]">
+                <div>
+                  <span className="font-mono text-sm font-bold text-[#8B1A1A] block">
+                    {p.partnerCode}
+                  </span>
+                  <h3 className="text-xl font-bold text-[#1A1A1A] mt-0.5">{p.name}</h3>
+                  <p className="text-base font-semibold text-[#52525B] mt-0.5">{p.phone}</p>
+                </div>
+                <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
+                <div>
+                  <p className="text-sm font-bold text-[#52525B] uppercase">Capital Contributed</p>
+                  <p className="text-lg font-extrabold text-[#1E3A8A] mt-0.5">
+                    {formatCurrency(p.capitalContribution)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#1F6B3A] uppercase">Equity Share</p>
+                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5">
+                    {formatPercentage(p.sharePercentage)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3">
+                <button
+                  onClick={() => handleOpenEdit(p)}
+                  className="h-12 px-4 rounded-xl bg-white border-2 border-[#D6CFC4] text-[#1E3A8A] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                >
+                  <Edit2 className="h-4 w-4" />
+                  <span>Edit</span>
+                </button>
+                <button
+                  onClick={() => handleOpenDelete(p)}
+                  className="h-12 px-4 rounded-xl bg-white border-2 border-[#FECACA] text-[#B91C1C] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Delete</span>
+                </button>
+              </div>
+            </AccessibleCard>
+          ))
+        ) : (
+          <AccessibleEmptyState
+            icon={Landmark}
+            title="No partners found"
+            description="Add your first company partner profile."
+            actionText="Add New Partner"
+            onAction={handleOpenCreate}
+            actionIcon={Plus}
+          />
+        )}
       </div>
 
       {/* Add Partner Modal */}
@@ -219,93 +315,69 @@ export const PartnerList: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         title="Add Company Partner"
-        subtitle="Register partner capital pool and equity share"
+        subtitle="Register company equity stakeholder"
       >
-        <form onSubmit={handleCreate} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Partner Name *
-            </label>
-            <input
-              type="text"
+        <form onSubmit={handleCreate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Partner Full Name"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Vikram Singhania"
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              placeholder="e.g. K. Soundhararajan"
+            />
+
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 98765 43210"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 98111 00001"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="partner@domain.in"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Capital Contribution (₹)"
+              type="number"
+              value={capitalContribution}
+              onChange={(e) => setCapitalContribution(e.target.value)}
+              placeholder="500000"
+            />
+
+            <AccessibleInput
+              label="Equity Share Percentage (%)"
+              type="number"
+              value={sharePercentage}
+              onChange={(e) => setSharePercentage(e.target.value)}
+              placeholder="25"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Base Capital Contribution (₹)
-              </label>
-              <input
-                type="number"
-                value={capitalContribution}
-                onChange={(e) => setCapitalContribution(e.target.value)}
-                placeholder="500000"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Equity Share (%)
-              </label>
-              <input
-                type="number"
-                value={sharePercentage}
-                onChange={(e) => setSharePercentage(e.target.value)}
-                placeholder="50"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-          </div>
+          <AccessibleInput
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="partner@domain.in"
+          />
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={createPartnerMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={createPartnerMutation.isPending}
             >
-              {createPartnerMutation.isPending ? 'Saving...' : 'Add Partner'}
-            </button>
+              Create Partner
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -314,103 +386,77 @@ export const PartnerList: React.FC = () => {
       <Modal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        title="Edit Partner"
-        subtitle={`Updating details for ${partnerToEdit?.partnerCode}`}
+        title="Edit Partner Profile"
+        subtitle={`Updating details for ${partnerToEdit?.partnerCode || ''}`}
       >
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Partner Name *
-            </label>
-            <input
-              type="text"
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Partner Full Name"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+            />
+
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Capital Contribution (₹)"
+              type="number"
+              value={capitalContribution}
+              onChange={(e) => setCapitalContribution(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="Equity Share Percentage (%)"
+              type="number"
+              value={sharePercentage}
+              onChange={(e) => setSharePercentage(e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Capital Contribution (₹)
-              </label>
-              <input
-                type="number"
-                value={capitalContribution}
-                onChange={(e) => setCapitalContribution(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Equity Share (%)
-              </label>
-              <input
-                type="number"
-                value={sharePercentage}
-                onChange={(e) => setSharePercentage(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="BLOCKED">BLOCKED</option>
-              </select>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <AccessibleSelect
+              label="Status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              options={[
+                { value: 'ACTIVE', label: 'ACTIVE' },
+                { value: 'INACTIVE', label: 'INACTIVE' },
+              ]}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={updatePartnerMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={updatePartnerMutation.isPending}
             >
-              {updatePartnerMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </button>
+              Save Changes
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -419,12 +465,16 @@ export const PartnerList: React.FC = () => {
       <ConfirmDeleteModal
         isOpen={!!partnerToDelete}
         onClose={() => setPartnerToDelete(null)}
-        onConfirm={() => deletePartnerMutation.mutate(partnerToDelete?.id)}
-        isLoading={deletePartnerMutation.isPending}
+        onConfirm={() => {
+          if (partnerToDelete) deletePartnerMutation.mutate(partnerToDelete.id);
+        }}
         title="Delete Partner Record"
-        message="Are you sure you want to permanently delete this partner? This action cannot be undone."
-        itemDescription={partnerToDelete ? `${partnerToDelete.partnerCode}: ${partnerToDelete.name}` : undefined}
+        message={`Are you sure you want to delete partner ${partnerToDelete?.name}?`}
+        itemDescription={`Partner Code: ${partnerToDelete?.partnerCode} — ${partnerToDelete?.name}`}
+        isLoading={deletePartnerMutation.isPending}
       />
     </div>
   );
 };
+
+export default PartnerList;

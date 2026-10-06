@@ -1,10 +1,30 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Edit2, Trash2, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  ArrowRight,
+  UserCheck,
+  Building,
+  Phone,
+  MapPin,
+  FileText,
+  Users,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
+import { StatusBadge } from '../../components/common/Badge';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+  AccessibleEmptyState,
+} from '../../components/common/AccessibleComponents';
 import { formatCurrency } from '../../utils/formatters';
 
 export const ClientList: React.FC = () => {
@@ -136,119 +156,120 @@ export const ClientList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Client Directory</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage client profiles, KYC documentation, active financings, and full administration
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+            Client Directory
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+            Manage client borrower profiles, active financings, and KYC records
           </p>
         </div>
-        <button
+        <AccessibleButton
+          variant="primary"
+          size="normal"
+          icon={Plus}
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-white text-xs font-bold shadow-glow transition-all"
         >
-          <Plus className="h-4 w-4" />
-          <span>Add New Client</span>
-        </button>
+          Add New Client
+        </AccessibleButton>
       </div>
 
-      {/* Search Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+      {/* Large Accessible Search Bar */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm">
+        <div className="relative max-w-xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[#52525B] stroke-[2.2]" />
           <input
             type="text"
             placeholder="Search by client name, business, phone, or PAN..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            className="w-full h-14 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-13 pr-4 text-lg font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
           />
         </div>
       </div>
 
-      {/* Clients Table */}
-      <div className="rounded-3xl border border-slate-800 bg-slate-900 overflow-hidden shadow-xl">
+      {/* Desktop / Tablet High-Contrast Table View */}
+      <div className="hidden md:block rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800">
+          <table className="w-full text-left text-base">
+            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-3.5 px-5">Client Code</th>
-                <th className="py-3.5 px-5">Client / Business</th>
-                <th className="py-3.5 px-5">Contact Details</th>
-                <th className="py-3.5 px-5">Total Finance</th>
-                <th className="py-3.5 px-5">Active Outstanding</th>
-                <th className="py-3.5 px-5">Deals</th>
-                <th className="py-3.5 px-5">Status</th>
-                <th className="py-3.5 px-5 text-right">Actions</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Client Code</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Client / Business</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Contact</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Total Finance</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Outstanding</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Deals</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider">Status</th>
+                <th className="py-4 px-6 text-sm uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-slate-500">
-                    Loading clients...
+                  <td colSpan={8} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                    Loading client directory...
                   </td>
                 </tr>
               ) : clients?.length > 0 ? (
-                clients.map((c: any) => (
+                clients.map((c: any, index: number) => (
                   <tr
                     key={c.id}
                     onClick={() => navigate(`/clients/${c.id}`)}
-                    className="hover:bg-slate-950/40 cursor-pointer transition-colors"
+                    className={`cursor-pointer hover:bg-[#FAF7F2] transition-colors ${
+                      index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
+                    }`}
                   >
-                    <td className="py-4 px-5 font-mono font-bold text-slate-400">{c.clientCode}</td>
-                    <td className="py-4 px-5">
-                      <p className="font-bold text-white">{c.fullName}</p>
-                      <p className="text-[11px] text-slate-500">{c.businessName || 'Individual'}</p>
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                      {c.clientCode}
                     </td>
-                    <td className="py-4 px-5">
-                      <p className="text-slate-300">{c.phone}</p>
-                      <p className="text-[11px] text-slate-500">{c.city || '—'}</p>
+                    <td className="py-5 px-6">
+                      <p className="font-bold text-lg text-[#1A1A1A]">{c.fullName}</p>
+                      <p className="text-sm font-semibold text-[#52525B] mt-0.5">
+                        {c.businessName || 'Individual'}
+                      </p>
                     </td>
-                    <td className="py-4 px-5 font-bold text-white">
+                    <td className="py-5 px-6">
+                      <p className="font-bold text-[#1A1A1A]">{c.phone}</p>
+                      <p className="text-sm text-[#52525B] font-medium mt-0.5">{c.city || '—'}</p>
+                    </td>
+                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
                       {formatCurrency(c.totalFinanceReceived)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-amber-400">
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#B45309]">
                       {formatCurrency(c.outstandingAmount)}
                     </td>
-                    <td className="py-4 px-5">
-                      <span className="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-[11px] font-semibold">
+                    <td className="py-5 px-6">
+                      <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
                         {c.dealsCount} deals
                       </span>
                     </td>
-                    <td className="py-4 px-5">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        c.status === 'ACTIVE'
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                      }`}>
-                        {c.status || 'ACTIVE'}
-                      </span>
+                    <td className="py-5 px-6">
+                      <StatusBadge status={c.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-4 px-5 text-right">
-                      <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    <td className="py-5 px-6 text-right">
+                      <div
+                        className="flex items-center justify-end gap-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button
                           title="Edit Client"
                           onClick={(e) => handleOpenEdit(c, e)}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 transition-colors"
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
                         >
-                          <Edit2 className="h-3.5 w-3.5" />
+                          <Edit2 className="h-4 w-4 stroke-[2.3]" />
+                          <span>Edit</span>
                         </button>
                         <button
                           title="Delete Client"
                           onClick={(e) => handleOpenDelete(c, e)}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/50 text-rose-400 hover:text-rose-300 transition-colors"
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          title="View Profile"
-                          onClick={() => navigate(`/clients/${c.id}`)}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                        >
-                          <ArrowUpRight className="h-3.5 w-3.5" />
+                          <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                          <span>Delete</span>
                         </button>
                       </div>
                     </td>
@@ -256,8 +277,15 @@ export const ClientList: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-slate-500">
-                    No clients registered yet.
+                  <td colSpan={8} className="py-12">
+                    <AccessibleEmptyState
+                      icon={Users}
+                      title="No clients found"
+                      description="Add your first client profile to manage financings and repayments."
+                      actionText="Add New Client"
+                      onAction={handleOpenCreate}
+                      actionIcon={Plus}
+                    />
                   </td>
                 </tr>
               )}
@@ -266,115 +294,175 @@ export const ClientList: React.FC = () => {
         </div>
       </div>
 
+      {/* Mobile Stacked Card List View (<768px, No Horizontal Scrolling) */}
+      <div className="md:hidden space-y-4">
+        {isLoading ? (
+          <div className="p-8 text-center text-lg font-bold text-[#52525B]">
+            Loading client directory...
+          </div>
+        ) : clients?.length > 0 ? (
+          clients.map((c: any) => (
+            <AccessibleCard
+              key={c.id}
+              onClick={() => navigate(`/clients/${c.id}`)}
+              className="p-5"
+            >
+              <div className="flex items-start justify-between gap-3 pb-3 border-b-2 border-[#EDE7DE]">
+                <div>
+                  <span className="font-mono text-sm font-bold text-[#8B1A1A] block">
+                    {c.clientCode}
+                  </span>
+                  <h3 className="text-xl font-bold text-[#1A1A1A] mt-0.5">{c.fullName}</h3>
+                  <p className="text-base font-semibold text-[#52525B] mt-0.5">
+                    {c.businessName || 'Individual'}
+                  </p>
+                </div>
+                <StatusBadge status={c.status || 'ACTIVE'} size="sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
+                <div>
+                  <p className="text-sm font-bold text-[#52525B] uppercase">Total Finance</p>
+                  <p className="text-lg font-bold text-[#1A1A1A] mt-0.5">
+                    {formatCurrency(c.totalFinanceReceived)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#B45309] uppercase">Outstanding</p>
+                  <p className="text-lg font-extrabold text-[#B45309] mt-0.5">
+                    {formatCurrency(c.outstandingAmount)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#52525B] uppercase">Phone</p>
+                  <p className="text-base font-bold text-[#1A1A1A] mt-0.5">{c.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#52525B] uppercase">Deals Count</p>
+                  <p className="text-base font-bold text-[#1A1A1A] mt-0.5">{c.dealsCount} deals</p>
+                </div>
+              </div>
+
+              <div
+                className="flex items-center justify-between gap-2 pt-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => handleOpenEdit(c, e)}
+                    className="h-12 px-4 rounded-xl bg-white border-2 border-[#D6CFC4] text-[#1E3A8A] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={(e) => handleOpenDelete(c, e)}
+                    className="h-12 px-4 rounded-xl bg-white border-2 border-[#FECACA] text-[#B91C1C] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>Delete</span>
+                  </button>
+                </div>
+
+                <AccessibleButton
+                  variant="secondary"
+                  size="compact"
+                  icon={ArrowRight}
+                  iconPosition="right"
+                  onClick={() => navigate(`/clients/${c.id}`)}
+                >
+                  View
+                </AccessibleButton>
+              </div>
+            </AccessibleCard>
+          ))
+        ) : (
+          <AccessibleEmptyState
+            icon={Users}
+            title="No clients found"
+            description="Add your first client profile to get started."
+            actionText="Add New Client"
+            onAction={handleOpenCreate}
+            actionIcon={Plus}
+          />
+        )}
+      </div>
+
       {/* Add Client Modal */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Add New Client"
-        subtitle="Create master record for financing applicant"
+        title="Add New Client Profile"
+        subtitle="Create master record for private finance applicant"
       >
-        <form onSubmit={handleCreate} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Ramesh Kumar"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+        <form onSubmit={handleCreate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Full Name"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="e.g. Ramesh Kumar"
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Business / Firm Name
-              </label>
-              <input
-                type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                placeholder="e.g. Balaji Traders"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Business / Firm Name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              placeholder="e.g. Balaji Traders"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 98765 43210"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 98765 43210"
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="client@domain.in"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="client@domain.in"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                City
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Mumbai"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Chennai"
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Business Type
-              </label>
-              <input
-                type="text"
-                value={businessType}
-                onChange={(e) => setBusinessType(e.target.value)}
-                placeholder="Proprietorship"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Business Type"
+              value={businessType}
+              onChange={(e) => setBusinessType(e.target.value)}
+              placeholder="Proprietorship / Retail"
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsCreateModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={createClientMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={createClientMutation.isPending}
             >
-              {createClientMutation.isPending ? 'Saving...' : 'Create Client'}
-            </button>
+              Create Client
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -384,107 +472,80 @@ export const ClientList: React.FC = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         title="Edit Client Information"
-        subtitle={`Updating master details for ${clientToEdit?.clientCode}`}
+        subtitle={`Updating master details for ${clientToEdit?.clientCode || ''}`}
       >
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Full Name"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Business / Firm Name
-              </label>
-              <input
-                type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Business / Firm Name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                City
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="BLOCKED">BLOCKED</option>
-              </select>
-            </div>
+            <AccessibleInput
+              label="Business Type"
+              value={businessType}
+              onChange={(e) => setBusinessType(e.target.value)}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <AccessibleSelect
+            label="Record Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            options={[
+              { value: 'ACTIVE', label: 'ACTIVE' },
+              { value: 'INACTIVE', label: 'INACTIVE' },
+            ]}
+          />
+
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={updateClientMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={updateClientMutation.isPending}
             >
-              {updateClientMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </button>
+              Save Changes
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -493,12 +554,16 @@ export const ClientList: React.FC = () => {
       <ConfirmDeleteModal
         isOpen={!!clientToDelete}
         onClose={() => setClientToDelete(null)}
-        onConfirm={() => deleteClientMutation.mutate(clientToDelete?.id)}
-        isLoading={deleteClientMutation.isPending}
+        onConfirm={() => {
+          if (clientToDelete) deleteClientMutation.mutate(clientToDelete.id);
+        }}
         title="Delete Client Record"
-        message="Are you sure you want to permanently delete this client? This will remove all associated profile data."
-        itemDescription={clientToDelete ? `${clientToDelete.clientCode}: ${clientToDelete.fullName} (${clientToDelete.phone})` : undefined}
+        message={`Are you sure you want to delete client ${clientToDelete?.fullName}? All associated deal links must be cleared first.`}
+        itemDescription={`Client Code: ${clientToDelete?.clientCode} — ${clientToDelete?.fullName}`}
+        isLoading={deleteClientMutation.isPending}
       />
     </div>
   );
 };
+
+export default ClientList;

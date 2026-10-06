@@ -1,11 +1,31 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { User, ArrowLeft, ArrowUpRight, PlusCircle, Edit2, Trash2 } from 'lucide-react';
+import {
+  User,
+  ArrowLeft,
+  ArrowRight,
+  PlusCircle,
+  Edit2,
+  Trash2,
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  FileText,
+  CreditCard,
+  Briefcase,
+} from 'lucide-react';
 import apiClient from '../../api/client';
 import { StatusBadge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
+import {
+  AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
+  AccessibleCard,
+} from '../../components/common/AccessibleComponents';
 import { formatCurrency } from '../../utils/formatters';
 
 export const ClientDetail: React.FC = () => {
@@ -84,14 +104,19 @@ export const ClientDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="h-10 w-10 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+        <div className="h-14 w-14 border-4 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
+        <p className="text-xl font-bold text-[#1A1A1A]">Loading client profile...</p>
       </div>
     );
   }
 
   if (!client) {
-    return <div className="text-center py-12 text-slate-400">Client not found</div>;
+    return (
+      <div className="text-center py-16 text-xl font-bold text-[#52525B]">
+        Client record not found
+      </div>
+    );
   }
 
   const summary = client.summary || {
@@ -103,152 +128,203 @@ export const ClientDetail: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Back button & Header Actions */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Navigation Breadcrumb & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => navigate('/clients')}
-          className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-lg font-bold text-[#8B1A1A] hover:underline"
         >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Clients</span>
+          <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
+          <span>Back to Client Directory</span>
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <button
+        <div className="flex flex-wrap items-center gap-3">
+          <AccessibleButton
+            variant="outline"
+            size="compact"
+            icon={Edit2}
             onClick={handleOpenEdit}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-400 hover:text-blue-300 text-xs font-bold border border-slate-700 transition-all"
           >
-            <Edit2 className="h-3.5 w-3.5" />
-            <span>Edit Client</span>
-          </button>
-          <button
+            Edit Profile
+          </AccessibleButton>
+          <AccessibleButton
+            variant="danger"
+            size="compact"
+            icon={Trash2}
             onClick={() => setIsDeleteModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-950/60 text-rose-400 hover:text-rose-300 text-xs font-bold border border-slate-700 transition-all"
           >
-            <Trash2 className="h-3.5 w-3.5" />
-            <span>Delete</span>
-          </button>
-          <button
+            Delete
+          </AccessibleButton>
+          <AccessibleButton
+            variant="primary"
+            size="compact"
+            icon={PlusCircle}
             onClick={() => navigate('/deals/new')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-xs font-bold shadow-glow hover:brightness-110 transition-all"
           >
-            <PlusCircle className="h-4 w-4" />
-            <span>New Finance Deal</span>
-          </button>
+            New Finance Deal
+          </AccessibleButton>
         </div>
       </div>
 
-      {/* Profile Banner */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex items-start gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 font-bold text-lg">
-            <User className="h-7 w-7" />
+      {/* Client Profile Banner Card */}
+      <AccessibleCard withTopAccent className="p-6 sm:p-8">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-start gap-4 sm:gap-5">
+            <div className="h-16 w-16 rounded-2xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-black text-2xl shrink-0">
+              <User className="h-8 w-8 stroke-[2.3]" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A]">
+                  {client.fullName}
+                </h1>
+                <span className="font-mono text-sm px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#8B1A1A] font-bold">
+                  {client.clientCode}
+                </span>
+                <StatusBadge status={client.status || 'ACTIVE'} size="md" />
+              </div>
+              <p className="text-base sm:text-lg font-bold text-[#52525B] mt-1">
+                {client.businessName ? `${client.businessName} • ` : ''}
+                {client.industry || client.businessType || 'General Commercial Trading'}
+              </p>
+            </div>
           </div>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-white">{client.fullName}</h1>
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-semibold">
-                {client.clientCode}
-              </span>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                client.status === 'ACTIVE'
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-              }`}>
-                {client.status || 'ACTIVE'}
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-base bg-[#FAF7F2] p-4 rounded-xl border border-[#D6CFC4]">
+            <div>
+              <span className="text-xs font-bold text-[#52525B] uppercase block">Phone</span>
+              <span className="font-bold text-[#1A1A1A] text-lg mt-0.5 block">{client.phone}</span>
+            </div>
+            <div>
+              <span className="text-xs font-bold text-[#52525B] uppercase block">Email</span>
+              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block truncate">
+                {client.email || '—'}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
-              {client.businessName ? `${client.businessName} • ` : ''}
-              {client.industry || client.businessType || 'General Commerce'}
+            <div>
+              <span className="text-xs font-bold text-[#52525B] uppercase block">Location</span>
+              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block">
+                {client.city ? `${client.city}, ${client.state || ''}` : '—'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Aggregate Financial Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
+          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#52525B] uppercase">Total Finance Taken</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A] mt-1">
+              {formatCurrency(summary.totalFinanceReceived)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
+            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Total Repaid (P+I)</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+              {formatCurrency(summary.totalRepaid)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
+            <span className="text-xs font-bold text-[#B45309] uppercase">Outstanding Total</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1">
+              {formatCurrency(summary.outstandingAmount)}
+            </p>
+          </div>
+          <div className="p-5 rounded-xl bg-[#FEE2E2] border-2 border-[#FECACA]">
+            <span className="text-xs font-bold text-[#B91C1C] uppercase">Overdue Balance</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B91C1C] mt-1">
+              {formatCurrency(summary.overdueAmount)}
             </p>
           </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-6 text-xs text-slate-300">
-          <div>
-            <span className="text-slate-500 block">Phone</span>
-            <span className="font-semibold">{client.phone}</span>
-          </div>
-          <div>
-            <span className="text-slate-500 block">PAN</span>
-            <span className="font-mono font-semibold">{client.pan || '—'}</span>
-          </div>
-          <div>
-            <span className="text-slate-500 block">Location</span>
-            <span className="font-semibold">{client.city ? `${client.city}, ${client.state || ''}` : '—'}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Aggregate Financial Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Total Finance Taken</span>
-          <p className="text-lg font-bold text-white mt-1">{formatCurrency(summary.totalFinanceReceived)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Total Repaid (P+I)</span>
-          <p className="text-lg font-bold text-emerald-400 mt-1">{formatCurrency(summary.totalRepaid)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Outstanding Total</span>
-          <p className="text-lg font-bold text-amber-400 mt-1">{formatCurrency(summary.outstandingAmount)}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <span className="text-[11px] text-slate-500 uppercase font-semibold">Overdue Balance</span>
-          <p className="text-lg font-bold text-rose-400 mt-1">{formatCurrency(summary.overdueAmount)}</p>
-        </div>
-      </div>
+      </AccessibleCard>
 
       {/* Finance Deals History */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
-        <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-          Finance History ({client.deals?.length || 0} Deals)
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800">
-              <tr>
-                <th className="py-3 px-4">Deal #</th>
-                <th className="py-3 px-4">Amount Approved</th>
-                <th className="py-3 px-4">Contract Interest</th>
-                <th className="py-3 px-4">Total Repaid</th>
-                <th className="py-3 px-4">Outstanding</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
-              {client.deals?.map((d: any) => (
-                <tr
-                  key={d.id}
-                  onClick={() => navigate(`/deals/${d.id}`)}
-                  className="hover:bg-slate-950/40 cursor-pointer"
-                >
-                  <td className="py-3 px-4 font-mono font-bold text-white">{d.dealNumber}</td>
-                  <td className="py-3 px-4 font-bold text-white">{formatCurrency(d.financeAmountApproved)}</td>
-                  <td className="py-3 px-4 text-emerald-400">{formatCurrency(d.totalInterest)}</td>
-                  <td className="py-3 px-4 text-emerald-400 font-semibold">
-                    {formatCurrency(Number(d.totalPrincipalRepaid) + Number(d.totalInterestRepaid))}
-                  </td>
-                  <td className="py-3 px-4 font-bold text-amber-400">{formatCurrency(d.outstandingTotal)}</td>
-                  <td className="py-3 px-4">
-                    <StatusBadge status={d.status} />
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <button className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
-                      <ArrowUpRight className="h-4 w-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <AccessibleCard withTopAccent className="space-y-6">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-center gap-3">
+            <Briefcase className="h-6 w-6 text-[#8B1A1A] stroke-[2.3]" />
+            <h3 className="text-2xl font-bold text-[#1A1A1A]">
+              Finance Deal History ({client.deals?.length || 0} Deals)
+            </h3>
+          </div>
+          <AccessibleButton
+            variant="primary"
+            size="compact"
+            icon={PlusCircle}
+            onClick={() => navigate('/deals/new')}
+          >
+            Create Deal
+          </AccessibleButton>
         </div>
-      </div>
+
+        {client.deals && client.deals.length > 0 ? (
+          <div className="overflow-x-auto rounded-xl border-2 border-[#D6CFC4]">
+            <table className="w-full text-left text-base">
+              <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
+                <tr>
+                  <th className="py-4 px-5 text-sm uppercase">Deal #</th>
+                  <th className="py-4 px-5 text-sm uppercase">Approved Finance</th>
+                  <th className="py-4 px-5 text-sm uppercase">Contract Interest</th>
+                  <th className="py-4 px-5 text-sm uppercase">Total Repaid</th>
+                  <th className="py-4 px-5 text-sm uppercase">Outstanding</th>
+                  <th className="py-4 px-5 text-sm uppercase">Status</th>
+                  <th className="py-4 px-5 text-sm uppercase text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+                {client.deals.map((d: any) => (
+                  <tr
+                    key={d.id}
+                    onClick={() => navigate(`/deals/${d.id}`)}
+                    className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
+                  >
+                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg">
+                      {d.dealNumber}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-lg">
+                      {formatCurrency(d.financeAmountApproved)}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                      {formatCurrency(d.totalInterest)}
+                    </td>
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                      {formatCurrency(
+                        Number(d.totalPrincipalRepaid || 0) + Number(d.totalInterestRepaid || 0)
+                      )}
+                    </td>
+                    <td className="py-4 px-5 font-extrabold text-lg text-[#B45309]">
+                      {formatCurrency(d.outstandingTotal)}
+                    </td>
+                    <td className="py-4 px-5">
+                      <StatusBadge status={d.status} size="sm" />
+                    </td>
+                    <td className="py-4 px-5 text-right">
+                      <AccessibleButton
+                        variant="secondary"
+                        size="compact"
+                        icon={ArrowRight}
+                        iconPosition="right"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/deals/${d.id}`);
+                        }}
+                      >
+                        View Deal
+                      </AccessibleButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-10 text-base font-semibold text-[#52525B]">
+            No finance deals registered for this client yet.
+          </div>
+        )}
+      </AccessibleCard>
 
       {/* Edit Client Modal */}
       <Modal
@@ -257,105 +333,73 @@ export const ClientDetail: React.FC = () => {
         title="Edit Client Information"
         subtitle={`Updating master record for ${client.clientCode}`}
       >
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+        <form onSubmit={handleUpdate} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Full Name"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Business / Firm Name
-              </label>
-              <input
-                type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Business / Firm Name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Phone Number"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                City
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Status
-              </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-              >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="BLOCKED">BLOCKED</option>
-              </select>
-            </div>
+            <AccessibleSelect
+              label="Status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              options={[
+                { value: 'ACTIVE', label: 'ACTIVE' },
+                { value: 'INACTIVE', label: 'INACTIVE' },
+                { value: 'BLOCKED', label: 'BLOCKED' },
+              ]}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-            <button
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+            <AccessibleButton
               type="button"
+              variant="outline"
               onClick={() => setIsEditModalOpen(false)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
             >
               Cancel
-            </button>
-            <button
+            </AccessibleButton>
+            <AccessibleButton
               type="submit"
-              disabled={updateClientMutation.isPending}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-xs shadow-glow hover:brightness-110 disabled:opacity-50"
+              variant="primary"
+              isLoading={updateClientMutation.isPending}
             >
-              {updateClientMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </button>
+              Save Changes
+            </AccessibleButton>
           </div>
         </form>
       </Modal>
@@ -373,3 +417,5 @@ export const ClientDetail: React.FC = () => {
     </div>
   );
 };
+
+export default ClientDetail;

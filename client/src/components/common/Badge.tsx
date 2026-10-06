@@ -1,41 +1,84 @@
 import React from 'react';
 import clsx from 'clsx';
+import {
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+  XCircle,
+  FileText,
+  ShieldCheck,
+  CheckCheck,
+  Ban,
+} from 'lucide-react';
 
 interface BadgeProps {
   status: string;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export const StatusBadge: React.FC<BadgeProps> = ({ status, className }) => {
-  const getStyle = (st: string) => {
+export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'md' }) => {
+  const getBadgeConfig = (st: string) => {
     switch (st?.toUpperCase()) {
       case 'ACTIVE':
       case 'PAID':
       case 'PROCESSED':
       case 'DISBURSED':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+        return {
+          icon: CheckCircle2,
+          style: 'bg-[#EAF5EE] text-[#1F6B3A] border-[#A7D9B7]',
+          symbol: '✓',
+        };
       case 'APPROVED':
       case 'COMMITTED':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+        return {
+          icon: ShieldCheck,
+          style: 'bg-[#EFF6FF] text-[#1E3A8A] border-[#BFDBFE]',
+          symbol: '✓',
+        };
       case 'PENDING_APPROVAL':
       case 'DUE':
       case 'UPCOMING':
       case 'PARTIALLY_PAID':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+      case 'FUNDING_PENDING':
+      case 'READY_FOR_APPROVAL':
+        return {
+          icon: Clock,
+          style: 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]',
+          symbol: '⏱',
+        };
       case 'OVERDUE':
       case 'DEFAULTED':
       case 'FLAGGED':
       case 'BLOCKED':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+        return {
+          icon: AlertTriangle,
+          style: 'bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]',
+          symbol: '!',
+        };
       case 'COMPLETED':
       case 'SETTLED':
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+      case 'CLOSED':
+        return {
+          icon: CheckCheck,
+          style: 'bg-[#F3E8FF] text-[#6B21A8] border-[#D8B4FE]',
+          symbol: '✓✓',
+        };
       case 'DRAFT':
+        return {
+          icon: FileText,
+          style: 'bg-[#F4F4F5] text-[#3F3F46] border-[#D4D4D8]',
+          symbol: '✎',
+        };
       case 'CANCELLED':
       case 'WAIVED':
       case 'INACTIVE':
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+        return {
+          icon: Ban,
+          style: 'bg-[#F4F4F5] text-[#52525B] border-[#D4D4D8]',
+          symbol: '✕',
+        };
     }
   };
 
@@ -44,15 +87,26 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className }) => {
     return st.replace(/_/g, ' ');
   };
 
+  const config = getBadgeConfig(status);
+  const IconComponent = config.icon;
+
+  const sizeClasses = {
+    sm: 'text-sm px-2.5 py-1 gap-1.5',
+    md: 'text-base px-3.5 py-1.5 gap-2',
+    lg: 'text-lg px-4 py-2 gap-2.5',
+  };
+
   return (
     <span
       className={clsx(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border uppercase tracking-wider',
-        getStyle(status),
+        'inline-flex items-center rounded-lg font-bold border-2 tracking-wide shadow-sm select-none',
+        config.style,
+        sizeClasses[size],
         className
       )}
     >
-      {formatText(status)}
+      <IconComponent className="h-4 w-4 shrink-0 stroke-[2.5]" aria-hidden="true" />
+      <span>{formatText(status)}</span>
     </span>
   );
 };

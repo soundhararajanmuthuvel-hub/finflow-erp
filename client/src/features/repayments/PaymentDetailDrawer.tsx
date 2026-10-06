@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Building,
 } from 'lucide-react';
+import { AccessibleButton, AccessibleCard } from '../../components/common/AccessibleComponents';
 
 interface PaymentDetailDrawerProps {
   isOpen: boolean;
@@ -40,95 +41,95 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={`Payment Collection Receipt • ${repayment.receiptNumber}`}
-      subtitle={`Detailed waterfall distribution breakdown, double-entry ledger & audit trails`}
+      subtitle="Detailed waterfall distribution breakdown, double-entry ledger & audit trails"
       maxWidth="4xl"
     >
       <div className="space-y-6">
         {/* Receipt Header Card */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+        <AccessibleCard className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-stone-50 border-2 border-stone-200">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2.5">
+              <span className="text-sm font-mono font-black text-maroon-900 bg-maroon-100 px-3 py-1 rounded-xl border border-maroon-300">
                 {repayment.receiptNumber}
               </span>
-              <span className="text-xs text-slate-400">Deal: <span className="text-white font-mono font-bold">{deal.dealNumber}</span></span>
+              <span className="text-sm text-stone-600 font-medium">Deal: <span className="text-stone-900 font-mono font-bold">{deal.dealNumber}</span></span>
             </div>
-            <h3 className="text-lg font-black text-white">{deal.client?.fullName}</h3>
-            <p className="text-xs text-slate-400">
-              Payment Method: <span className="text-slate-200 font-semibold">{repayment.paymentMethod}</span> • Ref / UTR: <span className="text-slate-200 font-mono">{repayment.referenceNumber || 'N/A'}</span>
+            <h3 className="text-2xl font-black text-stone-900">{deal.client?.fullName}</h3>
+            <p className="text-base text-stone-600 font-medium">
+              Payment Method: <span className="text-stone-900 font-bold">{repayment.paymentMethod}</span> • Ref / UTR: <span className="text-stone-900 font-mono font-bold">{repayment.referenceNumber || 'N/A'}</span>
             </p>
           </div>
 
           <div className="sm:text-right">
-            <span className="text-[11px] text-slate-400 font-semibold uppercase">Total Amount Received</span>
-            <p className="text-2xl font-black text-emerald-400 mt-0.5">
+            <span className="text-xs text-stone-500 font-bold uppercase block">Total Amount Received</span>
+            <p className="text-3xl font-black text-emerald-900 mt-0.5">
               {formatCurrency(repayment.amountReceived)}
             </p>
-            <p className="text-xs text-slate-400 mt-1 flex sm:justify-end items-center gap-1">
-              <Calendar className="h-3.5 w-3.5" />
+            <p className="text-sm text-stone-600 font-medium mt-1 flex sm:justify-end items-center gap-1.5">
+              <Calendar className="h-4 w-4 text-stone-500" />
               <span>{formatDate(repayment.paymentDate)}</span>
             </p>
           </div>
-        </div>
+        </AccessibleCard>
 
         {/* Principal vs Interest Allocation Strip */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-blue-950/20 border border-blue-800/30">
-            <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-5 rounded-2xl bg-blue-50 border-2 border-blue-200">
+            <span className="text-xs font-bold text-blue-900 uppercase tracking-wider block">
               Principal Settled
             </span>
-            <p className="text-xl font-black text-blue-300 mt-1">
+            <p className="text-2xl font-black text-blue-950 mt-1">
               {formatCurrency(repayment.principalPortion)}
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">Returned directly to syndicate capital providers</p>
+            <p className="text-sm text-blue-800 font-medium mt-1">Returned directly to syndicate capital providers</p>
           </div>
-          <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-800/30">
-            <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+          <div className="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+            <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider block">
               Interest / Profit Collected
             </span>
-            <p className="text-xl font-black text-emerald-300 mt-1">
+            <p className="text-2xl font-black text-emerald-950 mt-1">
               {formatCurrency(repayment.interestPortion)}
             </p>
-            <p className="text-[11px] text-slate-400 mt-1">Distributed via configured deal profit rules</p>
+            <p className="text-sm text-emerald-800 font-medium mt-1">Distributed via configured deal profit rules</p>
           </div>
         </div>
 
         {/* Section 1: Waterfall Distribution Snapshot */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <AccessibleCard className="p-6 space-y-4">
+          <div className="flex items-center justify-between border-b-2 border-stone-100 pb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
-              <h4 className="text-xs font-black text-white uppercase tracking-wider">
+              <ShieldCheck className="h-5 w-5 text-emerald-700" />
+              <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
                 Immutable Distribution Snapshot
               </h4>
             </div>
-            <span className="text-[11px] text-slate-400">Locked at time of transaction</span>
+            <span className="text-sm text-stone-500 font-medium">Locked at time of transaction</span>
           </div>
 
           {/* Company Share */}
           {companyProfit && (
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-white flex items-center gap-1.5">
-                  <Building className="h-3.5 w-3.5 text-emerald-400" />
+            <div className="p-4 rounded-xl bg-stone-50 border-2 border-stone-200 space-y-3">
+              <div className="flex justify-between items-center text-base">
+                <span className="font-bold text-stone-900 flex items-center gap-2">
+                  <Building className="h-5 w-5 text-maroon-800" />
                   Company Allocation
                 </span>
-                <span className="font-bold text-emerald-400 font-mono">
+                <span className="font-black text-emerald-900 font-mono text-lg">
                   Total Profit: {formatCurrency(companyProfit.totalCompanyProfit)}
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-2 text-[11px] pt-1 border-t border-slate-900">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm pt-2 border-t border-stone-200">
                 <div>
-                  <span className="text-slate-500">Principal Recovered</span>
-                  <p className="font-bold text-slate-200 mt-0.5">{formatCurrency(companyProfit.principalRecovered)}</p>
+                  <span className="text-stone-500 font-medium">Principal Recovered</span>
+                  <p className="font-bold text-stone-900 mt-0.5">{formatCurrency(companyProfit.principalRecovered)}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Commission (10%)</span>
-                  <p className="font-bold text-teal-300 mt-0.5">{formatCurrency(companyProfit.managementCommission)}</p>
+                  <span className="text-stone-500 font-medium">Commission (10%)</span>
+                  <p className="font-bold text-stone-900 mt-0.5">{formatCurrency(companyProfit.managementCommission)}</p>
                 </div>
                 <div>
-                  <span className="text-slate-500">Retained Margin</span>
-                  <p className="font-bold text-emerald-300 mt-0.5">{formatCurrency(companyProfit.retainedInterestMargin)}</p>
+                  <span className="text-stone-500 font-medium">Retained Margin</span>
+                  <p className="font-bold text-emerald-800 mt-0.5">{formatCurrency(companyProfit.retainedInterestMargin)}</p>
                 </div>
               </div>
             </div>
@@ -136,22 +137,22 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
 
           {/* Outside Investors */}
           {investorReturns.length > 0 && (
-            <div className="space-y-2">
-              <span className="text-[11px] font-bold text-purple-400 uppercase tracking-wider block">
+            <div className="space-y-3">
+              <span className="text-sm font-bold text-purple-900 uppercase tracking-wider block">
                 Outside Investor Returns
               </span>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {investorReturns.map((inv: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs">
+                  <div key={idx} className="p-4 rounded-xl bg-purple-50 border-2 border-purple-200 flex justify-between items-center text-base">
                     <div>
-                      <p className="font-bold text-purple-300">{inv.investor?.name || `Investor #${idx + 1}`}</p>
-                      <p className="text-[11px] text-slate-400">
-                        Principal Returned: <span className="text-white font-semibold">{formatCurrency(inv.principalReturned)}</span> • Profit ROI: <span className="text-purple-300 font-semibold">{formatCurrency(inv.interestEarned)}</span>
+                      <p className="font-bold text-purple-950">{inv.investor?.name || `Investor #${idx + 1}`}</p>
+                      <p className="text-sm text-stone-600 mt-0.5">
+                        Principal Returned: <span className="text-stone-900 font-bold">{formatCurrency(inv.principalReturned)}</span> • Profit ROI: <span className="text-purple-900 font-bold">{formatCurrency(inv.interestEarned)}</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-500 font-semibold uppercase">Total Payout</span>
-                      <p className="font-mono font-bold text-purple-200">{formatCurrency(inv.totalPayout)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase">Total Payout</span>
+                      <p className="font-mono font-black text-purple-950 text-lg">{formatCurrency(inv.totalPayout)}</p>
                     </div>
                   </div>
                 ))}
@@ -161,64 +162,64 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
 
           {/* Partners */}
           {partnerReturns.length > 0 && (
-            <div className="space-y-2">
-              <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block">
+            <div className="space-y-3">
+              <span className="text-sm font-bold text-blue-900 uppercase tracking-wider block">
                 Partner Distributions
               </span>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {partnerReturns.map((prt: any, idx: number) => (
-                  <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex justify-between items-center text-xs">
+                  <div key={idx} className="p-4 rounded-xl bg-blue-50 border-2 border-blue-200 flex justify-between items-center text-base">
                     <div>
-                      <p className="font-bold text-cyan-300">{prt.partner?.name || `Partner #${idx + 1}`}</p>
-                      <p className="text-[11px] text-slate-400">
-                        Principal: <span className="text-white font-semibold">{formatCurrency(prt.principalReturned)}</span> • Profit Share: <span className="text-cyan-300 font-semibold">{formatCurrency(prt.profitShare)}</span>
+                      <p className="font-bold text-blue-950">{prt.partner?.name || `Partner #${idx + 1}`}</p>
+                      <p className="text-sm text-stone-600 mt-0.5">
+                        Principal: <span className="text-stone-900 font-bold">{formatCurrency(prt.principalReturned)}</span> • Profit Share: <span className="text-blue-900 font-bold">{formatCurrency(prt.profitShare)}</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-500 font-semibold uppercase">Total Payout</span>
-                      <p className="font-mono font-bold text-cyan-200">{formatCurrency(prt.totalPayout)}</p>
+                      <span className="text-xs text-stone-500 font-bold uppercase">Total Payout</span>
+                      <p className="font-mono font-black text-blue-950 text-lg">{formatCurrency(prt.totalPayout)}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
-        </div>
+        </AccessibleCard>
 
         {/* Section 2: Double-Entry Ledger Postings */}
         {relatedJournal && relatedJournal.ledgerEntries?.length > 0 && (
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+          <AccessibleCard className="p-6 space-y-3">
+            <div className="flex items-center justify-between border-b-2 border-stone-100 pb-3">
               <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-blue-400" />
-                <h4 className="text-xs font-black text-white uppercase tracking-wider">
+                <BookOpen className="h-5 w-5 text-blue-800" />
+                <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
                   Double-Entry Ledger Journal ({relatedJournal.transactionNo})
                 </h4>
               </div>
-              <span className="text-[11px] text-slate-400 font-mono">{formatDate(relatedJournal.transactionDate)}</span>
+              <span className="text-sm text-stone-500 font-mono font-bold">{formatDate(relatedJournal.transactionDate)}</span>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b border-slate-800 text-[11px] text-slate-400 font-bold uppercase">
+                  <tr className="border-b-2 border-stone-200 text-sm text-stone-600 font-bold uppercase">
                     <th className="pb-2">Account</th>
                     <th className="pb-2">Description</th>
                     <th className="pb-2 text-right">Debit (Dr)</th>
                     <th className="pb-2 text-right">Credit (Cr)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-stone-100 text-stone-800">
                   {relatedJournal.ledgerEntries.map((entry: any, i: number) => (
-                    <tr key={i} className="hover:bg-slate-800/30">
-                      <td className="py-2 font-mono text-slate-300 font-semibold">
+                    <tr key={i} className="hover:bg-stone-50">
+                      <td className="py-2.5 font-mono text-stone-900 font-bold">
                         {entry.account?.accountCode} - {entry.account?.accountName}
                       </td>
-                      <td className="py-2 text-slate-400">{entry.narration}</td>
-                      <td className="py-2 text-right font-mono font-bold text-emerald-400">
+                      <td className="py-2.5 text-stone-600">{entry.narration}</td>
+                      <td className="py-2.5 text-right font-mono font-bold text-emerald-800">
                         {Number(entry.debit) > 0 ? formatCurrency(entry.debit) : '-'}
                       </td>
-                      <td className="py-2 text-right font-mono font-bold text-blue-400">
+                      <td className="py-2.5 text-right font-mono font-bold text-blue-900">
                         {Number(entry.credit) > 0 ? formatCurrency(entry.credit) : '-'}
                       </td>
                     </tr>
@@ -226,26 +227,26 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
                 </tbody>
               </table>
             </div>
-          </div>
+          </AccessibleCard>
         )}
 
         {/* Audit Footer */}
-        <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-800">
-          <span>Recorded by: <span className="text-slate-300 font-medium">{repayment.recordedBy?.fullName || 'Finance Staff'}</span></span>
+        <div className="flex flex-wrap items-center justify-between gap-4 text-base text-stone-600 pt-4 border-t-2 border-stone-200">
+          <span>Recorded by: <span className="text-stone-900 font-bold">{repayment.recordedBy?.fullName || 'Finance Staff'}</span></span>
           <div className="flex items-center gap-3">
-            <button
+            <AccessibleButton
+              variant="outline"
               onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all"
+              icon={<Printer className="h-5 w-5" />}
             >
-              <Printer className="h-3.5 w-3.5" />
-              <span>Print Receipt</span>
-            </button>
-            <button
+              Print Receipt
+            </AccessibleButton>
+            <AccessibleButton
+              variant="primary"
               onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all"
             >
               Close
-            </button>
+            </AccessibleButton>
           </div>
         </div>
       </div>

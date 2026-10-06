@@ -36,46 +36,65 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   const maxWidthClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
-    '2xl': 'max-w-2xl',
-    '4xl': 'max-w-4xl',
+    sm: 'max-w-md',
+    md: 'max-w-xl',
+    lg: 'max-w-2xl',
+    xl: 'max-w-3xl',
+    '2xl': 'max-w-4xl',
+    '4xl': 'max-w-5xl',
     '6xl': 'max-w-6xl',
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-      {/* Backdrop */}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+    >
+      {/* High contrast Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog Box */}
       <div
         className={clsx(
-          'relative w-full overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl transition-all my-8 z-10',
+          'relative w-full overflow-hidden rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-modal transition-all my-6 z-10 flex flex-col max-h-[92vh]',
           maxWidthClasses[maxWidth]
         )}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between border-b border-slate-800 px-6 py-4 bg-slate-900/90">
-          <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">{title}</h2>
-            {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+        {/* Tamil Culture Decorative Accent Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#8B1A1A] via-[#8B1A1A] to-[#B7791F]" />
+
+        {/* Header with High-Contrast Clear Labeled Close Button */}
+        <div className="flex items-center justify-between border-b-2 border-[#EDE7DE] px-6 py-5 bg-[#FAF7F2] shrink-0">
+          <div className="pr-4">
+            <h2 id="modal-title" className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="mt-1 text-base font-semibold text-[#52525B] leading-relaxed">
+                {subtitle}
+              </p>
+            )}
           </div>
+
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            aria-label="Close dialog"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#F3EFEA] text-[#1A1A1A] font-bold text-base border-2 border-[#D6CFC4] hover:border-[#8B1A1A] shadow-sm transition-all shrink-0 min-h-[44px]"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 text-[#8B1A1A] stroke-[2.5]" />
+            <span>Close</span>
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 max-h-[80vh] overflow-y-auto">{children}</div>
+        {/* Content Body */}
+        <div className="p-6 sm:p-8 overflow-y-auto text-base text-[#1A1A1A] leading-relaxed bg-white">
+          {children}
+        </div>
       </div>
     </div>
   );

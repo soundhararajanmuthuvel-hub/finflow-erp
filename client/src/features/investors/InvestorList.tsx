@@ -201,14 +201,14 @@ export const InvestorList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-sm uppercase">Investor Code</th>
-                <th className="py-4 px-6 text-sm uppercase">Investor Name</th>
-                <th className="py-4 px-6 text-sm uppercase">Contact</th>
-                <th className="py-4 px-6 text-sm uppercase">Total Capital</th>
-                <th className="py-4 px-6 text-sm uppercase">Principal Returned</th>
-                <th className="py-4 px-6 text-sm uppercase">ROI Earned</th>
-                <th className="py-4 px-6 text-sm uppercase">Status</th>
-                <th className="py-4 px-6 text-sm uppercase text-right">Actions</th>
+                <th className="py-4 px-6 text-base font-bold">Investor Code</th>
+                <th className="py-4 px-6 text-base font-bold">Investor Name</th>
+                <th className="py-4 px-6 text-base font-bold">Contact</th>
+                <th className="py-4 px-6 text-base font-bold">Total Capital</th>
+                <th className="py-4 px-6 text-base font-bold">Principal Returned</th>
+                <th className="py-4 px-6 text-base font-bold">ROI Earned</th>
+                <th className="py-4 px-6 text-base font-bold">Status</th>
+                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -227,7 +227,7 @@ export const InvestorList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                       {inv.investorCode}
                     </td>
                     <td className="py-5 px-6">
@@ -236,23 +236,23 @@ export const InvestorList: React.FC = () => {
                         {inv.bankName ? `Bank: ${inv.bankName}` : 'Bank details unlisted'}
                       </p>
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <p className="font-bold text-[#1A1A1A]">{inv.phone}</p>
                       <p className="text-sm text-[#52525B] mt-0.5">{inv.email || '—'}</p>
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#6B21A8]">
+                    <td className="py-5 px-6 font-bold text-lg text-[#6B21A8] whitespace-nowrap">
                       {formatCurrency(inv.totalInvested)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A]">
+                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(inv.totalPrincipalReturned)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A]">
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(inv.totalInterestEarned)}
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <StatusBadge status={inv.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right">
+                    <td className="py-5 px-6 text-right whitespace-nowrap">
                       <div
                         className="flex items-center justify-end gap-2"
                         onClick={(e) => e.stopPropagation()}
@@ -324,26 +324,26 @@ export const InvestorList: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Total Capital</p>
-                  <p className="text-lg font-bold text-[#6B21A8] mt-0.5">
+                  <p className="text-sm font-bold text-[#3F3F46]">Total Capital</p>
+                  <p className="text-lg font-bold text-[#6B21A8] mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.totalInvested)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A] uppercase">ROI Earned</p>
-                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5">
+                  <p className="text-sm font-bold text-[#1F6B3A]">ROI Earned</p>
+                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.totalInterestEarned)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Principal Returned</p>
-                  <p className="text-base font-bold text-[#1F6B3A] mt-0.5">
+                  <p className="text-sm font-bold text-[#3F3F46]">Principal Returned</p>
+                  <p className="text-base font-bold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.totalPrincipalReturned)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Bank Name</p>
-                  <p className="text-base font-bold text-[#1A1A1A] mt-0.5 truncate">
+                  <p className="text-sm font-bold text-[#3F3F46]">Bank Name</p>
+                  <p className="text-base font-bold text-[#1A1A1A] mt-0.5 break-words">
                     {inv.bankName || '—'}
                   </p>
                 </div>

@@ -3,6 +3,7 @@ import { Bell, Search, LogOut, Menu, X, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../../api/client';
+import { formatRole } from '../../utils/formatters';
 
 interface NavbarProps {
   onOpenMobileMenu?: () => void;
@@ -24,20 +25,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
   const unreadCount = notificationsData?.filter((n: any) => !n.isRead).length || 0;
 
   return (
-    <header className="h-20 bg-white border-b-2 border-[#D6CFC4] flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30 shadow-sm">
-      {/* Left Area: Mobile Menu Toggle & Global Search */}
-      <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xl">
+    <header className="h-20 bg-white border-b-2 border-[#D6CFC4] flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30 shadow-sm gap-4">
+      {/* Left Area: Mobile Menu Toggle & Global Search (shrinks first when space is tight) */}
+      <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 max-w-xl">
         {onOpenMobileMenu && (
           <button
             onClick={onOpenMobileMenu}
-            className="lg:hidden h-12 w-12 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] flex items-center justify-center text-[#1A1A1A] shrink-0"
+            className="lg:hidden h-14 w-14 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] flex items-center justify-center text-[#1A1A1A] shrink-0 cursor-pointer"
             aria-label="Open Navigation Menu"
           >
             <Menu className="h-6 w-6 stroke-[2.3]" />
           </button>
         )}
 
-        <div className="relative w-full">
+        <div className="relative w-full min-w-0">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#52525B] stroke-[2.2]" />
           <input
             type="text"
@@ -47,13 +48,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
         </div>
       </div>
 
-      {/* Right Area: In-App Notifications & Sign Out */}
-      <div className="flex items-center gap-3 sm:gap-4 ml-4">
+      {/* Right Area: Alerts, User Session, and Sign Out (never shrunk) */}
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
         {/* In-App Notifications */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative h-12 px-3 sm:px-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] text-[#1A1A1A] flex items-center gap-2 font-bold text-base transition-colors"
+            className="relative h-12 px-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] hover:border-[#8B1A1A] text-[#1A1A1A] flex items-center gap-2 font-bold text-base transition-colors cursor-pointer"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5 text-[#8B1A1A] stroke-[2.3]" />
@@ -68,12 +69,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
           {showNotifications && (
             <div className="absolute right-0 mt-3 w-84 sm:w-96 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-modal p-5 z-50">
               <div className="flex items-center justify-between pb-3 border-b-2 border-[#EDE7DE]">
-                <h4 className="text-base font-bold text-[#1A1A1A] uppercase tracking-wider">
+                <h4 className="text-lg font-bold text-[#1A1A1A]">
                   Notifications & Alerts
                 </h4>
                 <button
                   onClick={() => setShowNotifications(false)}
-                  className="p-1 rounded-lg text-[#52525B] hover:text-[#1A1A1A]"
+                  className="p-1.5 rounded-lg text-[#52525B] hover:text-[#1A1A1A] cursor-pointer"
+                  aria-label="Close notifications"
                 >
                   <X className="h-5 w-5 stroke-[2.5]" />
                 </button>
@@ -102,16 +104,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
         </div>
 
         {/* User Info & Prominent Sign Out Button */}
-        <div className="flex items-center gap-3 border-l-2 border-[#EDE7DE] pl-3 sm:pl-4">
+        <div className="flex items-center gap-3 sm:gap-4 border-l-2 border-[#EDE7DE] pl-3 sm:pl-4">
           <div className="text-right hidden md:block">
-            <p className="text-base font-bold text-[#1A1A1A] leading-tight">{user?.fullName}</p>
-            <p className="text-xs font-bold text-[#8B1A1A] uppercase tracking-wider">{user?.role}</p>
+            <p className="text-[1.125rem] font-bold text-[#1A1A1A] leading-tight">{user?.fullName}</p>
+            <p className="text-sm font-semibold text-[#8B1A1A] mt-0.5 leading-tight">{formatRole(user?.role)}</p>
           </div>
 
           <button
             onClick={logout}
             title="Sign Out"
-            className="h-12 px-4 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-base flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+            className="h-12 px-4 sm:px-5 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-base flex items-center gap-2 shadow-sm transition-all cursor-pointer shrink-0"
           >
             <LogOut className="h-5 w-5 stroke-[2.5]" />
             <span className="hidden sm:inline">Sign Out</span>

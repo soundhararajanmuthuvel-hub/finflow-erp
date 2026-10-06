@@ -180,8 +180,8 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
                   className="h-12 w-12 rounded-xl object-contain shadow-sm bg-[#072661] p-0.5 border border-stone-300"
                 />
                 <div>
-                  <h1 className="text-2xl font-black text-stone-900 tracking-tight leading-none">FINFLOW</h1>
-                  <p className="text-xs text-emerald-800 uppercase tracking-wider font-extrabold mt-0.5">Private Finance Management</p>
+                  <h1 className="text-2xl font-black text-stone-900 tracking-tight leading-none">FinFlow</h1>
+                  <p className="text-sm text-emerald-800 font-bold mt-0.5">Private Finance Management</p>
                 </div>
               </div>
               <p className="text-sm text-stone-600 font-medium pt-1">
@@ -190,7 +190,7 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
             </div>
 
             <div className="sm:text-right space-y-1 text-sm text-stone-600">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-black bg-purple-100 text-purple-950 border border-purple-300 uppercase tracking-wider">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-950 border border-purple-300">
                 Confidential Investor Statement
               </span>
               <p className="text-stone-500 text-xs pt-1 font-medium">Generated: {formatDate(new Date())}</p>
@@ -199,34 +199,34 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
 
           {/* 2. Document Title */}
           <div className="text-center py-3 bg-stone-900 rounded-xl text-white">
-            <h2 className="text-lg font-black tracking-widest uppercase">
-              INVESTOR PAYMENT STATEMENT
+            <h2 className="text-xl font-bold">
+              Investor Payment Statement
             </h2>
           </div>
 
           {/* 3. Investor & Connected Client Deal Details Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-xl bg-stone-50 border border-stone-300 text-sm">
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Investor Name</span>
+              <span className="text-stone-600 font-bold text-sm block">Investor Name</span>
               <p className="text-base font-black text-purple-950 mt-0.5">{currentInvestor?.name || 'Outside Investor'}</p>
               <p className="text-xs text-stone-600 font-mono font-bold">{currentInvestor?.investorCode || 'INV'}</p>
             </div>
 
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Connected Client Name</span>
+              <span className="text-stone-600 font-bold text-sm block">Connected Client Name</span>
               <p className="text-base font-black text-stone-900 mt-0.5">{deal.client?.fullName}</p>
               <p className="text-xs text-stone-600 font-mono">Deal #{deal.dealNumber}</p>
             </div>
 
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Total Client Finance</span>
-              <p className="text-base font-black text-stone-900 mt-0.5">{formatCurrency(deal.financeAmountApproved)}</p>
+              <span className="text-stone-600 font-bold text-sm block">Total Client Finance</span>
+              <p className="text-base font-black text-stone-900 mt-0.5 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
               <p className="text-xs text-stone-600">Started: {formatDate(deal.startDate)}</p>
             </div>
 
             <div>
-              <span className="text-purple-900 font-bold uppercase text-xs block">Investor Investment</span>
-              <p className="text-base font-black text-purple-950 mt-0.5">{formatCurrency(investedAmount)}</p>
+              <span className="text-purple-900 font-bold text-sm block">Investor Investment</span>
+              <p className="text-base font-black text-purple-950 mt-0.5 whitespace-nowrap">{formatCurrency(investedAmount)}</p>
               <p className="text-xs font-extrabold text-purple-900">{sharePercentage.toFixed(2)}% Syndicate Share</p>
             </div>
           </div>
@@ -234,20 +234,20 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
           {/* 4. Financial Returns Summary Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 rounded-xl bg-purple-50 border border-purple-200 text-sm text-center">
             <div>
-              <span className="text-stone-600 font-bold uppercase text-xs">Expected Principal</span>
-              <p className="font-bold text-stone-900 text-base mt-0.5">{formatCurrency(investedAmount)}</p>
+              <span className="text-stone-600 font-bold text-sm">Expected Principal</span>
+              <p className="font-bold text-stone-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(investedAmount)}</p>
             </div>
             <div>
-              <span className="text-purple-900 font-bold uppercase text-xs">Expected Interest Return</span>
-              <p className="font-bold text-purple-950 text-base mt-0.5">{formatCurrency(expectedInterestReturn)}</p>
+              <span className="text-purple-900 font-bold text-sm">Expected Interest Return</span>
+              <p className="font-bold text-purple-950 text-base mt-0.5 whitespace-nowrap">{formatCurrency(expectedInterestReturn)}</p>
             </div>
             <div>
-              <span className="text-emerald-900 font-bold uppercase text-xs">Total Settled Payout</span>
-              <p className="font-bold text-emerald-900 text-base mt-0.5">{formatCurrency(totalReceived)}</p>
+              <span className="text-emerald-900 font-bold text-sm">Total Settled Payout</span>
+              <p className="font-bold text-emerald-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(totalReceived)}</p>
             </div>
             <div>
-              <span className="text-amber-900 font-bold uppercase text-xs">Pending Balance</span>
-              <p className="font-bold text-amber-900 text-base mt-0.5">{formatCurrency(totalPending)}</p>
+              <span className="text-amber-900 font-bold text-sm">Pending Balance</span>
+              <p className="font-bold text-amber-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(totalPending)}</p>
             </div>
           </div>
 
@@ -255,7 +255,7 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
           <div className="border border-stone-300 rounded-xl overflow-hidden">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="bg-stone-900 text-white font-bold uppercase text-xs">
+                <tr className="bg-stone-900 text-white font-bold text-sm">
                   <th className="p-3.5">No.</th>
                   <th className="p-3.5">Client Due Date</th>
                   <th className="p-3.5 text-right">Client Collection (₹)</th>

@@ -177,31 +177,31 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
           </div>
 
           <div className="p-6 rounded-2xl bg-[#FAF7F2] border-2 border-[#D6CFC4] space-y-4">
-            <h5 className="text-base font-bold text-[#1A1A1A] uppercase tracking-wider">
+            <h5 className="text-lg font-bold text-[#1A1A1A]">
               Settled Waterfall Payouts
             </h5>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-base">
               <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                <p className="text-xs font-bold text-[#52525B] uppercase">Company Principal</p>
-                <p className="font-extrabold text-[#1A1A1A] text-lg mt-1">
+                <p className="text-sm font-bold text-[#3F3F46]">Company Principal</p>
+                <p className="font-extrabold text-[#1A1A1A] text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.principalRecovered)}
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                <p className="text-xs font-bold text-[#52525B] uppercase">Company Commission</p>
-                <p className="font-extrabold text-[#1E3A8A] text-lg mt-1">
+                <p className="text-sm font-bold text-[#3F3F46]">Company Commission</p>
+                <p className="font-extrabold text-[#1E3A8A] text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.managementCommission)}
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-                <p className="text-xs font-bold text-[#1F6B3A] uppercase">Company Net Profit</p>
-                <p className="font-extrabold text-[#1F6B3A] text-lg mt-1">
+                <p className="text-sm font-bold text-[#1F6B3A]">Company Net Profit</p>
+                <p className="font-extrabold text-[#1F6B3A] text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.totalCompanyProfit)}
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-                <p className="text-xs font-bold text-[#B45309] uppercase">Outstanding Remaining</p>
-                <p className="font-extrabold text-[#B45309] text-lg mt-1">
+                <p className="text-sm font-bold text-[#B45309]">Outstanding Remaining</p>
+                <p className="font-extrabold text-[#B45309] text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.dealUpdated?.outstandingTotal)}
                 </p>
               </div>
@@ -302,7 +302,7 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
               <div className="flex items-center justify-between border-b-2 border-[#D6CFC4] pb-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-[#1F6B3A] stroke-[2.3]" />
-                  <h4 className="text-base font-extrabold text-[#1A1A1A] uppercase tracking-wider">
+                  <h4 className="text-lg font-bold text-[#1A1A1A]">
                     Waterfall Distribution Preview
                   </h4>
                 </div>
@@ -314,20 +314,20 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
               {/* Allocation Top Row */}
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                  <span className="text-xs text-[#52525B] font-bold uppercase">Total Received</span>
-                  <p className="text-xl font-extrabold text-[#1A1A1A] mt-1">
+                  <span className="text-sm text-[#3F3F46] font-bold block">Total Received</span>
+                  <p className="text-xl font-extrabold text-[#1A1A1A] mt-1 whitespace-nowrap">
                     {formatCurrency(previewData.amountReceived)}
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-[#EFF6FF] border-2 border-[#BFDBFE]">
-                  <span className="text-xs text-[#1E3A8A] font-bold uppercase">Principal Portion</span>
-                  <p className="text-xl font-extrabold text-[#1E3A8A] mt-1">
+                  <span className="text-sm text-[#1E3A8A] font-bold block">Principal Portion</span>
+                  <p className="text-xl font-extrabold text-[#1E3A8A] mt-1 whitespace-nowrap">
                     {formatCurrency(previewData.principalPortion)}
                   </p>
                 </div>
                 <div className="p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-                  <span className="text-xs text-[#1F6B3A] font-bold uppercase">Interest / Finance Charge</span>
-                  <p className="text-xl font-extrabold text-[#1F6B3A] mt-1">
+                  <span className="text-sm text-[#1F6B3A] font-bold block">Interest / Finance Charge</span>
+                  <p className="text-xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
                     {formatCurrency(previewData.interestPortion)}
                   </p>
                 </div>

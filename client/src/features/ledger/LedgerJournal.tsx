@@ -79,11 +79,11 @@ export const LedgerJournal: React.FC = () => {
                     <span className="font-mono text-base font-bold text-[#8B1A1A] bg-[#FAF7F2] px-3.5 py-1.5 rounded-xl border border-[#D6CFC4]">
                       {txn.transactionNo}
                     </span>
-                    <span className="text-sm font-extrabold uppercase tracking-wider text-[#1F6B3A] bg-[#EAF5EE] px-3 py-1 rounded-lg border border-[#A7D9B7]">
-                      {txn.transactionType.replace(/_/g, ' ')}
+                    <span className="text-sm font-bold text-[#1F6B3A] bg-[#EAF5EE] px-3 py-1 rounded-lg border border-[#A7D9B7]">
+                      {txn.transactionType.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase())}
                     </span>
                   </div>
-                  <span className="text-base text-[#52525B] font-bold">
+                  <span className="text-base text-[#52525B] font-bold whitespace-nowrap">
                     {formatDate(txn.transactionDate)}
                   </span>
                 </div>
@@ -143,10 +143,10 @@ export const LedgerJournal: React.FC = () => {
             <table className="w-full text-left text-base">
               <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
                 <tr>
-                  <th className="py-4 px-6 text-sm uppercase">Account Code</th>
-                  <th className="py-4 px-6 text-sm uppercase">Account Title</th>
-                  <th className="py-4 px-6 text-sm uppercase">Account Category</th>
-                  <th className="py-4 px-6 text-sm uppercase text-right">Current Balance</th>
+                  <th className="py-4 px-6 text-base font-bold">Account Code</th>
+                  <th className="py-4 px-6 text-base font-bold">Account Title</th>
+                  <th className="py-4 px-6 text-base font-bold">Account Category</th>
+                  <th className="py-4 px-6 text-base font-bold text-right">Current Balance</th>
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -164,18 +164,18 @@ export const LedgerJournal: React.FC = () => {
                         index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                       }`}
                     >
-                      <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                      <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                         {acc.accountCode}
                       </td>
                       <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
                         {acc.accountName}
                       </td>
-                      <td className="py-5 px-6">
-                        <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A] uppercase">
+                      <td className="py-5 px-6 whitespace-nowrap">
+                        <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
                           {acc.accountType}
                         </span>
                       </td>
-                      <td className="py-5 px-6 text-right font-extrabold text-xl text-[#1A1A1A]">
+                      <td className="py-5 px-6 text-right font-extrabold text-xl text-[#1A1A1A] whitespace-nowrap">
                         {formatCurrency(acc.balance)}
                       </td>
                     </tr>

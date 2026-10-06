@@ -193,17 +193,17 @@ export const ClientDetail: React.FC = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-base bg-[#FAF7F2] p-4 rounded-xl border border-[#D6CFC4]">
             <div>
-              <span className="text-xs font-bold text-[#52525B] uppercase block">Phone</span>
+              <span className="text-sm font-bold text-[#3F3F46] block">Phone</span>
               <span className="font-bold text-[#1A1A1A] text-lg mt-0.5 block">{client.phone}</span>
             </div>
             <div>
-              <span className="text-xs font-bold text-[#52525B] uppercase block">Email</span>
-              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block truncate">
+              <span className="text-sm font-bold text-[#3F3F46] block">Email</span>
+              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block break-words">
                 {client.email || '—'}
               </span>
             </div>
             <div>
-              <span className="text-xs font-bold text-[#52525B] uppercase block">Location</span>
+              <span className="text-sm font-bold text-[#3F3F46] block">Location</span>
               <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block">
                 {client.city ? `${client.city}, ${client.state || ''}` : '—'}
               </span>
@@ -214,26 +214,26 @@ export const ClientDetail: React.FC = () => {
         {/* Aggregate Financial Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#52525B] uppercase">Total Finance Taken</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A] mt-1">
+            <span className="text-sm font-bold text-[#3F3F46] block">Total Finance Taken</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.totalFinanceReceived)}
             </p>
           </div>
           <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Total Repaid (P+I)</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+            <span className="text-sm font-bold text-[#1F6B3A] block">Total Repaid (P+I)</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.totalRepaid)}
             </p>
           </div>
           <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-            <span className="text-xs font-bold text-[#B45309] uppercase">Outstanding Total</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1">
+            <span className="text-sm font-bold text-[#B45309] block">Outstanding Total</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1 whitespace-nowrap">
               {formatCurrency(summary.outstandingAmount)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#FEE2E2] border-2 border-[#FECACA]">
-            <span className="text-xs font-bold text-[#B91C1C] uppercase">Overdue Balance</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#B91C1C] mt-1">
+          <div className="p-5 rounded-xl bg-[#FEF2F2] border-2 border-[#FECACA]">
+            <span className="text-sm font-bold text-[#B91C1C] block">Overdue Balance</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B91C1C] mt-1 whitespace-nowrap">
               {formatCurrency(summary.overdueAmount)}
             </p>
           </div>
@@ -264,13 +264,13 @@ export const ClientDetail: React.FC = () => {
             <table className="w-full text-left text-base">
               <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
                 <tr>
-                  <th className="py-4 px-5 text-sm uppercase">Deal #</th>
-                  <th className="py-4 px-5 text-sm uppercase">Approved Finance</th>
-                  <th className="py-4 px-5 text-sm uppercase">Contract Interest</th>
-                  <th className="py-4 px-5 text-sm uppercase">Total Repaid</th>
-                  <th className="py-4 px-5 text-sm uppercase">Outstanding</th>
-                  <th className="py-4 px-5 text-sm uppercase">Status</th>
-                  <th className="py-4 px-5 text-sm uppercase text-right">Action</th>
+                  <th className="py-4 px-5 text-base font-bold">Deal #</th>
+                  <th className="py-4 px-5 text-base font-bold">Approved Finance</th>
+                  <th className="py-4 px-5 text-base font-bold">Contract Interest</th>
+                  <th className="py-4 px-5 text-base font-bold">Total Repaid</th>
+                  <th className="py-4 px-5 text-base font-bold">Outstanding</th>
+                  <th className="py-4 px-5 text-base font-bold">Status</th>
+                  <th className="py-4 px-5 text-base font-bold text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -280,27 +280,27 @@ export const ClientDetail: React.FC = () => {
                     onClick={() => navigate(`/deals/${d.id}`)}
                     className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
                   >
-                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg">
+                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                       {d.dealNumber}
                     </td>
-                    <td className="py-4 px-5 font-bold text-lg">
+                    <td className="py-4 px-5 font-bold text-lg whitespace-nowrap">
                       {formatCurrency(d.financeAmountApproved)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(d.totalInterest)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(
                         Number(d.totalPrincipalRepaid || 0) + Number(d.totalInterestRepaid || 0)
                       )}
                     </td>
-                    <td className="py-4 px-5 font-extrabold text-lg text-[#B45309]">
+                    <td className="py-4 px-5 font-extrabold text-lg text-[#B45309] whitespace-nowrap">
                       {formatCurrency(d.outstandingTotal)}
                     </td>
-                    <td className="py-4 px-5">
+                    <td className="py-4 px-5 whitespace-nowrap">
                       <StatusBadge status={d.status} size="sm" />
                     </td>
-                    <td className="py-4 px-5 text-right">
+                    <td className="py-4 px-5 text-right whitespace-nowrap">
                       <AccessibleButton
                         variant="secondary"
                         size="compact"

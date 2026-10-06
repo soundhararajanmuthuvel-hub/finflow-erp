@@ -197,26 +197,26 @@ export const InvestorDetail: React.FC = () => {
         {/* Aggregate Financial Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#52525B] uppercase">Total Capital Deployed</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#6B21A8] mt-1">
+            <span className="text-sm font-bold text-[#3F3F46] block">Total Capital Deployed</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#6B21A8] mt-1 whitespace-nowrap">
               {formatCurrency(summary.totalInvested)}
             </p>
           </div>
           <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Principal Recovered</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+            <span className="text-sm font-bold text-[#1F6B3A] block">Principal Recovered</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.principalReturned)}
             </p>
           </div>
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#1F6B3A] uppercase">Total ROI Earned</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1">
+            <span className="text-sm font-bold text-[#1F6B3A] block">Total ROI Earned</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.interestEarned)}
             </p>
           </div>
           <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-            <span className="text-xs font-bold text-[#B45309] uppercase">Pending Capital</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1">
+            <span className="text-sm font-bold text-[#B45309] block">Pending Capital</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1 whitespace-nowrap">
               {formatCurrency(summary.pendingPrincipal)}
             </p>
           </div>
@@ -239,14 +239,14 @@ export const InvestorDetail: React.FC = () => {
             <table className="w-full text-left text-base">
               <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
                 <tr>
-                  <th className="py-4 px-5 text-sm uppercase">Deal Number</th>
-                  <th className="py-4 px-5 text-sm uppercase">Client Name</th>
-                  <th className="py-4 px-5 text-sm uppercase">Invested Amount</th>
-                  <th className="py-4 px-5 text-sm uppercase">Share %</th>
-                  <th className="py-4 px-5 text-sm uppercase">Principal Recovered</th>
-                  <th className="py-4 px-5 text-sm uppercase">Interest Earned</th>
-                  <th className="py-4 px-5 text-sm uppercase">Status</th>
-                  <th className="py-4 px-5 text-sm uppercase text-right">Action</th>
+                  <th className="py-4 px-5 text-base font-bold">Deal Number</th>
+                  <th className="py-4 px-5 text-base font-bold">Client Name</th>
+                  <th className="py-4 px-5 text-base font-bold">Invested Amount</th>
+                  <th className="py-4 px-5 text-base font-bold">Share %</th>
+                  <th className="py-4 px-5 text-base font-bold">Principal Recovered</th>
+                  <th className="py-4 px-5 text-base font-bold">Interest Earned</th>
+                  <th className="py-4 px-5 text-base font-bold">Status</th>
+                  <th className="py-4 px-5 text-base font-bold text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -256,28 +256,28 @@ export const InvestorDetail: React.FC = () => {
                     onClick={() => navigate(`/deals/${f.deal?.id}`)}
                     className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
                   >
-                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg">
+                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                       {f.deal?.dealNumber}
                     </td>
                     <td className="py-4 px-5 font-bold text-lg">
                       {f.deal?.client?.fullName}
                     </td>
-                    <td className="py-4 px-5 font-bold text-lg text-[#6B21A8]">
+                    <td className="py-4 px-5 font-bold text-lg text-[#6B21A8] whitespace-nowrap">
                       {formatCurrency(f.amount)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1A1A1A]">
+                    <td className="py-4 px-5 font-bold text-[#1A1A1A] whitespace-nowrap">
                       {formatPercentage(f.percentage)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A]">
+                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(f.principalReturned)}
                     </td>
-                    <td className="py-4 px-5 font-extrabold text-lg text-[#1F6B3A]">
+                    <td className="py-4 px-5 font-extrabold text-lg text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(f.interestEarned)}
                     </td>
-                    <td className="py-4 px-5">
+                    <td className="py-4 px-5 whitespace-nowrap">
                       <StatusBadge status={f.deal?.status} size="sm" />
                     </td>
-                    <td className="py-4 px-5 text-right">
+                    <td className="py-4 px-5 text-right whitespace-nowrap">
                       <AccessibleButton
                         variant="secondary"
                         size="compact"

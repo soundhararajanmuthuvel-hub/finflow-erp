@@ -20,6 +20,7 @@ import {
   AccessibleCard,
   AccessibleBanner,
 } from '../../components/common/AccessibleComponents';
+import { formatRole } from '../../utils/formatters';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -265,16 +266,16 @@ export const Settings: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-base">
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#52525B] uppercase block">Operator Name</span>
+            <span className="text-sm font-bold text-[#3F3F46] block">Operator Name</span>
             <p className="font-extrabold text-[#1A1A1A] text-lg mt-1">{user?.fullName}</p>
           </div>
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#52525B] uppercase block">Email Address</span>
-            <p className="font-bold text-[#1A1A1A] text-base mt-1">{user?.email}</p>
+            <span className="text-sm font-bold text-[#3F3F46] block">Email Address</span>
+            <p className="font-bold text-[#1A1A1A] text-base mt-1 break-words">{user?.email}</p>
           </div>
           <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#52525B] uppercase block">Assigned Role</span>
-            <p className="font-extrabold text-[#8B1A1A] uppercase text-base mt-1">{user?.role}</p>
+            <span className="text-sm font-bold text-[#3F3F46] block">Assigned Role</span>
+            <p className="font-extrabold text-[#8B1A1A] text-lg mt-1">{formatRole(user?.role)}</p>
           </div>
         </div>
       </AccessibleCard>

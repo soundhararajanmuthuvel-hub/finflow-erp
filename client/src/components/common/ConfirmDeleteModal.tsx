@@ -34,7 +34,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 
         {itemDescription && (
           <div className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] text-base font-semibold text-[#1A1A1A]">
-            <span className="text-sm font-bold text-[#52525B] block uppercase tracking-wider mb-1">Target Record:</span>
+            <span className="text-sm font-bold text-[#52525B] block mb-1">Target Record:</span>
             {itemDescription}
           </div>
         )}

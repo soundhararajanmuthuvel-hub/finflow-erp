@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   Clock,
   AlertTriangle,
-  XCircle,
   FileText,
   ShieldCheck,
   CheckCheck,
@@ -84,7 +83,10 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
 
   const formatText = (st: string) => {
     if (!st) return '—';
-    return st.replace(/_/g, ' ');
+    return st
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
   const config = getBadgeConfig(status);
@@ -99,7 +101,7 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-lg font-bold border-2 tracking-wide shadow-sm select-none',
+        'inline-flex items-center rounded-lg font-bold border-2 shadow-sm select-none whitespace-nowrap',
         config.style,
         sizeClasses[size],
         className

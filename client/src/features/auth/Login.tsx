@@ -48,7 +48,7 @@ export const Login: React.FC = () => {
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
             FinFlow
           </h1>
-          <p className="text-sm sm:text-base text-[#8B1A1A] uppercase tracking-widest font-extrabold mt-1">
+          <p className="text-sm sm:text-base text-[#8B1A1A] font-extrabold mt-1">
             Private Finance Management
           </p>
 
@@ -103,7 +103,7 @@ export const Login: React.FC = () => {
 
             {/* Quick credentials switcher */}
             <div className="p-4 rounded-2xl bg-[#FAF7F2] border-2 border-[#EDE7DE]">
-              <p className="text-sm font-bold text-[#52525B] uppercase tracking-wider mb-2">
+              <p className="text-sm font-bold text-[#52525B] mb-2">
                 Quick Demo Operator Profiles:
               </p>
               <div className="grid grid-cols-3 gap-2 sm:gap-3">

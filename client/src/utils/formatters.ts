@@ -23,3 +23,12 @@ export const formatPercentage = (val: number | string | undefined | null): strin
   if (val === undefined || val === null || isNaN(Number(val))) return '0.00%';
   return `${Number(val).toFixed(2)}%`;
 };
+
+export const formatRole = (role?: string | null): string => {
+  if (!role) return '—';
+  return role
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+

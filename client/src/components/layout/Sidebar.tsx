@@ -17,6 +17,7 @@ import {
 import clsx from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 import { useCompanyProfile } from '../../context/CompanyProfileContext';
+import { formatRole } from '../../utils/formatters';
 
 export const navigationItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, section: 'Core' },
@@ -63,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
               <h1 className="font-extrabold text-[#1A1A1A] text-xl tracking-tight leading-tight">
                 FinFlow
               </h1>
-              <p className="text-xs font-bold text-[#8B1A1A] uppercase tracking-wider">
+              <p className="text-sm font-semibold text-[#8B1A1A] leading-tight">
                 Private Finance Management
               </p>
             </div>
@@ -80,16 +81,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
           )}
         </div>
 
-        {/* Dynamic Client Company Profile Box */}
+        {/* Dynamic Client Company Profile Box (wraps without truncation) */}
         <div className="p-3.5 rounded-xl bg-white border-2 border-[#D6CFC4] shadow-sm">
           <div className="flex items-center gap-2">
             <Building2 className="h-4 w-4 text-[#8B1A1A] shrink-0" />
-            <span className="text-xs uppercase tracking-wider text-[#52525B] font-bold block">
+            <span className="text-sm font-bold text-[#3F3F46] block">
               Operating Company
             </span>
           </div>
           <p
-            className="text-base font-bold text-[#1A1A1A] truncate mt-1 leading-snug"
+            className="text-[1.0625rem] font-bold text-[#1A1A1A] mt-1 leading-snug break-words"
             title={company?.name || 'Sri Lakshmi Finance'}
           >
             {company?.name || 'Sri Lakshmi Finance'}
@@ -99,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
 
       {/* Nav List */}
       <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto" aria-label="Main Navigation">
-        <div className="px-3 pb-1 text-xs font-bold text-[#52525B] uppercase tracking-wider">
+        <div className="px-3 pb-1 text-sm font-bold text-[#3F3F46]">
           Main Navigation
         </div>
 
@@ -113,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
               onClick={onCloseMobile}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-base sm:text-lg font-bold transition-all duration-150 group min-h-[52px]',
+                  'flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-[1.125rem] font-semibold transition-all duration-150 group min-h-[56px]',
                   isActive
                     ? 'bg-[#8B1A1A] text-white shadow-md shadow-[#8B1A1A]/20 border-2 border-[#8B1A1A]'
                     : 'text-[#1A1A1A] hover:bg-[#FAF7F2] hover:text-[#8B1A1A] border-2 border-transparent hover:border-[#D6CFC4]'
@@ -129,7 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
                     )}
                     aria-hidden="true"
                   />
-                  <span className="truncate">{item.name}</span>
+                  <span>{item.name}</span>
                 </>
               )}
             </NavLink>
@@ -141,18 +142,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
       <div className="border-t-2 border-[#EDE7DE] bg-[#FAF7F2] p-4 space-y-3">
         {user && (
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white border-2 border-[#D6CFC4] shadow-sm">
-            <div className="h-10 w-10 rounded-xl bg-[#8B1A1A] text-white flex items-center justify-center font-bold text-base uppercase shrink-0 shadow-sm">
+            <div className="h-11 w-11 rounded-xl bg-[#8B1A1A] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-sm">
               {user.fullName.slice(0, 2)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-[#1A1A1A] truncate">{user.fullName}</p>
-              <p className="text-xs text-[#8B1A1A] font-bold truncate uppercase tracking-wider">{user.role}</p>
+              <p className="text-base font-bold text-[#1A1A1A] leading-tight break-words">{user.fullName}</p>
+              <p className="text-sm text-[#8B1A1A] font-semibold mt-0.5 leading-tight">{formatRole(user.role)}</p>
             </div>
           </div>
         )}
 
         <div className="text-center pt-1">
-          <p className="text-xs font-semibold text-[#52525B]">
+          <p className="text-sm font-medium text-[#3F3F46]">
             Product by <span className="text-[#1A1A1A] font-bold">MSR Solutions</span>
           </p>
         </div>

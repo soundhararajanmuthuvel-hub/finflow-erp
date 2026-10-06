@@ -35,11 +35,11 @@ export const AuditLogs: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-sm uppercase">Timestamp</th>
-                <th className="py-4 px-6 text-sm uppercase">Action Performed</th>
-                <th className="py-4 px-6 text-sm uppercase">Operator</th>
-                <th className="py-4 px-6 text-sm uppercase">Target Entity</th>
-                <th className="py-4 px-6 text-sm uppercase">Recorded Changes</th>
+                <th className="py-4 px-6 text-base">Timestamp</th>
+                <th className="py-4 px-6 text-base">Action Performed</th>
+                <th className="py-4 px-6 text-base">Operator</th>
+                <th className="py-4 px-6 text-base">Target Entity</th>
+                <th className="py-4 px-6 text-base">Recorded Changes</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -72,7 +72,7 @@ export const AuditLogs: React.FC = () => {
                     <td className="py-4 px-6 font-mono text-base font-bold text-[#8B1A1A]">
                       {log.entity}
                     </td>
-                    <td className="py-4 px-6 text-sm font-mono text-[#52525B] max-w-md truncate">
+                    <td className="py-4 px-6 text-sm font-mono text-[#52525B] max-w-md break-words">
                       {log.newValues || '—'}
                     </td>
                   </tr>

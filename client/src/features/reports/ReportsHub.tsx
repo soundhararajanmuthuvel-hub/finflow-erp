@@ -134,8 +134,8 @@ export const ReportsHub: React.FC = () => {
               <tr>
                 {reportData?.length > 0 &&
                   Object.keys(reportData[0]).map((col) => (
-                    <th key={col} className="py-4 px-5 uppercase text-sm tracking-wider">
-                      {col.replace(/([A-Z])/g, ' $1')}
+                    <th key={col} className="py-4 px-5 text-base font-bold whitespace-nowrap">
+                      {col.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
                     </th>
                   ))}
               </tr>
@@ -166,9 +166,9 @@ export const ReportsHub: React.FC = () => {
                           k.toLowerCase().includes('total'));
 
                       return (
-                        <td key={j} className="py-4 px-5">
+                        <td key={j} className="py-4 px-5 whitespace-nowrap">
                           {isMoney ? (
-                            <span className="font-bold text-[#1A1A1A] font-mono text-lg">
+                            <span className="font-bold text-[#1A1A1A] font-mono text-lg whitespace-nowrap">
                               {formatCurrency(val)}
                             </span>
                           ) : (

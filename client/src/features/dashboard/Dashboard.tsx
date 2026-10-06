@@ -5,16 +5,13 @@ import {
   TrendingUp,
   AlertTriangle,
   Building2,
-  Users,
   CreditCard,
   Percent,
   CircleDollarSign,
   PlusCircle,
   Receipt,
-  ArrowUpRight,
   Clock,
   CheckCircle2,
-  FileSpreadsheet,
   ArrowRight,
   Phone,
 } from 'lucide-react';
@@ -76,23 +73,24 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 sm:space-y-10">
-      {/* Header with Large Quick Action Buttons */}
+      {/* Header with Title and Large Action Buttons */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
         <div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight leading-tight">
             Executive Dashboard
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1.5 leading-relaxed">
+          <p className="text-base sm:text-lg font-medium text-[#3F3F46] mt-1.5 leading-relaxed">
             Real-time portfolio metrics, syndicate capital pools & waterfall distributions
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <AccessibleButton
             variant="secondary"
             size="normal"
             icon={Receipt}
             onClick={() => setRepaymentModalOpen(true)}
+            className="min-w-[200px]"
           >
             Record Repayment
           </AccessibleButton>
@@ -101,14 +99,15 @@ export const Dashboard: React.FC = () => {
             size="normal"
             icon={PlusCircle}
             onClick={() => navigate('/deals/new')}
+            className="min-w-[200px]"
           >
             Create Finance Deal
           </AccessibleButton>
         </div>
       </div>
 
-      {/* Primary KPI Cards Grid (40-48px Numbers, High Contrast) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Primary KPI Cards Grid (2 cards per row on laptop, 1 per row on mobile, min 340px) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatCard
           title="Active Finance Portfolio"
           value={formatCurrency(kpis.totalActiveFinance)}
@@ -143,52 +142,58 @@ export const Dashboard: React.FC = () => {
         />
       </div>
 
-      {/* Secondary Quick Metrics Row */}
+      {/* Secondary Performance Metrics Row (min 320px, 2 or 3 per row) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex items-center justify-between">
-          <div>
-            <p className="text-sm font-bold text-[#52525B] uppercase tracking-wider">
+        <div className="p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col justify-between min-h-[160px]">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[1.125rem] font-semibold text-[#1A1A1A] leading-snug">
               Total Interest Collected
             </p>
-            <h4 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A] mt-2">
+            <div className="h-11 w-11 rounded-xl bg-[#FEF3C7] text-[#B45309] border-2 border-[#FDE68A] flex items-center justify-center shrink-0">
+              <Percent className="h-6 w-6 stroke-[2.3]" />
+            </div>
+          </div>
+          <div className="mt-3">
+            <h4 className="text-[2rem] sm:text-[2.25rem] font-bold text-[#1A1A1A] whitespace-nowrap leading-none">
               {formatCurrency(kpis.interestCollected)}
             </h4>
-            <p className="text-sm font-semibold text-[#52525B] mt-1">Across all repayments</p>
-          </div>
-          <div className="h-14 w-14 rounded-2xl bg-[#FEF3C7] text-[#B45309] border-2 border-[#FDE68A] flex items-center justify-center shrink-0">
-            <Percent className="h-7 w-7 stroke-[2.3]" />
+            <p className="text-[1.0625rem] font-normal text-[#3F3F46] mt-2">Across all repayments</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex items-center justify-between">
-          <div>
-            <p className="text-sm font-bold text-[#52525B] uppercase tracking-wider">
+        <div className="p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col justify-between min-h-[160px]">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[1.125rem] font-semibold text-[#1A1A1A] leading-snug">
               Company Own Capital
             </p>
-            <h4 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A] mt-2">
+            <div className="h-11 w-11 rounded-xl bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE] flex items-center justify-center shrink-0">
+              <Building2 className="h-6 w-6 stroke-[2.3]" />
+            </div>
+          </div>
+          <div className="mt-3">
+            <h4 className="text-[2rem] sm:text-[2.25rem] font-bold text-[#1A1A1A] whitespace-nowrap leading-none">
               {formatCurrency(kpis.totalCompanyCapital)}
             </h4>
-            <p className="text-sm font-semibold text-[#52525B] mt-1">Committed by partners</p>
-          </div>
-          <div className="h-14 w-14 rounded-2xl bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE] flex items-center justify-center shrink-0">
-            <Building2 className="h-7 w-7 stroke-[2.3]" />
+            <p className="text-[1.0625rem] font-normal text-[#3F3F46] mt-2">Committed by partners</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#FEE2E2] border-2 border-[#FECACA] shadow-warm flex items-center justify-between">
-          <div>
-            <p className="text-sm font-bold text-[#B91C1C] uppercase tracking-wider">
+        <div className="p-6 rounded-2xl bg-[#FEF2F2] border-2 border-[#FECACA] shadow-warm flex flex-col justify-between min-h-[160px]">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-[1.125rem] font-semibold text-[#B91C1C] leading-snug">
               Overdue Repayments
             </p>
-            <h4 className="text-2xl sm:text-3xl font-extrabold text-[#B91C1C] mt-2">
+            <div className="h-11 w-11 rounded-xl bg-white text-[#B91C1C] border-2 border-[#FECACA] flex items-center justify-center shrink-0 shadow-sm">
+              <AlertTriangle className="h-6 w-6 stroke-[2.3]" />
+            </div>
+          </div>
+          <div className="mt-3">
+            <h4 className="text-[2rem] sm:text-[2.25rem] font-bold text-[#B91C1C] whitespace-nowrap leading-none">
               {formatCurrency(kpis.overdueAmount)}
             </h4>
-            <p className="text-sm font-bold text-[#7F1D1D] mt-1">
+            <p className="text-[1.0625rem] font-semibold text-[#991B1B] mt-2">
               {overdueRepayments.length} installments pending
             </p>
-          </div>
-          <div className="h-14 w-14 rounded-2xl bg-white text-[#B91C1C] border-2 border-[#FECACA] flex items-center justify-center shrink-0 shadow-sm">
-            <AlertTriangle className="h-7 w-7 stroke-[2.3]" />
           </div>
         </div>
       </div>
@@ -199,10 +204,10 @@ export const Dashboard: React.FC = () => {
         <AccessibleCard withTopAccent className="lg:col-span-2">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b-2 border-[#EDE7DE]">
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
+              <h3 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">
                 Disbursement vs Collection Flow
               </h3>
-              <p className="text-base text-[#52525B] font-medium mt-0.5">
+              <p className="text-[1.0625rem] text-[#3F3F46] font-normal mt-0.5">
                 Monthly capital deployed vs client repayments collected
               </p>
             </div>
@@ -274,10 +279,10 @@ export const Dashboard: React.FC = () => {
         {/* Capital Pool Breakdown */}
         <AccessibleCard withTopAccent className="flex flex-col justify-between">
           <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
+            <h3 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">
               Syndicate Capital Pool
             </h3>
-            <p className="text-base text-[#52525B] font-medium mt-0.5">
+            <p className="text-[1.0625rem] text-[#3F3F46] font-normal mt-0.5">
               Capital distribution across active deals
             </p>
 
@@ -285,7 +290,7 @@ export const Dashboard: React.FC = () => {
               <div>
                 <div className="flex justify-between text-base font-bold mb-2">
                   <span className="text-[#1A1A1A]">Outside Investors</span>
-                  <span className="text-[#6B21A8]">{formatCurrency(kpis.totalInvestorCapital)}</span>
+                  <span className="text-[#6B21A8] whitespace-nowrap">{formatCurrency(kpis.totalInvestorCapital)}</span>
                 </div>
                 <div className="h-4 rounded-full bg-[#EDE7DE] overflow-hidden border border-[#D6CFC4]">
                   <div className="h-full bg-[#6B21A8] rounded-full" style={{ width: '60%' }} />
@@ -295,7 +300,7 @@ export const Dashboard: React.FC = () => {
               <div>
                 <div className="flex justify-between text-base font-bold mb-2">
                   <span className="text-[#1A1A1A]">Company & Partner Capital</span>
-                  <span className="text-[#1F6B3A]">{formatCurrency(kpis.totalCompanyCapital)}</span>
+                  <span className="text-[#1F6B3A] whitespace-nowrap">{formatCurrency(kpis.totalCompanyCapital)}</span>
                 </div>
                 <div className="h-4 rounded-full bg-[#EDE7DE] overflow-hidden border border-[#D6CFC4]">
                   <div className="h-full bg-[#1F6B3A] rounded-full" style={{ width: '40%' }} />
@@ -309,7 +314,7 @@ export const Dashboard: React.FC = () => {
               <CircleDollarSign className="h-6 w-6 stroke-[2.3]" />
               <span>Double-Entry Financial Integrity</span>
             </div>
-            <p className="text-sm font-medium text-[#52525B] mt-1.5 leading-relaxed">
+            <p className="text-sm font-medium text-[#3F3F46] mt-1.5 leading-relaxed">
               Every client repayment is automatically journaled into balanced debit/credit ledger accounts.
             </p>
           </div>
@@ -340,15 +345,15 @@ export const Dashboard: React.FC = () => {
                 <div key={item.id} className="py-4 flex items-center justify-between gap-4">
                   <div>
                     <p className="text-lg font-bold text-[#1A1A1A]">{item.deal?.client?.fullName}</p>
-                    <p className="text-base text-[#52525B] font-semibold mt-0.5">
+                    <p className="text-base text-[#3F3F46] font-semibold mt-0.5">
                       Deal {item.deal?.dealNumber} • Inst #{item.installmentNumber}
                     </p>
                     <p className="text-sm text-[#1F6B3A] font-bold mt-0.5">
                       Due: {formatDate(item.dueDate)}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xl font-extrabold text-[#1F6B3A]">
+                  <div className="text-right shrink-0">
+                    <p className="text-xl font-extrabold text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(item.balanceAmount)}
                     </p>
                     <StatusBadge status="UPCOMING" size="sm" className="mt-1" />
@@ -356,7 +361,7 @@ export const Dashboard: React.FC = () => {
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-base font-semibold text-[#52525B]">
+              <div className="text-center py-8 text-base font-semibold text-[#3F3F46]">
                 <CheckCircle2 className="h-8 w-8 text-[#1F6B3A] mx-auto mb-2" />
                 No upcoming repayments scheduled
               </div>
@@ -394,8 +399,8 @@ export const Dashboard: React.FC = () => {
                       Overdue since {formatDate(item.dueDate)}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xl font-extrabold text-[#B91C1C]">
+                  <div className="text-right shrink-0">
+                    <p className="text-xl font-extrabold text-[#B91C1C] whitespace-nowrap">
                       {formatCurrency(item.balanceAmount)}
                     </p>
                     <StatusBadge status="OVERDUE" size="sm" className="mt-1" />

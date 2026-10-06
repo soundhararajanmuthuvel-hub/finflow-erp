@@ -13,6 +13,7 @@ interface StatCardProps {
   };
   colorScheme?: 'maroon' | 'emerald' | 'blue' | 'purple' | 'amber' | 'rose' | 'slate';
   onClick?: () => void;
+  className?: string;
 }
 
 export const StatCard: React.FC<StatCardProps> = ({
@@ -23,6 +24,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
   colorScheme = 'maroon',
   onClick,
+  className,
 }) => {
   const getColors = () => {
     switch (colorScheme) {
@@ -58,8 +60,8 @@ export const StatCard: React.FC<StatCardProps> = ({
         };
       case 'rose':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#B91C1C]',
-          iconBg: 'bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA]',
+          cardBorder: 'border-[#FECACA] hover:border-[#B91C1C] bg-[#FEF2F2]',
+          iconBg: 'bg-white text-[#B91C1C] border-2 border-[#FECACA]',
           accentBar: 'bg-[#B91C1C]',
         };
       default:
@@ -77,48 +79,53 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        'relative bg-white rounded-2xl p-6 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between overflow-hidden',
+        'relative bg-white rounded-2xl p-6 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between min-h-[190px]',
         colors.cardBorder,
-        onClick && 'cursor-pointer hover:shadow-warm-lg'
+        onClick && 'cursor-pointer hover:shadow-warm-lg',
+        className
       )}
     >
       {/* Top Accent Strip */}
       <div className={clsx('absolute top-0 left-0 right-0 h-1.5', colors.accentBar)} />
 
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <p className="text-base sm:text-lg font-bold text-[#3F3F46] tracking-wide uppercase leading-snug">
-            {title}
-          </p>
-          <div className="mt-3 text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight truncate leading-tight">
-            {value}
-          </div>
-          {subtitle && (
-            <p className="mt-2 text-base font-semibold text-[#52525B] leading-relaxed">
-              {subtitle}
-            </p>
-          )}
+      {/* Top Line: Icon badge (44px) placed beside the label */}
+      <div className="flex items-center gap-3.5">
+        <div className={clsx('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 shadow-sm', colors.iconBg)}>
+          <Icon className="h-6 w-6 stroke-[2.2]" aria-hidden="true" />
         </div>
+        <p className="text-[1.125rem] sm:text-[1.1875rem] font-semibold text-[#1A1A1A] leading-snug">
+          {title}
+        </p>
+      </div>
 
-        <div className={clsx('rounded-xl p-3.5 shrink-0 shadow-sm', colors.iconBg)}>
-          <Icon className="h-7 w-7 stroke-[2.2]" aria-hidden="true" />
+      {/* Full-width Big Amount on its own line: 40px bold, never wrapped, never truncated */}
+      <div className="mt-4 my-1">
+        <div className="text-[2.25rem] sm:text-[2.5rem] font-bold text-[#1A1A1A] tracking-tight whitespace-nowrap leading-none">
+          {value}
         </div>
       </div>
 
+      {/* Helper text below: 17px, normal weight, dark gray #3F3F46 */}
+      {subtitle && (
+        <p className="mt-2 text-[1.0625rem] font-normal text-[#3F3F46] leading-relaxed">
+          {subtitle}
+        </p>
+      )}
+
       {trend && (
-        <div className="mt-4 pt-3 border-t border-[#EDE7DE] flex items-center gap-2 text-base font-bold">
+        <div className="mt-3 pt-3 border-t border-[#EDE7DE] flex items-center gap-2 text-base font-semibold">
           {trend.isPositive ? (
-            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2 py-0.5 rounded-md">
-              <ArrowUpRight className="h-5 w-5" />
+            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2.5 py-1 rounded-lg border border-[#A7D9B7]">
+              <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
               {trend.value}
             </span>
           ) : (
-            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2 py-0.5 rounded-md">
-              <ArrowDownRight className="h-5 w-5" />
+            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2.5 py-1 rounded-lg border border-[#FECACA]">
+              <ArrowDownRight className="h-5 w-5 stroke-[2.5]" />
               {trend.value}
             </span>
           )}
-          <span className="text-[#52525B] font-medium">vs last period</span>
+          <span className="text-[#3F3F46]">vs last period</span>
         </div>
       )}
     </div>

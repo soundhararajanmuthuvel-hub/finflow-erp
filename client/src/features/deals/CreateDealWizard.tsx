@@ -365,8 +365,8 @@ export const CreateDealWizard: React.FC = () => {
               </p>
             </div>
             <div className="sm:text-right bg-stone-50 p-3.5 rounded-2xl border border-stone-200">
-              <span className="text-sm font-bold text-stone-600 uppercase block">Approved Target:</span>
-              <p className="text-2xl font-black text-maroon-800">{formatCurrency(approvedAmountNum)}</p>
+              <span className="text-sm font-bold text-stone-600 block">Approved Target:</span>
+              <p className="text-2xl font-black text-maroon-800 whitespace-nowrap">{formatCurrency(approvedAmountNum)}</p>
             </div>
           </div>
 
@@ -398,8 +398,8 @@ export const CreateDealWizard: React.FC = () => {
                     <span className="h-8 w-8 rounded-full bg-maroon-800 text-white flex items-center justify-center text-sm font-bold">
                       {idx + 1}
                     </span>
-                    <span className="text-base font-bold text-stone-900 uppercase tracking-wide">
-                      {item.sourceType.replace(/_/g, ' ')}
+                    <span className="text-base font-bold text-stone-900">
+                      {item.sourceType === 'COMPANY' ? 'Company Capital' : item.sourceType === 'PARTNER' ? 'Partner Equity' : 'Outside Investor'}
                     </span>
                   </div>
                   {fundings.length > 1 && (
@@ -602,26 +602,26 @@ export const CreateDealWizard: React.FC = () => {
               {/* Financial Summary Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="p-4 rounded-2xl bg-stone-50 border-2 border-stone-200">
-                  <span className="text-sm font-bold text-stone-600 uppercase">Approved Amount</span>
-                  <p className="text-xl sm:text-2xl font-black text-stone-900 mt-1">
+                  <span className="text-sm font-bold text-stone-600">Approved Amount</span>
+                  <p className="text-xl sm:text-2xl font-black text-stone-900 mt-1 whitespace-nowrap">
                     {formatCurrency(schedulePreview.totals.principal)}
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
-                  <span className="text-sm font-bold text-emerald-800 uppercase">Total Interest</span>
-                  <p className="text-xl sm:text-2xl font-black text-emerald-800 mt-1">
+                  <span className="text-sm font-bold text-emerald-800">Total Interest</span>
+                  <p className="text-xl sm:text-2xl font-black text-emerald-800 mt-1 whitespace-nowrap">
                     {formatCurrency(schedulePreview.totals.totalInterest)}
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-blue-50 border-2 border-blue-200">
-                  <span className="text-sm font-bold text-blue-800 uppercase">Total Payable</span>
-                  <p className="text-xl sm:text-2xl font-black text-blue-900 mt-1">
+                  <span className="text-sm font-bold text-blue-800">Total Payable</span>
+                  <p className="text-xl sm:text-2xl font-black text-blue-900 mt-1 whitespace-nowrap">
                     {formatCurrency(schedulePreview.totals.totalPayable)}
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200">
-                  <span className="text-sm font-bold text-amber-800 uppercase">Installment Due</span>
-                  <p className="text-xl sm:text-2xl font-black text-amber-900 mt-1">
+                  <span className="text-sm font-bold text-amber-800">Installment Due</span>
+                  <p className="text-xl sm:text-2xl font-black text-amber-900 mt-1 whitespace-nowrap">
                     {formatCurrency(schedulePreview.totals.installmentAmount)}
                   </p>
                 </div>

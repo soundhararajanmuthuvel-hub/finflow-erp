@@ -105,7 +105,7 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
                     alt="FinFlow Mark"
                     className="h-10 w-10 rounded-xl object-contain bg-[#072661] p-0.5 border border-stone-300"
                   />
-                  <span className="text-xs font-black text-stone-500 uppercase tracking-wider">FinFlow Letterhead</span>
+                  <span className="text-xs font-bold text-stone-500">FinFlow Letterhead</span>
                 </div>
               )}
               <h1 className="text-3xl font-black text-stone-900 tracking-tight leading-none">{company.name}</h1>
@@ -126,34 +126,34 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
 
           {/* 2. Document Title */}
           <div className="text-center py-3 bg-stone-100 rounded-xl border border-stone-300">
-            <h2 className="text-xl font-black text-stone-900 tracking-wider uppercase">
-              CLIENT PAYMENT SCHEDULE
+            <h2 className="text-xl font-black text-stone-900">
+              Client Payment Schedule
             </h2>
           </div>
 
           {/* 3. Deal & Client Metadata Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-xl bg-stone-50 border border-stone-300 text-sm">
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Client Name</span>
+              <span className="text-stone-500 font-bold text-xs block">Client Name</span>
               <p className="text-base font-black text-stone-900 mt-0.5">{deal.client?.fullName}</p>
               <p className="text-xs text-stone-600">{deal.client?.businessName || deal.client?.phone}</p>
             </div>
 
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Finance Deal No.</span>
+              <span className="text-stone-500 font-bold text-xs block">Finance Deal No.</span>
               <p className="text-base font-mono font-black text-stone-900 mt-0.5">{deal.dealNumber}</p>
               <p className="text-xs text-stone-600">Status: <span className="font-bold">{deal.status}</span></p>
             </div>
 
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Finance Amount</span>
-              <p className="text-base font-black text-stone-900 mt-0.5">{formatCurrency(deal.financeAmountApproved)}</p>
+              <span className="text-stone-500 font-bold text-xs block">Finance Amount</span>
+              <p className="text-base font-black text-stone-900 mt-0.5 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
               <p className="text-xs text-stone-600">Start Date: {formatDate(deal.startDate)}</p>
             </div>
 
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs block">Repayment Frequency</span>
-              <p className="text-base font-bold text-stone-900 mt-0.5 uppercase">{deal.repaymentFrequency}</p>
+              <span className="text-stone-500 font-bold text-xs block">Repayment Frequency</span>
+              <p className="text-base font-bold text-stone-900 mt-0.5">{deal.repaymentFrequency}</p>
               <p className="text-xs text-stone-600">{deal.numberOfRepayments} Installments</p>
             </div>
           </div>
@@ -162,7 +162,7 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
           <div className="border border-stone-300 rounded-xl overflow-hidden">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="bg-stone-900 text-white font-bold uppercase text-xs">
+                <tr className="bg-stone-900 text-white font-bold text-xs">
                   <th className="p-3.5">No.</th>
                   <th className="p-3.5">Due Date</th>
                   <th className="p-3.5 text-right">Principal (₹)</th>
@@ -176,9 +176,9 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
                   <tr key={sch.id} className="hover:bg-stone-50">
                     <td className="p-3.5 font-mono font-bold text-stone-700">#{sch.installmentNumber}</td>
                     <td className="p-3.5 font-medium text-stone-800">{formatDate(sch.dueDate)}</td>
-                    <td className="p-3.5 text-right font-mono font-medium text-stone-800">{formatCurrency(sch.principalAmount)}</td>
-                    <td className="p-3.5 text-right font-mono font-medium text-stone-800">{formatCurrency(sch.interestAmount)}</td>
-                    <td className="p-3.5 text-right font-mono font-bold text-stone-900">{formatCurrency(sch.totalDue)}</td>
+                    <td className="p-3.5 text-right font-mono font-medium text-stone-800 whitespace-nowrap">{formatCurrency(sch.principalAmount)}</td>
+                    <td className="p-3.5 text-right font-mono font-medium text-stone-800 whitespace-nowrap">{formatCurrency(sch.interestAmount)}</td>
+                    <td className="p-3.5 text-right font-mono font-bold text-stone-900 whitespace-nowrap">{formatCurrency(sch.totalDue)}</td>
                     <td className="p-3.5 text-center">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -201,24 +201,24 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
           {/* 5. Summary Financial Totals at Bottom */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 p-5 rounded-xl bg-stone-100 border border-stone-300 text-sm text-center">
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs">Total Finance</span>
-              <p className="font-bold text-stone-900 text-base mt-0.5">{formatCurrency(deal.financeAmountApproved)}</p>
+              <span className="text-stone-500 font-bold text-xs">Total Finance</span>
+              <p className="font-bold text-stone-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
             </div>
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs">Total Interest</span>
-              <p className="font-bold text-stone-900 text-base mt-0.5">{formatCurrency(deal.totalInterest)}</p>
+              <span className="text-stone-500 font-bold text-xs">Total Interest</span>
+              <p className="font-bold text-stone-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(deal.totalInterest)}</p>
             </div>
             <div>
-              <span className="text-stone-500 font-bold uppercase text-xs">Total Payable</span>
-              <p className="font-bold text-stone-900 text-base mt-0.5">{formatCurrency(deal.totalPayable)}</p>
+              <span className="text-stone-500 font-bold text-xs">Total Payable</span>
+              <p className="font-bold text-stone-900 text-base mt-0.5 whitespace-nowrap">{formatCurrency(deal.totalPayable)}</p>
             </div>
             <div>
-              <span className="text-emerald-800 font-bold uppercase text-xs">Amount Paid</span>
-              <p className="font-bold text-emerald-800 text-base mt-0.5">{formatCurrency(totalPaid)}</p>
+              <span className="text-emerald-800 font-bold text-xs">Amount Paid</span>
+              <p className="font-bold text-emerald-800 text-base mt-0.5 whitespace-nowrap">{formatCurrency(totalPaid)}</p>
             </div>
             <div>
-              <span className="text-rose-800 font-bold uppercase text-xs">Outstanding</span>
-              <p className="font-bold text-rose-800 text-base mt-0.5">{formatCurrency(outstanding)}</p>
+              <span className="text-rose-800 font-bold text-xs">Outstanding</span>
+              <p className="font-bold text-rose-800 text-base mt-0.5 whitespace-nowrap">{formatCurrency(outstanding)}</p>
             </div>
           </div>
 

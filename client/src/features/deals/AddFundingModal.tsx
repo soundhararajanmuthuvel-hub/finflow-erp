@@ -123,18 +123,18 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
         {/* Remaining Capacity Card */}
         <div className="p-5 rounded-2xl bg-[#EFF6FF] border-2 border-[#BFDBFE] flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold text-[#1E3A8A] uppercase tracking-wider block">
+            <span className="text-xs font-bold text-[#1E3A8A] block">
               Remaining Unfunded Gap
             </span>
-            <p className="text-2xl font-black text-[#1E3A8A] mt-0.5">
+            <p className="text-2xl font-black text-[#1E3A8A] mt-0.5 whitespace-nowrap">
               {formatCurrency(remainingCap)}
             </p>
           </div>
           <div className="text-right">
-            <span className="text-xs font-bold text-[#52525B] uppercase tracking-wider block">
+            <span className="text-xs font-bold text-[#52525B] block">
               Deal Approved Total
             </span>
-            <p className="text-lg font-bold text-[#1A1A1A]">{formatCurrency(approvedAmount)}</p>
+            <p className="text-lg font-bold text-[#1A1A1A] whitespace-nowrap">{formatCurrency(approvedAmount)}</p>
           </div>
         </div>
 

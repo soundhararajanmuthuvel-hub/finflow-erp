@@ -197,14 +197,14 @@ export const ClientList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Client Code</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Client / Business</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Contact</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Total Finance</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Outstanding</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Deals</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider">Status</th>
-                <th className="py-4 px-6 text-sm uppercase tracking-wider text-right">Actions</th>
+                <th className="py-4 px-6 text-base font-bold">Client Code</th>
+                <th className="py-4 px-6 text-base font-bold">Client / Business</th>
+                <th className="py-4 px-6 text-base font-bold">Contact</th>
+                <th className="py-4 px-6 text-base font-bold">Total Finance</th>
+                <th className="py-4 px-6 text-base font-bold">Outstanding</th>
+                <th className="py-4 px-6 text-base font-bold">Deals</th>
+                <th className="py-4 px-6 text-base font-bold">Status</th>
+                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -223,7 +223,7 @@ export const ClientList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                       {c.clientCode}
                     </td>
                     <td className="py-5 px-6">
@@ -232,25 +232,25 @@ export const ClientList: React.FC = () => {
                         {c.businessName || 'Individual'}
                       </p>
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <p className="font-bold text-[#1A1A1A]">{c.phone}</p>
                       <p className="text-sm text-[#52525B] font-medium mt-0.5">{c.city || '—'}</p>
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A] whitespace-nowrap">
                       {formatCurrency(c.totalFinanceReceived)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#B45309]">
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#B45309] whitespace-nowrap">
                       {formatCurrency(c.outstandingAmount)}
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
                         {c.dealsCount} deals
                       </span>
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <StatusBadge status={c.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right">
+                    <td className="py-5 px-6 text-right whitespace-nowrap">
                       <div
                         className="flex items-center justify-end gap-2"
                         onClick={(e) => e.stopPropagation()}
@@ -258,7 +258,7 @@ export const ClientList: React.FC = () => {
                         <button
                           title="Edit Client"
                           onClick={(e) => handleOpenEdit(c, e)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                         >
                           <Edit2 className="h-4 w-4 stroke-[2.3]" />
                           <span>Edit</span>
@@ -266,7 +266,7 @@ export const ClientList: React.FC = () => {
                         <button
                           title="Delete Client"
                           onClick={(e) => handleOpenDelete(c, e)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                         >
                           <Trash2 className="h-4 w-4 stroke-[2.3]" />
                           <span>Delete</span>
@@ -322,23 +322,23 @@ export const ClientList: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Total Finance</p>
-                  <p className="text-lg font-bold text-[#1A1A1A] mt-0.5">
+                  <p className="text-sm font-bold text-[#52525B]">Total Finance</p>
+                  <p className="text-lg font-bold text-[#1A1A1A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(c.totalFinanceReceived)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#B45309] uppercase">Outstanding</p>
-                  <p className="text-lg font-extrabold text-[#B45309] mt-0.5">
+                  <p className="text-sm font-bold text-[#B45309]">Outstanding</p>
+                  <p className="text-lg font-extrabold text-[#B45309] mt-0.5 whitespace-nowrap">
                     {formatCurrency(c.outstandingAmount)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Phone</p>
+                  <p className="text-sm font-bold text-[#52525B]">Phone</p>
                   <p className="text-base font-bold text-[#1A1A1A] mt-0.5">{c.phone}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Deals Count</p>
+                  <p className="text-sm font-bold text-[#52525B]">Deals Count</p>
                   <p className="text-base font-bold text-[#1A1A1A] mt-0.5">{c.dealsCount} deals</p>
                 </div>
               </div>

@@ -68,15 +68,15 @@ export const RepaymentList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-sm uppercase">Receipt #</th>
-                <th className="py-4 px-6 text-sm uppercase">Deal #</th>
-                <th className="py-4 px-6 text-sm uppercase">Client Name</th>
-                <th className="py-4 px-6 text-sm uppercase">Payment Date</th>
-                <th className="py-4 px-6 text-sm uppercase">Total Received</th>
-                <th className="py-4 px-6 text-sm uppercase">Principal Split</th>
-                <th className="py-4 px-6 text-sm uppercase">Interest Split</th>
-                <th className="py-4 px-6 text-sm uppercase">Payment Mode</th>
-                <th className="py-4 px-6 text-sm uppercase text-right">Actions</th>
+                <th className="py-4 px-6 text-base font-bold">Receipt #</th>
+                <th className="py-4 px-6 text-base font-bold">Deal #</th>
+                <th className="py-4 px-6 text-base font-bold">Client Name</th>
+                <th className="py-4 px-6 text-base font-bold">Payment Date</th>
+                <th className="py-4 px-6 text-base font-bold">Total Received</th>
+                <th className="py-4 px-6 text-base font-bold">Principal Split</th>
+                <th className="py-4 px-6 text-base font-bold">Interest Split</th>
+                <th className="py-4 px-6 text-base font-bold">Payment Mode</th>
+                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -94,38 +94,38 @@ export const RepaymentList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg flex items-center gap-2">
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg flex items-center gap-2 whitespace-nowrap">
                       <Receipt className="h-5 w-5 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
                       <span>{r.receiptNumber}</span>
                     </td>
-                    <td className="py-5 px-6 font-mono font-bold text-[#1A1A1A] text-lg">
+                    <td className="py-5 px-6 font-mono font-bold text-[#1A1A1A] text-lg whitespace-nowrap">
                       {r.dealNumber}
                     </td>
                     <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
                       {r.clientName}
                     </td>
-                    <td className="py-5 px-6 text-[#52525B] font-semibold">
+                    <td className="py-5 px-6 text-[#52525B] font-semibold whitespace-nowrap">
                       {formatDate(r.paymentDate)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-xl text-[#1F6B3A]">
+                    <td className="py-5 px-6 font-extrabold text-xl text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(r.amountReceived)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A] whitespace-nowrap">
                       {formatCurrency(r.principalPortion)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A]">
+                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(r.interestPortion)}
                     </td>
-                    <td className="py-5 px-6">
-                      <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-xs font-bold text-[#1A1A1A] uppercase tracking-wider">
+                    <td className="py-5 px-6 whitespace-nowrap">
+                      <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
                         {r.paymentMethod}
                       </span>
                     </td>
-                    <td className="py-5 px-6 text-right">
+                    <td className="py-5 px-6 text-right whitespace-nowrap">
                       <button
                         title="Void / Reverse Repayment"
                         onClick={(e) => handleOpenDelete(r, e)}
-                        className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm inline-flex items-center gap-1.5 shadow-sm transition-all"
+                        className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm inline-flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4 stroke-[2.3]" />
                         <span>Void</span>
@@ -171,32 +171,32 @@ export const RepaymentList: React.FC = () => {
                     Deal #{r.dealNumber} • Paid: {formatDate(r.paymentDate)}
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-xs font-bold text-[#1A1A1A] uppercase">
+                <span className="px-2.5 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-xs font-bold text-[#1A1A1A]">
                   {r.paymentMethod}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A] uppercase">Total Received</p>
-                  <p className="text-xl font-extrabold text-[#1F6B3A] mt-0.5">
+                  <p className="text-sm font-bold text-[#1F6B3A]">Total Received</p>
+                  <p className="text-xl font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(r.amountReceived)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Principal Portion</p>
-                  <p className="text-lg font-bold text-[#1A1A1A] mt-0.5">
+                  <p className="text-sm font-bold text-[#52525B]">Principal Portion</p>
+                  <p className="text-lg font-bold text-[#1A1A1A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(r.principalPortion)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A] uppercase">Interest Portion</p>
-                  <p className="text-lg font-bold text-[#1F6B3A] mt-0.5">
+                  <p className="text-sm font-bold text-[#1F6B3A]">Interest Portion</p>
+                  <p className="text-lg font-bold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(r.interestPortion)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Recorded By</p>
+                  <p className="text-sm font-bold text-[#52525B]">Recorded By</p>
                   <p className="text-base font-semibold text-[#1A1A1A] mt-0.5">
                     {r.recordedBy || 'Admin'}
                   </p>

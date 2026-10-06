@@ -33,7 +33,7 @@ import apiClient from '../../api/client';
 import { StatusBadge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
-import { formatCurrency, formatDate, formatPercentage } from '../../utils/formatters';
+import { formatCurrency, formatDate, formatPercentage, formatRole } from '../../utils/formatters';
 import { RecordRepaymentModal } from '../repayments/RecordRepaymentModal';
 import { PaymentDetailDrawer } from '../repayments/PaymentDetailDrawer';
 import { AddFundingModal } from './AddFundingModal';
@@ -369,30 +369,30 @@ export const DealDetail: React.FC = () => {
         {/* Financial Header 4-KPI Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t-2 border-stone-200">
           <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
-            <span className="text-sm text-stone-600 font-bold uppercase tracking-wider block">Finance Amount</span>
-            <p className="text-3xl font-black text-stone-900 mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
+            <span className="text-sm text-stone-600 font-bold block">Finance Amount</span>
+            <p className="text-3xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
             <p className="text-sm text-stone-500 font-medium mt-1">Required: {formatCurrency(deal.financeAmountRequired)}</p>
           </div>
 
           <div className="p-5 rounded-2xl bg-blue-50 border-2 border-blue-200">
-            <span className="text-sm text-blue-900 font-bold uppercase tracking-wider block">Total Payable</span>
-            <p className="text-3xl font-black text-blue-950 mt-1">{formatCurrency(totalPayable)}</p>
+            <span className="text-sm text-blue-900 font-bold block">Total Payable</span>
+            <p className="text-3xl font-black text-blue-950 mt-1 whitespace-nowrap">{formatCurrency(totalPayable)}</p>
             <p className="text-sm text-blue-800 font-medium mt-1">
               {deal.numberOfRepayments} × {formatCurrency(deal.installmentAmount)} ({deal.repaymentFrequency})
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
-            <span className="text-sm text-emerald-900 font-bold uppercase tracking-wider block">Total Collected</span>
-            <p className="text-3xl font-black text-emerald-950 mt-1">{formatCurrency(totalCollected)}</p>
+            <span className="text-sm text-emerald-900 font-bold block">Total Collected</span>
+            <p className="text-3xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(totalCollected)}</p>
             <p className="text-sm text-emerald-800 font-medium mt-1">
               Principal: {formatCurrency(principalRepaid)} • Interest: {formatCurrency(interestRepaid)}
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200">
-            <span className="text-sm text-amber-900 font-bold uppercase tracking-wider block">Outstanding</span>
-            <p className="text-3xl font-black text-amber-950 mt-1">{formatCurrency(outstandingTotal)}</p>
+            <span className="text-sm text-amber-900 font-bold block">Outstanding</span>
+            <p className="text-3xl font-black text-amber-950 mt-1 whitespace-nowrap">{formatCurrency(outstandingTotal)}</p>
             <p className="text-sm text-amber-800 font-medium mt-1">Principal Remaining: {formatCurrency(outstandingPrincipal)}</p>
           </div>
         </div>
@@ -405,7 +405,7 @@ export const DealDetail: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-maroon-800" />
-                <h3 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
+                <h3 className="text-base font-extrabold text-stone-900">
                   Syndicate Funding Allocation Summary
                 </h3>
               </div>
@@ -516,72 +516,72 @@ export const DealDetail: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <AccessibleCard className="p-5">
-              <span className="text-sm text-stone-500 font-bold uppercase">1. Finance Amount</span>
-              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(deal.financeAmountApproved)}</p>
+              <span className="text-sm text-stone-500 font-bold">1. Finance Amount</span>
+              <p className="text-2xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5">
-              <span className="text-sm text-stone-500 font-bold uppercase">2. Disbursed Amount</span>
-              <p className="text-2xl font-black text-stone-900 mt-1">
+              <span className="text-sm text-stone-500 font-bold">2. Disbursed Amount</span>
+              <p className="text-2xl font-black text-stone-900 mt-1 whitespace-nowrap">
                 {deal.status === 'ACTIVE' || deal.status === 'COMPLETED' || deal.status === 'OVERDUE'
                   ? formatCurrency(deal.financeAmountApproved)
                   : '₹0.00 (Pending)'}
               </p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-blue-50 border-blue-200">
-              <span className="text-sm text-blue-900 font-bold uppercase">3. Total Payable</span>
-              <p className="text-2xl font-black text-blue-950 mt-1">{formatCurrency(deal.totalPayable)}</p>
+              <span className="text-sm text-blue-900 font-bold">3. Total Payable</span>
+              <p className="text-2xl font-black text-blue-950 mt-1 whitespace-nowrap">{formatCurrency(deal.totalPayable)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
-              <span className="text-sm text-emerald-900 font-bold uppercase">4. Total Collected</span>
-              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(totalCollected)}</p>
+              <span className="text-sm text-emerald-900 font-bold">4. Total Collected</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(totalCollected)}</p>
             </AccessibleCard>
 
             <AccessibleCard className="p-5">
-              <span className="text-sm text-stone-500 font-bold uppercase">5. Principal Collected</span>
-              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(principalRepaid)}</p>
+              <span className="text-sm text-stone-500 font-bold">5. Principal Collected</span>
+              <p className="text-2xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(principalRepaid)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
-              <span className="text-sm text-emerald-900 font-bold uppercase">6. Interest Collected</span>
-              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(interestRepaid)}</p>
+              <span className="text-sm text-emerald-900 font-bold">6. Interest Collected</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(interestRepaid)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-amber-50 border-amber-200">
-              <span className="text-sm text-amber-900 font-bold uppercase">7. Outstanding Principal</span>
-              <p className="text-2xl font-black text-amber-950 mt-1">{formatCurrency(outstandingPrincipal)}</p>
+              <span className="text-sm text-amber-900 font-bold">7. Outstanding Principal</span>
+              <p className="text-2xl font-black text-amber-950 mt-1 whitespace-nowrap">{formatCurrency(outstandingPrincipal)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-amber-50 border-amber-200">
-              <span className="text-sm text-amber-900 font-bold uppercase">8. Outstanding Interest</span>
-              <p className="text-2xl font-black text-amber-950 mt-1">
+              <span className="text-sm text-amber-900 font-bold">8. Outstanding Interest</span>
+              <p className="text-2xl font-black text-amber-950 mt-1 whitespace-nowrap">
                 {formatCurrency(Math.max(0, Number(deal.totalInterest || 0) - interestRepaid))}
               </p>
             </AccessibleCard>
 
             <AccessibleCard className="p-5">
-              <span className="text-sm text-stone-600 font-bold uppercase">9. Company Commission</span>
-              <p className="text-2xl font-black text-stone-900 mt-1">{formatCurrency(totalCompanyCommission)}</p>
+              <span className="text-sm text-stone-600 font-bold">9. Company Commission</span>
+              <p className="text-2xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(totalCompanyCommission)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-purple-50 border-purple-200">
-              <span className="text-sm text-purple-900 font-bold uppercase">10. Investor Returns</span>
-              <p className="text-2xl font-black text-purple-950 mt-1">{formatCurrency(totalInvestorReturns)}</p>
+              <span className="text-sm text-purple-900 font-bold">10. Investor Returns</span>
+              <p className="text-2xl font-black text-purple-950 mt-1 whitespace-nowrap">{formatCurrency(totalInvestorReturns)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-blue-50 border-blue-200">
-              <span className="text-sm text-blue-900 font-bold uppercase">11. Partner Profit Share</span>
-              <p className="text-2xl font-black text-blue-950 mt-1">{formatCurrency(totalPartnerProfits)}</p>
+              <span className="text-sm text-blue-900 font-bold">11. Partner Profit Share</span>
+              <p className="text-2xl font-black text-blue-950 mt-1 whitespace-nowrap">{formatCurrency(totalPartnerProfits)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-5 bg-emerald-50 border-emerald-200">
-              <span className="text-sm text-emerald-900 font-bold uppercase">12. Company Net Profit</span>
-              <p className="text-2xl font-black text-emerald-950 mt-1">{formatCurrency(totalCompanyProfit)}</p>
+              <span className="text-sm text-emerald-900 font-bold">12. Company Net Profit</span>
+              <p className="text-2xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(totalCompanyProfit)}</p>
             </AccessibleCard>
           </div>
 
           {/* Collection Status Strip */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <AccessibleCard className="p-6">
-              <span className="text-sm text-stone-500 font-bold uppercase tracking-wider block mb-1">
+              <span className="text-sm text-stone-500 font-bold block mb-1">
                 Next Collection Due
               </span>
               {nextPendingSchedule ? (
                 <div>
-                  <p className="text-2xl font-black text-stone-900 font-mono">{formatCurrency(nextPendingSchedule.totalDue)}</p>
+                  <p className="text-2xl font-black text-stone-900 font-mono whitespace-nowrap">{formatCurrency(nextPendingSchedule.totalDue)}</p>
                   <p className="text-base text-stone-600 mt-1 font-medium">
                     Installment #{nextPendingSchedule.installmentNumber} • Due Date: <span className="text-maroon-900 font-bold">{formatDate(nextPendingSchedule.dueDate)}</span>
                   </p>
@@ -592,20 +592,20 @@ export const DealDetail: React.FC = () => {
             </AccessibleCard>
 
             <AccessibleCard className="p-6">
-              <span className="text-sm text-stone-500 font-bold uppercase tracking-wider block mb-1">
+              <span className="text-sm text-stone-500 font-bold block mb-1">
                 Repayment Frequency
               </span>
-              <p className="text-2xl font-black text-stone-900 uppercase">{deal.repaymentFrequency}</p>
+              <p className="text-2xl font-black text-stone-900">{deal.repaymentFrequency}</p>
               <p className="text-base text-stone-600 mt-1 font-medium">
                 Method: <span className="text-stone-900 font-semibold">{deal.interestType}</span> • Rate: <span className="text-maroon-900 font-bold">{deal.interestRate}%</span>
               </p>
             </AccessibleCard>
 
             <AccessibleCard className="p-6 bg-red-50 border-red-200">
-              <span className="text-sm text-red-900 font-bold uppercase tracking-wider block mb-1">
+              <span className="text-sm text-red-900 font-bold block mb-1">
                 Overdue Balance
               </span>
-              <p className="text-2xl font-black text-red-900 font-mono">{formatCurrency(overdueAmount)}</p>
+              <p className="text-2xl font-black text-red-900 font-mono whitespace-nowrap">{formatCurrency(overdueAmount)}</p>
               <p className="text-base text-red-800 mt-1 font-medium">
                 {overdueSchedules.length > 0 ? `${overdueSchedules.length} installment(s) currently overdue` : 'No overdue payments'}
               </p>
@@ -715,19 +715,19 @@ export const DealDetail: React.FC = () => {
         <div className="space-y-6">
           <AccessibleCard className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-base">
             <div>
-              <span className="text-sm text-stone-500 font-bold uppercase">Repayment Method</span>
+              <span className="text-sm text-stone-500 font-bold">Repayment Method</span>
               <p className="font-black text-stone-900 mt-1">{deal.interestType}</p>
             </div>
             <div>
-              <span className="text-sm text-stone-500 font-bold uppercase">Frequency</span>
-              <p className="font-black text-maroon-900 mt-1 uppercase">{deal.repaymentFrequency}</p>
+              <span className="text-sm text-stone-500 font-bold">Frequency</span>
+              <p className="font-black text-maroon-900 mt-1">{deal.repaymentFrequency}</p>
             </div>
             <div>
-              <span className="text-sm text-stone-500 font-bold uppercase">Installment Amount</span>
-              <p className="font-black text-stone-900 mt-1">{formatCurrency(deal.installmentAmount)}</p>
+              <span className="text-sm text-stone-500 font-bold">Installment Amount</span>
+              <p className="font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(deal.installmentAmount)}</p>
             </div>
             <div>
-              <span className="text-sm text-stone-500 font-bold uppercase">Total Installments</span>
+              <span className="text-sm text-stone-500 font-bold">Total Installments</span>
               <p className="font-black text-stone-900 mt-1">{deal.numberOfRepayments} Periodic Payments</p>
             </div>
           </AccessibleCard>
@@ -878,26 +878,26 @@ export const DealDetail: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-3 text-base pt-3 border-t-2 border-stone-100">
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Invested</span>
-                      <p className="font-mono font-black text-stone-900 mt-0.5">{formatCurrency(invested)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Invested</span>
+                      <p className="font-mono font-black text-stone-900 mt-0.5 whitespace-nowrap">{formatCurrency(invested)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Principal Returned</span>
-                      <p className="font-mono font-bold text-stone-700 mt-0.5">{formatCurrency(princReturned)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Principal Returned</span>
+                      <p className="font-mono font-bold text-stone-700 mt-0.5 whitespace-nowrap">{formatCurrency(princReturned)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Interest Earned</span>
-                      <p className="font-mono font-bold text-emerald-800 mt-0.5">{formatCurrency(intEarned)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Interest Earned</span>
+                      <p className="font-mono font-bold text-emerald-800 mt-0.5 whitespace-nowrap">{formatCurrency(intEarned)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Pending Principal</span>
-                      <p className="font-mono font-bold text-amber-900 mt-0.5">{formatCurrency(pending)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Pending Principal</span>
+                      <p className="font-mono font-bold text-amber-900 mt-0.5 whitespace-nowrap">{formatCurrency(pending)}</p>
                     </div>
                   </div>
 
                   <div className="p-4 rounded-xl bg-purple-50 border-2 border-purple-200 flex justify-between items-center text-base">
                     <span className="text-purple-950 font-bold">Total Payout Settled</span>
-                    <span className="font-black text-purple-950 font-mono text-lg">{formatCurrency(totalRet)}</span>
+                    <span className="font-black text-purple-950 font-mono text-lg whitespace-nowrap">{formatCurrency(totalRet)}</span>
                   </div>
 
                   <div className="pt-2">
@@ -956,26 +956,26 @@ export const DealDetail: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-3 text-base pt-3 border-t-2 border-stone-100">
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Capital Deployed</span>
-                      <p className="font-mono font-black text-stone-900 mt-0.5">{formatCurrency(capital)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Capital Deployed</span>
+                      <p className="font-mono font-black text-stone-900 mt-0.5 whitespace-nowrap">{formatCurrency(capital)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Principal Returned</span>
-                      <p className="font-mono font-bold text-stone-700 mt-0.5">{formatCurrency(princReturned)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Principal Returned</span>
+                      <p className="font-mono font-bold text-stone-700 mt-0.5 whitespace-nowrap">{formatCurrency(princReturned)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Profit Share Earned</span>
-                      <p className="font-mono font-bold text-blue-900 mt-0.5">{formatCurrency(profitShare)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Profit Share Earned</span>
+                      <p className="font-mono font-bold text-blue-900 mt-0.5 whitespace-nowrap">{formatCurrency(profitShare)}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-stone-500 font-bold uppercase block">Pending Capital</span>
-                      <p className="font-mono font-bold text-amber-900 mt-0.5">{formatCurrency(pending)}</p>
+                      <span className="text-xs text-stone-500 font-bold block">Pending Capital</span>
+                      <p className="font-mono font-bold text-amber-900 mt-0.5 whitespace-nowrap">{formatCurrency(pending)}</p>
                     </div>
                   </div>
 
                   <div className="p-4 rounded-xl bg-blue-50 border-2 border-blue-200 flex justify-between items-center text-base">
                     <span className="text-blue-950 font-bold">Total Payout Settled</span>
-                    <span className="font-black text-blue-950 font-mono text-lg">{formatCurrency(totalRet)}</span>
+                    <span className="font-black text-blue-950 font-mono text-lg whitespace-nowrap">{formatCurrency(totalRet)}</span>
                   </div>
                 </AccessibleCard>
               );
@@ -996,30 +996,30 @@ export const DealDetail: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <AccessibleCard className="p-4">
-              <span className="text-xs text-stone-500 font-bold uppercase">Interest Received</span>
-              <p className="text-xl font-black text-stone-900 mt-1">{formatCurrency(interestRepaid)}</p>
+              <span className="text-xs text-stone-500 font-bold">Interest Received</span>
+              <p className="text-xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(interestRepaid)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-4">
-              <span className="text-xs text-stone-600 font-bold uppercase">Company Commission</span>
-              <p className="text-xl font-black text-stone-900 mt-1">{formatCurrency(totalCompanyCommission)}</p>
+              <span className="text-xs text-stone-600 font-bold">Company Commission</span>
+              <p className="text-xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(totalCompanyCommission)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-4 bg-purple-50 border-purple-200">
-              <span className="text-xs text-purple-900 font-bold uppercase">Investor Return</span>
-              <p className="text-xl font-black text-purple-950 mt-1">{formatCurrency(totalInvestorReturns)}</p>
+              <span className="text-xs text-purple-900 font-bold">Investor Return</span>
+              <p className="text-xl font-black text-purple-950 mt-1 whitespace-nowrap">{formatCurrency(totalInvestorReturns)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-4 bg-blue-50 border-blue-200">
-              <span className="text-xs text-blue-900 font-bold uppercase">Partner Profit</span>
-              <p className="text-xl font-black text-blue-950 mt-1">{formatCurrency(totalPartnerProfits)}</p>
+              <span className="text-xs text-blue-900 font-bold">Partner Profit</span>
+              <p className="text-xl font-black text-blue-950 mt-1 whitespace-nowrap">{formatCurrency(totalPartnerProfits)}</p>
             </AccessibleCard>
             <AccessibleCard className="p-4 bg-emerald-50 border-emerald-200">
-              <span className="text-xs text-emerald-900 font-bold uppercase">Company Net Profit</span>
-              <p className="text-xl font-black text-emerald-950 mt-1">{formatCurrency(totalCompanyProfit)}</p>
+              <span className="text-xs text-emerald-900 font-bold">Company Net Profit</span>
+              <p className="text-xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(totalCompanyProfit)}</p>
             </AccessibleCard>
           </div>
 
           <AccessibleCard className="overflow-hidden p-0">
             <div className="p-5 bg-stone-100 border-b-2 border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
+              <h4 className="text-base font-extrabold text-stone-900">
                 Distribution Snapshots History
               </h4>
               <span className="text-sm text-stone-600 font-medium">All calculations locked immutably per collection</span>
@@ -1045,12 +1045,12 @@ export const DealDetail: React.FC = () => {
                     return (
                       <tr key={dist.id} className="hover:bg-stone-50">
                         <td className="p-4 font-mono font-bold text-maroon-900">{dist.repayment?.receiptNumber || 'RCP'}</td>
-                        <td className="p-4 text-right font-mono font-medium">{formatCurrency(dist.totalPrincipalSplit)}</td>
-                        <td className="p-4 text-right font-mono font-bold text-emerald-800">{formatCurrency(dist.totalInterestSplit)}</td>
-                        <td className="p-4 text-right font-mono font-bold text-purple-900">{formatCurrency(invTotal)}</td>
-                        <td className="p-4 text-right font-mono font-medium">{formatCurrency(compProf?.managementCommission || 0)}</td>
-                        <td className="p-4 text-right font-mono font-black text-emerald-900">{formatCurrency(compProf?.totalCompanyProfit || 0)}</td>
-                        <td className="p-4 text-right font-mono font-black text-stone-900">{formatCurrency(dist.totalDistributed)}</td>
+                        <td className="p-4 text-right font-mono font-medium whitespace-nowrap">{formatCurrency(dist.totalPrincipalSplit)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">{formatCurrency(dist.totalInterestSplit)}</td>
+                        <td className="p-4 text-right font-mono font-bold text-purple-900 whitespace-nowrap">{formatCurrency(invTotal)}</td>
+                        <td className="p-4 text-right font-mono font-medium whitespace-nowrap">{formatCurrency(compProf?.managementCommission || 0)}</td>
+                        <td className="p-4 text-right font-mono font-black text-emerald-900 whitespace-nowrap">{formatCurrency(compProf?.totalCompanyProfit || 0)}</td>
+                        <td className="p-4 text-right font-mono font-black text-stone-900 whitespace-nowrap">{formatCurrency(dist.totalDistributed)}</td>
                       </tr>
                     );
                   })}
@@ -1093,7 +1093,7 @@ export const DealDetail: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-base">
                     <thead>
-                      <tr className="text-sm text-stone-600 uppercase font-bold border-b border-stone-200">
+                      <tr className="text-sm text-stone-600 font-bold border-b border-stone-200">
                         <th className="pb-2">Account Code & Name</th>
                         <th className="pb-2">Narration</th>
                         <th className="pb-2 text-right">Debit (Dr)</th>
@@ -1107,10 +1107,10 @@ export const DealDetail: React.FC = () => {
                             {entry.account?.accountCode} - {entry.account?.accountName}
                           </td>
                           <td className="py-2.5 text-stone-600">{entry.narration}</td>
-                          <td className="py-2.5 text-right font-mono font-bold text-emerald-800">
+                          <td className="py-2.5 text-right font-mono font-bold text-emerald-800 whitespace-nowrap">
                             {Number(entry.debit) > 0 ? formatCurrency(entry.debit) : '-'}
                           </td>
-                          <td className="py-2.5 text-right font-mono font-bold text-blue-900">
+                          <td className="py-2.5 text-right font-mono font-bold text-blue-900 whitespace-nowrap">
                             {Number(entry.credit) > 0 ? formatCurrency(entry.credit) : '-'}
                           </td>
                         </tr>
@@ -1141,20 +1141,20 @@ export const DealDetail: React.FC = () => {
           <AccessibleCard className="p-6 space-y-6 text-base">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
-                <span className="text-xs text-stone-500 font-bold uppercase block">Created By</span>
+                <span className="text-xs text-stone-500 font-bold block">Created By</span>
                 <p className="text-lg font-bold text-stone-900 mt-1">{deal.createdBy?.fullName || 'System Admin'}</p>
-                <p className="text-sm text-stone-600 mt-0.5">Role: {deal.createdBy?.role || 'SUPER_ADMIN'} • Created: {formatDate(deal.createdAt)}</p>
+                <p className="text-sm text-stone-600 mt-0.5">Role: {formatRole(deal.createdBy?.role || 'SUPER_ADMIN')} • Created: {formatDate(deal.createdAt)}</p>
               </div>
 
               <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
-                <span className="text-xs text-stone-500 font-bold uppercase block">Approved By</span>
+                <span className="text-xs text-stone-500 font-bold block">Approved By</span>
                 <p className="text-lg font-bold text-emerald-900 mt-1">{deal.approvedBy?.fullName || 'Chief Investment Officer'}</p>
                 <p className="text-sm text-stone-600 mt-0.5">Approved Date: {deal.approvedAt ? formatDate(deal.approvedAt) : 'Pending'}</p>
               </div>
             </div>
 
             <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
-              <span className="text-xs text-stone-500 font-bold uppercase block mb-1">Deal Purpose & Audit Notes</span>
+              <span className="text-xs text-stone-500 font-bold block mb-1">Deal Purpose & Audit Notes</span>
               <p className="text-stone-800 font-medium leading-relaxed">{deal.notes || deal.purpose || 'Standard private finance syndication deal.'}</p>
             </div>
           </AccessibleCard>

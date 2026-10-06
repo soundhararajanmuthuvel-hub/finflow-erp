@@ -161,13 +161,13 @@ export const PartnerList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-sm uppercase">Partner Code</th>
-                <th className="py-4 px-6 text-sm uppercase">Partner Name</th>
-                <th className="py-4 px-6 text-sm uppercase">Contact</th>
-                <th className="py-4 px-6 text-sm uppercase">Capital Contributed</th>
-                <th className="py-4 px-6 text-sm uppercase">Equity Share %</th>
-                <th className="py-4 px-6 text-sm uppercase">Status</th>
-                <th className="py-4 px-6 text-sm uppercase text-right">Actions</th>
+                <th className="py-4 px-6 text-base font-bold">Partner Code</th>
+                <th className="py-4 px-6 text-base font-bold">Partner Name</th>
+                <th className="py-4 px-6 text-base font-bold">Contact</th>
+                <th className="py-4 px-6 text-base font-bold">Capital Contributed</th>
+                <th className="py-4 px-6 text-base font-bold">Equity Share %</th>
+                <th className="py-4 px-6 text-base font-bold">Status</th>
+                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -185,26 +185,26 @@ export const PartnerList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg">
+                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
                       {p.partnerCode}
                     </td>
                     <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
                       {p.name}
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <p className="font-bold text-[#1A1A1A]">{p.phone}</p>
                       <p className="text-sm text-[#52525B] mt-0.5">{p.email || '—'}</p>
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#1E3A8A]">
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#1E3A8A] whitespace-nowrap">
                       {formatCurrency(p.capitalContribution)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A]">
+                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A] whitespace-nowrap">
                       {formatPercentage(p.sharePercentage)}
                     </td>
-                    <td className="py-5 px-6">
+                    <td className="py-5 px-6 whitespace-nowrap">
                       <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right">
+                    <td className="py-5 px-6 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           title="Edit Partner"
@@ -267,14 +267,14 @@ export const PartnerList: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
                 <div>
-                  <p className="text-sm font-bold text-[#52525B] uppercase">Capital Contributed</p>
-                  <p className="text-lg font-extrabold text-[#1E3A8A] mt-0.5">
+                  <p className="text-sm font-bold text-[#3F3F46]">Capital Contributed</p>
+                  <p className="text-lg font-extrabold text-[#1E3A8A] mt-0.5 whitespace-nowrap">
                     {formatCurrency(p.capitalContribution)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A] uppercase">Equity Share</p>
-                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5">
+                  <p className="text-sm font-bold text-[#1F6B3A]">Equity Share</p>
+                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
                     {formatPercentage(p.sharePercentage)}
                   </p>
                 </div>

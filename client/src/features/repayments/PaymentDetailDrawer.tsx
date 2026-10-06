@@ -61,12 +61,12 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
           </div>
 
           <div className="sm:text-right">
-            <span className="text-xs text-stone-500 font-bold uppercase block">Total Amount Received</span>
-            <p className="text-3xl font-black text-emerald-900 mt-0.5">
+            <span className="text-sm text-[#3F3F46] font-bold block">Total Amount Received</span>
+            <p className="text-3xl font-black text-emerald-900 mt-0.5 whitespace-nowrap">
               {formatCurrency(repayment.amountReceived)}
             </p>
-            <p className="text-sm text-stone-600 font-medium mt-1 flex sm:justify-end items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-stone-500" />
+            <p className="text-sm text-[#3F3F46] font-medium mt-1 flex sm:justify-end items-center gap-1.5 whitespace-nowrap">
+              <Calendar className="h-4 w-4 text-[#52525B]" />
               <span>{formatDate(repayment.paymentDate)}</span>
             </p>
           </div>
@@ -75,19 +75,19 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
         {/* Principal vs Interest Allocation Strip */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-5 rounded-2xl bg-blue-50 border-2 border-blue-200">
-            <span className="text-xs font-bold text-blue-900 uppercase tracking-wider block">
+            <span className="text-sm font-bold text-blue-900 block">
               Principal Settled
             </span>
-            <p className="text-2xl font-black text-blue-950 mt-1">
+            <p className="text-2xl font-black text-blue-950 mt-1 whitespace-nowrap">
               {formatCurrency(repayment.principalPortion)}
             </p>
             <p className="text-sm text-blue-800 font-medium mt-1">Returned directly to syndicate capital providers</p>
           </div>
           <div className="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
-            <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider block">
+            <span className="text-sm font-bold text-emerald-900 block">
               Interest / Profit Collected
             </span>
-            <p className="text-2xl font-black text-emerald-950 mt-1">
+            <p className="text-2xl font-black text-emerald-950 mt-1 whitespace-nowrap">
               {formatCurrency(repayment.interestPortion)}
             </p>
             <p className="text-sm text-emerald-800 font-medium mt-1">Distributed via configured deal profit rules</p>
@@ -99,37 +99,37 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
           <div className="flex items-center justify-between border-b-2 border-stone-100 pb-3">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-emerald-700" />
-              <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
+              <h4 className="text-base font-extrabold text-[#1A1A1A]">
                 Immutable Distribution Snapshot
               </h4>
             </div>
-            <span className="text-sm text-stone-500 font-medium">Locked at time of transaction</span>
+            <span className="text-sm text-[#52525B] font-medium">Locked at time of transaction</span>
           </div>
 
           {/* Company Share */}
           {companyProfit && (
             <div className="p-4 rounded-xl bg-stone-50 border-2 border-stone-200 space-y-3">
               <div className="flex justify-between items-center text-base">
-                <span className="font-bold text-stone-900 flex items-center gap-2">
-                  <Building className="h-5 w-5 text-maroon-800" />
+                <span className="font-bold text-[#1A1A1A] flex items-center gap-2">
+                  <Building className="h-5 w-5 text-[#8B1A1A]" />
                   Company Allocation
                 </span>
-                <span className="font-black text-emerald-900 font-mono text-lg">
+                <span className="font-black text-emerald-900 font-mono text-lg whitespace-nowrap">
                   Total Profit: {formatCurrency(companyProfit.totalCompanyProfit)}
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm pt-2 border-t border-stone-200">
                 <div>
-                  <span className="text-stone-500 font-medium">Principal Recovered</span>
-                  <p className="font-bold text-stone-900 mt-0.5">{formatCurrency(companyProfit.principalRecovered)}</p>
+                  <span className="text-[#52525B] font-medium">Principal Recovered</span>
+                  <p className="font-bold text-[#1A1A1A] mt-0.5 whitespace-nowrap">{formatCurrency(companyProfit.principalRecovered)}</p>
                 </div>
                 <div>
-                  <span className="text-stone-500 font-medium">Commission (10%)</span>
-                  <p className="font-bold text-stone-900 mt-0.5">{formatCurrency(companyProfit.managementCommission)}</p>
+                  <span className="text-[#52525B] font-medium">Commission (10%)</span>
+                  <p className="font-bold text-[#1A1A1A] mt-0.5 whitespace-nowrap">{formatCurrency(companyProfit.managementCommission)}</p>
                 </div>
                 <div>
-                  <span className="text-stone-500 font-medium">Retained Margin</span>
-                  <p className="font-bold text-emerald-800 mt-0.5">{formatCurrency(companyProfit.retainedInterestMargin)}</p>
+                  <span className="text-[#52525B] font-medium">Retained Margin</span>
+                  <p className="font-bold text-emerald-800 mt-0.5 whitespace-nowrap">{formatCurrency(companyProfit.retainedInterestMargin)}</p>
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
           {/* Outside Investors */}
           {investorReturns.length > 0 && (
             <div className="space-y-3">
-              <span className="text-sm font-bold text-purple-900 uppercase tracking-wider block">
+              <span className="text-sm font-bold text-purple-900 block">
                 Outside Investor Returns
               </span>
               <div className="space-y-2">
@@ -146,13 +146,13 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
                   <div key={idx} className="p-4 rounded-xl bg-purple-50 border-2 border-purple-200 flex justify-between items-center text-base">
                     <div>
                       <p className="font-bold text-purple-950">{inv.investor?.name || `Investor #${idx + 1}`}</p>
-                      <p className="text-sm text-stone-600 mt-0.5">
-                        Principal Returned: <span className="text-stone-900 font-bold">{formatCurrency(inv.principalReturned)}</span> • Profit ROI: <span className="text-purple-900 font-bold">{formatCurrency(inv.interestEarned)}</span>
+                      <p className="text-sm text-[#3F3F46] mt-0.5">
+                        Principal Returned: <span className="text-[#1A1A1A] font-bold">{formatCurrency(inv.principalReturned)}</span> • Profit ROI: <span className="text-purple-900 font-bold">{formatCurrency(inv.interestEarned)}</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-stone-500 font-bold uppercase">Total Payout</span>
-                      <p className="font-mono font-black text-purple-950 text-lg">{formatCurrency(inv.totalPayout)}</p>
+                      <span className="text-sm text-[#52525B] font-bold block">Total Payout</span>
+                      <p className="font-mono font-black text-purple-950 text-lg whitespace-nowrap">{formatCurrency(inv.totalPayout)}</p>
                     </div>
                   </div>
                 ))}
@@ -163,7 +163,7 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
           {/* Partners */}
           {partnerReturns.length > 0 && (
             <div className="space-y-3">
-              <span className="text-sm font-bold text-blue-900 uppercase tracking-wider block">
+              <span className="text-sm font-bold text-blue-900 block">
                 Partner Distributions
               </span>
               <div className="space-y-2">
@@ -171,13 +171,13 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
                   <div key={idx} className="p-4 rounded-xl bg-blue-50 border-2 border-blue-200 flex justify-between items-center text-base">
                     <div>
                       <p className="font-bold text-blue-950">{prt.partner?.name || `Partner #${idx + 1}`}</p>
-                      <p className="text-sm text-stone-600 mt-0.5">
-                        Principal: <span className="text-stone-900 font-bold">{formatCurrency(prt.principalReturned)}</span> • Profit Share: <span className="text-blue-900 font-bold">{formatCurrency(prt.profitShare)}</span>
+                      <p className="text-sm text-[#3F3F46] mt-0.5">
+                        Principal: <span className="text-[#1A1A1A] font-bold">{formatCurrency(prt.principalReturned)}</span> • Profit Share: <span className="text-blue-900 font-bold">{formatCurrency(prt.profitShare)}</span>
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-stone-500 font-bold uppercase">Total Payout</span>
-                      <p className="font-mono font-black text-blue-950 text-lg">{formatCurrency(prt.totalPayout)}</p>
+                      <span className="text-sm text-[#52525B] font-bold block">Total Payout</span>
+                      <p className="font-mono font-black text-blue-950 text-lg whitespace-nowrap">{formatCurrency(prt.totalPayout)}</p>
                     </div>
                   </div>
                 ))}
@@ -192,17 +192,17 @@ export const PaymentDetailDrawer: React.FC<PaymentDetailDrawerProps> = ({
             <div className="flex items-center justify-between border-b-2 border-stone-100 pb-3">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-blue-800" />
-                <h4 className="text-base font-extrabold text-stone-900 uppercase tracking-wide">
+                <h4 className="text-base font-extrabold text-[#1A1A1A]">
                   Double-Entry Ledger Journal ({relatedJournal.transactionNo})
                 </h4>
               </div>
-              <span className="text-sm text-stone-500 font-mono font-bold">{formatDate(relatedJournal.transactionDate)}</span>
+              <span className="text-sm text-[#52525B] font-mono font-bold">{formatDate(relatedJournal.transactionDate)}</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-base">
                 <thead>
-                  <tr className="border-b-2 border-stone-200 text-sm text-stone-600 font-bold uppercase">
+                  <tr className="border-b-2 border-stone-200 text-sm text-[#3F3F46] font-bold">
                     <th className="pb-2">Account</th>
                     <th className="pb-2">Description</th>
                     <th className="pb-2 text-right">Debit (Dr)</th>

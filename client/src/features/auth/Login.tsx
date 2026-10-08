@@ -25,22 +25,10 @@ export const Login: React.FC = () => {
       if (res.success && res.data) {
         login(res.data.token, res.data.user);
         navigate('/');
-        return;
+      } else {
+        setError('Login failed: Invalid server response');
       }
     } catch (err: any) {
-      // Dev / offline UI verification fallback
-      if (email) {
-        const role = email.includes('manager') ? 'MANAGER' : email.includes('staff') ? 'STAFF' : 'SUPER_ADMIN';
-        login('dev_mock_token', {
-          id: 'usr_dev_1',
-          fullName: role === 'MANAGER' ? 'Branch Manager' : role === 'STAFF' ? 'Collection Officer' : 'Super Admin',
-          email: email,
-          role: role,
-          status: 'ACTIVE',
-        } as any);
-        navigate('/');
-        return;
-      }
       setError(err.message || 'Login failed. Please verify your email and password.');
     } finally {
       setLoading(false);

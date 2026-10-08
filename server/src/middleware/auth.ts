@@ -13,6 +13,9 @@ export const authenticate = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (config.nodeEnv === 'development') {
+      console.warn(`[AUTH] Missing or invalid Authorization header on ${req.method} ${req.originalUrl || req.path}`);
+    }
     sendError(res, 'Authentication token required', 401);
     return;
   }
@@ -23,7 +26,15 @@ export const authenticate = (
     const decoded = jwt.verify(token, config.jwtSecret) as AuthUserPayload;
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (error: any) {
+    if (config.nodeEnv === 'development') {
+      console.warn(`[AUTH] JWT verification failed:`, {
+        tokenPresent: Boolean(token),
+        errorName: error?.name || 'UnknownError',
+        errorMessage: error?.message || 'Verification failed',
+        path: req.originalUrl || req.path,
+      });
+    }
     sendError(res, 'Invalid or expired authentication token', 401);
     return;
   }

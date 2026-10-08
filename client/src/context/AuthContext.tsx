@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const verifyUser = async () => {
-      if (token && token !== 'dev_mock_token') {
+      if (token) {
         try {
           const res: any = await apiClient.get('/auth/me');
           if (res.success && res.data) {
@@ -31,10 +31,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem('finance_erp_user', JSON.stringify(res.data));
           }
         } catch (err) {
-          // If network or 401 error
-          if ((err as any)?.response?.status === 401) {
-            logout();
-          }
+          // If token verification explicitly fails, logout
+          logout();
         }
       }
       setIsLoading(false);

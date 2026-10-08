@@ -41,14 +41,14 @@ export const RepaymentList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
             Repayments & Collections
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-0.5">
             Browse collected client receipts, principal/interest splits, and void payment entries
           </p>
         </div>
@@ -68,21 +68,21 @@ export const RepaymentList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-base font-bold">Receipt #</th>
-                <th className="py-4 px-6 text-base font-bold">Deal #</th>
-                <th className="py-4 px-6 text-base font-bold">Client Name</th>
-                <th className="py-4 px-6 text-base font-bold">Payment Date</th>
-                <th className="py-4 px-6 text-base font-bold">Total Received</th>
-                <th className="py-4 px-6 text-base font-bold">Principal Split</th>
-                <th className="py-4 px-6 text-base font-bold">Interest Split</th>
-                <th className="py-4 px-6 text-base font-bold">Payment Mode</th>
-                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Receipt #</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Deal #</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Client Name</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Payment Date</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Total Received</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Principal Split</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Interest Split</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Payment Mode</th>
+                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                  <td colSpan={9} className="py-10 text-center text-base font-bold text-[#52525B]">
                     Loading repayments...
                   </td>
                 </tr>
@@ -94,40 +94,40 @@ export const RepaymentList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg flex items-center gap-2 whitespace-nowrap">
-                      <Receipt className="h-5 w-5 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
+                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base flex items-center gap-2 whitespace-nowrap">
+                      <Receipt className="h-4 w-4 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
                       <span>{r.receiptNumber}</span>
                     </td>
-                    <td className="py-5 px-6 font-mono font-bold text-[#1A1A1A] text-lg whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-mono font-bold text-[#1A1A1A] text-base whitespace-nowrap">
                       {r.dealNumber}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A]">
                       {r.clientName}
                     </td>
-                    <td className="py-5 px-6 text-[#52525B] font-semibold whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-[#52525B] font-medium text-sm whitespace-nowrap">
                       {formatDate(r.paymentDate)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-xl text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(r.amountReceived)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A] whitespace-nowrap">
                       {formatCurrency(r.principalPortion)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(r.interestPortion)}
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
-                      <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
+                      <span className="px-2.5 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-xs font-bold text-[#1A1A1A]">
                         {r.paymentMethod}
                       </span>
                     </td>
-                    <td className="py-5 px-6 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <button
                         title="Void / Reverse Repayment"
                         onClick={(e) => handleOpenDelete(r, e)}
-                        className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm inline-flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                        className="h-9 px-3 rounded-lg bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border border-[#FECACA] hover:border-[#B91C1C] font-bold text-xs inline-flex items-center gap-1 shadow-sm transition-all cursor-pointer"
                       >
-                        <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                        <Trash2 className="h-3.5 w-3.5 stroke-[2.3]" />
                         <span>Void</span>
                       </button>
                     </td>

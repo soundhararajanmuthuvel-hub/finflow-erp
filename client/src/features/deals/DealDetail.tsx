@@ -277,40 +277,43 @@ export const DealDetail: React.FC = () => {
                 </span>
               )}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">{deal.client?.fullName}</h1>
-            <p className="text-base text-stone-600 font-medium">
+            <h1 className="text-2xl sm:text-[28px] font-extrabold text-stone-900 tracking-tight">{deal.client?.fullName}</h1>
+            <p className="text-sm text-stone-600 font-medium mt-0.5">
               {deal.client?.businessName ? <span className="text-stone-900 font-bold">{deal.client.businessName} • </span> : null}
               {deal.purpose || 'Working Capital Syndication'} • Started: <span className="text-stone-900 font-bold">{formatDate(deal.startDate)}</span>
             </p>
           </div>
 
           {/* Top Actions */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <AccessibleButton
               variant="outline"
+              size="normal"
               onClick={() => resetDemoMutation.mutate()}
               disabled={resetDemoMutation.isPending}
-              icon={<RefreshCw className={`h-5 w-5 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />}
+              icon={<RefreshCw className={`h-4 w-4 ${resetDemoMutation.isPending ? 'animate-spin' : ''}`} />}
             >
               Reset Demo
             </AccessibleButton>
 
             <AccessibleButton
               variant="outline"
+              size="normal"
               onClick={() => setClientScheduleModalOpen(true)}
-              icon={<FileSpreadsheet className="h-5 w-5 text-emerald-700" />}
+              icon={<FileSpreadsheet className="h-4 w-4 text-emerald-700" />}
             >
-              Print Client Schedule
+              Print Schedule
             </AccessibleButton>
 
             {investorFunding.length > 0 && (
               <AccessibleButton
                 variant="outline"
+                size="normal"
                 onClick={() => {
                   setSelectedInvestorForStatement(investorFunding[0]?.investorId);
                   setInvestorStatementModalOpen(true);
                 }}
-                icon={<TrendingUp className="h-5 w-5 text-purple-700" />}
+                icon={<TrendingUp className="h-4 w-4 text-purple-700" />}
               >
                 Investor Statements
               </AccessibleButton>
@@ -318,16 +321,18 @@ export const DealDetail: React.FC = () => {
 
             <AccessibleButton
               variant="outline"
+              size="normal"
               onClick={handleOpenEdit}
-              icon={<Edit2 className="h-5 w-5" />}
+              icon={<Edit2 className="h-4 w-4" />}
             >
               Edit Deal
             </AccessibleButton>
 
             <AccessibleButton
               variant="danger"
+              size="normal"
               onClick={() => setIsDeleteModalOpen(true)}
-              icon={<Trash2 className="h-5 w-5" />}
+              icon={<Trash2 className="h-4 w-4" />}
             >
               Delete
             </AccessibleButton>
@@ -335,9 +340,10 @@ export const DealDetail: React.FC = () => {
             {deal.status === 'PENDING_APPROVAL' && (
               <AccessibleButton
                 variant="primary"
+                size="normal"
                 onClick={() => approveMutation.mutate()}
                 disabled={approveMutation.isPending}
-                icon={<CheckCircle2 className="h-5 w-5" />}
+                icon={<CheckCircle2 className="h-4 w-4" />}
               >
                 Approve Deal
               </AccessibleButton>
@@ -346,9 +352,10 @@ export const DealDetail: React.FC = () => {
             {deal.status === 'APPROVED' && (
               <AccessibleButton
                 variant="primary"
+                size="normal"
                 onClick={() => activateMutation.mutate()}
                 disabled={activateMutation.isPending}
-                icon={<PlayCircle className="h-5 w-5" />}
+                icon={<PlayCircle className="h-4 w-4" />}
               >
                 Activate & Disburse
               </AccessibleButton>
@@ -357,8 +364,9 @@ export const DealDetail: React.FC = () => {
             {(deal.status === 'ACTIVE' || deal.status === 'OVERDUE') && (
               <AccessibleButton
                 variant="primary"
+                size="normal"
                 onClick={() => setRepaymentModalOpen(true)}
-                icon={<Receipt className="h-5 w-5" />}
+                icon={<Receipt className="h-4 w-4" />}
               >
                 + Record Collection
               </AccessibleButton>
@@ -367,33 +375,33 @@ export const DealDetail: React.FC = () => {
         </div>
 
         {/* Financial Header 4-KPI Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 border-t-2 border-stone-200">
-          <div className="p-5 rounded-2xl bg-stone-50 border-2 border-stone-200">
-            <span className="text-sm text-stone-600 font-bold block">Finance Amount</span>
-            <p className="text-3xl font-black text-stone-900 mt-1 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
-            <p className="text-sm text-stone-500 font-medium mt-1">Required: {formatCurrency(deal.financeAmountRequired)}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-4 border-t-2 border-stone-200">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-stone-50 border-2 border-stone-200">
+            <span className="text-xs sm:text-sm text-stone-600 font-bold block">Finance Amount</span>
+            <p className="text-xl sm:text-2xl font-black text-stone-900 mt-0.5 whitespace-nowrap">{formatCurrency(deal.financeAmountApproved)}</p>
+            <p className="text-xs text-stone-500 font-medium mt-0.5">Required: {formatCurrency(deal.financeAmountRequired)}</p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-blue-50 border-2 border-blue-200">
-            <span className="text-sm text-blue-900 font-bold block">Total Payable</span>
-            <p className="text-3xl font-black text-blue-950 mt-1 whitespace-nowrap">{formatCurrency(totalPayable)}</p>
-            <p className="text-sm text-blue-800 font-medium mt-1">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-blue-50 border-2 border-blue-200">
+            <span className="text-xs sm:text-sm text-blue-900 font-bold block">Total Payable</span>
+            <p className="text-xl sm:text-2xl font-black text-blue-950 mt-0.5 whitespace-nowrap">{formatCurrency(totalPayable)}</p>
+            <p className="text-xs text-blue-800 font-medium mt-0.5">
               {deal.numberOfRepayments} × {formatCurrency(deal.installmentAmount)} ({deal.repaymentFrequency})
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
-            <span className="text-sm text-emerald-900 font-bold block">Total Collected</span>
-            <p className="text-3xl font-black text-emerald-950 mt-1 whitespace-nowrap">{formatCurrency(totalCollected)}</p>
-            <p className="text-sm text-emerald-800 font-medium mt-1">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-emerald-50 border-2 border-emerald-200">
+            <span className="text-xs sm:text-sm text-emerald-900 font-bold block">Total Collected</span>
+            <p className="text-xl sm:text-2xl font-black text-emerald-950 mt-0.5 whitespace-nowrap">{formatCurrency(totalCollected)}</p>
+            <p className="text-xs text-emerald-800 font-medium mt-0.5">
               Principal: {formatCurrency(principalRepaid)} • Interest: {formatCurrency(interestRepaid)}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200">
-            <span className="text-sm text-amber-900 font-bold block">Outstanding</span>
-            <p className="text-3xl font-black text-amber-950 mt-1 whitespace-nowrap">{formatCurrency(outstandingTotal)}</p>
-            <p className="text-sm text-amber-800 font-medium mt-1">Principal Remaining: {formatCurrency(outstandingPrincipal)}</p>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-amber-50 border-2 border-amber-200">
+            <span className="text-xs sm:text-sm text-amber-900 font-bold block">Outstanding</span>
+            <p className="text-xl sm:text-2xl font-black text-amber-950 mt-0.5 whitespace-nowrap">{formatCurrency(outstandingTotal)}</p>
+            <p className="text-xs text-amber-800 font-medium mt-0.5">Principal Rem: {formatCurrency(outstandingPrincipal)}</p>
           </div>
         </div>
 

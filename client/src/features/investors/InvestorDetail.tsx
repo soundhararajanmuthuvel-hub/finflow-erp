@@ -126,14 +126,14 @@ export const InvestorDetail: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Navigation Breadcrumb & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           onClick={() => navigate('/investors')}
-          className="inline-flex items-center gap-2 text-lg font-bold text-[#8B1A1A] hover:underline"
+          className="inline-flex items-center gap-2 text-base font-bold text-[#8B1A1A] hover:underline"
         >
-          <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
+          <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
           <span>Back to Investor Directory</span>
         </button>
 
@@ -158,36 +158,36 @@ export const InvestorDetail: React.FC = () => {
       </div>
 
       {/* Investor Profile Banner Card */}
-      <AccessibleCard withTopAccent className="p-6 sm:p-8">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b-2 border-[#EDE7DE]">
-          <div className="flex items-start gap-4 sm:gap-5">
-            <div className="h-16 w-16 rounded-2xl bg-[#F3E8FF] text-[#6B21A8] border-2 border-[#D8B4FE] flex items-center justify-center font-black text-2xl shrink-0">
-              <TrendingUp className="h-8 w-8 stroke-[2.3]" />
+      <AccessibleCard withTopAccent className="p-4 sm:p-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="h-12 w-12 rounded-xl bg-[#F3E8FF] text-[#6B21A8] border-2 border-[#D8B4FE] flex items-center justify-center font-black text-xl shrink-0">
+              <TrendingUp className="h-6 w-6 stroke-[2.3]" />
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A]">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A]">
                   {investor.name}
                 </h1>
-                <span className="font-mono text-sm px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#6B21A8] font-bold">
+                <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#6B21A8] font-bold">
                   {investor.investorCode}
                 </span>
-                <StatusBadge status={investor.status || 'ACTIVE'} size="md" />
+                <StatusBadge status={investor.status || 'ACTIVE'} size="sm" />
               </div>
-              <p className="text-base sm:text-lg font-bold text-[#52525B] mt-1">
+              <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
                 Outside Capital Partner • Phone: {investor.phone} {investor.email ? `• ${investor.email}` : ''}
               </p>
             </div>
           </div>
 
           {/* Bank Details Strip */}
-          <div className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] flex items-center gap-4 text-base">
-            <CreditCard className="h-8 w-8 text-[#8B1A1A] shrink-0" />
+          <div className="p-3 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] flex items-center gap-3 text-sm">
+            <CreditCard className="h-6 w-6 text-[#8B1A1A] shrink-0" />
             <div>
-              <p className="font-bold text-[#1A1A1A] text-lg">
+              <p className="font-bold text-[#1A1A1A] text-base">
                 {investor.bankName || 'Bank Not Configured'}
               </p>
-              <p className="text-[#52525B] font-mono text-sm font-semibold mt-0.5">
+              <p className="text-[#52525B] font-mono text-xs font-semibold mt-0.5">
                 A/C: {investor.bankAccountNo || '—'} • IFSC: {investor.ifscCode || '—'}
               </p>
             </div>
@@ -195,27 +195,27 @@ export const InvestorDetail: React.FC = () => {
         </div>
 
         {/* Aggregate Financial Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-sm font-bold text-[#3F3F46] block">Total Capital Deployed</span>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs sm:text-sm font-bold text-[#3F3F46] block">Total Capital Deployed</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#6B21A8] mt-1 whitespace-nowrap">
               {formatCurrency(summary.totalInvested)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-            <span className="text-sm font-bold text-[#1F6B3A] block">Principal Recovered</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
+            <span className="text-xs sm:text-sm font-bold text-[#1F6B3A] block">Principal Recovered</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.principalReturned)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-sm font-bold text-[#1F6B3A] block">Total ROI Earned</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs sm:text-sm font-bold text-[#1F6B3A] block">Total ROI Earned</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
               {formatCurrency(summary.interestEarned)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-            <span className="text-sm font-bold text-[#B45309] block">Pending Capital</span>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
+            <span className="text-xs sm:text-sm font-bold text-[#B45309] block">Pending Capital</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1 whitespace-nowrap">
               {formatCurrency(summary.pendingPrincipal)}
             </p>
@@ -224,11 +224,11 @@ export const InvestorDetail: React.FC = () => {
       </AccessibleCard>
 
       {/* Deals Participated */}
-      <AccessibleCard withTopAccent className="space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b-2 border-[#EDE7DE]">
-          <div className="flex items-center gap-3">
-            <Briefcase className="h-6 w-6 text-[#8B1A1A] stroke-[2.3]" />
-            <h3 className="text-2xl font-bold text-[#1A1A1A]">
+      <AccessibleCard withTopAccent className="space-y-4 p-4 sm:p-5">
+        <div className="flex items-center justify-between pb-3 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-center gap-2.5">
+            <Briefcase className="h-5 w-5 text-[#8B1A1A] stroke-[2.3]" />
+            <h3 className="text-lg sm:text-xl font-bold text-[#1A1A1A]">
               Deal Participations ({investor.fundings?.length || 0} Deals)
             </h3>
           </div>
@@ -239,14 +239,14 @@ export const InvestorDetail: React.FC = () => {
             <table className="w-full text-left text-base">
               <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
                 <tr>
-                  <th className="py-4 px-5 text-base font-bold">Deal Number</th>
-                  <th className="py-4 px-5 text-base font-bold">Client Name</th>
-                  <th className="py-4 px-5 text-base font-bold">Invested Amount</th>
-                  <th className="py-4 px-5 text-base font-bold">Share %</th>
-                  <th className="py-4 px-5 text-base font-bold">Principal Recovered</th>
-                  <th className="py-4 px-5 text-base font-bold">Interest Earned</th>
-                  <th className="py-4 px-5 text-base font-bold">Status</th>
-                  <th className="py-4 px-5 text-base font-bold text-right">Action</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Deal Number</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Client Name</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Invested Amount</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Share %</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Principal Recovered</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Interest Earned</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold">Status</th>
+                  <th className="py-3 px-4 text-xs sm:text-sm font-bold text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
@@ -256,28 +256,28 @@ export const InvestorDetail: React.FC = () => {
                     onClick={() => navigate(`/deals/${f.deal?.id}`)}
                     className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
                   >
-                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
+                    <td className="py-3 px-4 font-mono font-bold text-[#8B1A1A] text-sm sm:text-base whitespace-nowrap">
                       {f.deal?.dealNumber}
                     </td>
-                    <td className="py-4 px-5 font-bold text-lg">
+                    <td className="py-3 px-4 font-bold text-sm sm:text-base">
                       {f.deal?.client?.fullName}
                     </td>
-                    <td className="py-4 px-5 font-bold text-lg text-[#6B21A8] whitespace-nowrap">
+                    <td className="py-3 px-4 font-bold text-sm sm:text-base text-[#6B21A8] whitespace-nowrap">
                       {formatCurrency(f.amount)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1A1A1A] whitespace-nowrap">
+                    <td className="py-3 px-4 font-bold text-sm sm:text-base text-[#1A1A1A] whitespace-nowrap">
                       {formatPercentage(f.percentage)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3 px-4 font-bold text-sm sm:text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(f.principalReturned)}
                     </td>
-                    <td className="py-4 px-5 font-extrabold text-lg text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3 px-4 font-extrabold text-sm sm:text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(f.interestEarned)}
                     </td>
-                    <td className="py-4 px-5 whitespace-nowrap">
+                    <td className="py-3 px-4 whitespace-nowrap">
                       <StatusBadge status={f.deal?.status} size="sm" />
                     </td>
-                    <td className="py-4 px-5 text-right whitespace-nowrap">
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
                       <AccessibleButton
                         variant="secondary"
                         size="compact"
@@ -362,9 +362,9 @@ export const InvestorDetail: React.FC = () => {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             options={[
-              { value: 'ACTIVE', label: 'ACTIVE' },
-              { value: 'INACTIVE', label: 'INACTIVE' },
-              { value: 'BLOCKED', label: 'BLOCKED' },
+              { value: 'ACTIVE', label: 'Active' },
+              { value: 'INACTIVE', label: 'Inactive' },
+              { value: 'BLOCKED', label: 'Blocked' },
             ]}
           />
 

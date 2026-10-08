@@ -79,49 +79,49 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        'relative bg-white rounded-2xl p-6 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between min-h-[190px]',
+        'relative bg-white rounded-2xl p-4 sm:p-5 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between min-h-[160px]',
         colors.cardBorder,
         onClick && 'cursor-pointer hover:shadow-warm-lg',
         className
       )}
     >
       {/* Top Accent Strip */}
-      <div className={clsx('absolute top-0 left-0 right-0 h-1.5', colors.accentBar)} />
+      <div className={clsx('absolute top-0 left-0 right-0 h-1', colors.accentBar)} />
 
-      {/* Top Line: Icon badge (44px) placed beside the label */}
-      <div className="flex items-center gap-3.5">
-        <div className={clsx('h-11 w-11 rounded-xl flex items-center justify-center shrink-0 shadow-sm', colors.iconBg)}>
-          <Icon className="h-6 w-6 stroke-[2.2]" aria-hidden="true" />
+      {/* Top Line: Icon badge placed beside the label */}
+      <div className="flex items-center gap-3">
+        <div className={clsx('h-9 w-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm', colors.iconBg)}>
+          <Icon className="h-5 w-5 stroke-[2.2]" aria-hidden="true" />
         </div>
-        <p className="text-[1.125rem] sm:text-[1.1875rem] font-semibold text-[#1A1A1A] leading-snug">
+        <p className="text-base font-semibold text-[#1A1A1A] leading-snug">
           {title}
         </p>
       </div>
 
-      {/* Full-width Big Amount on its own line: 40px bold, never wrapped, never truncated */}
-      <div className="mt-4 my-1">
-        <div className="text-[2.25rem] sm:text-[2.5rem] font-bold text-[#1A1A1A] tracking-tight whitespace-nowrap leading-none">
+      {/* Full-width Big Amount on its own line: 26-30px bold, never wrapped, never truncated */}
+      <div className="mt-3 my-1">
+        <div className="text-[26px] sm:text-[28px] font-bold text-[#1A1A1A] tracking-tight whitespace-nowrap leading-none">
           {value}
         </div>
       </div>
 
-      {/* Helper text below: 17px, normal weight, dark gray #3F3F46 */}
+      {/* Helper text below: 14-15px, normal weight, dark gray #3F3F46 */}
       {subtitle && (
-        <p className="mt-2 text-[1.0625rem] font-normal text-[#3F3F46] leading-relaxed">
+        <p className="mt-1 text-sm font-normal text-[#3F3F46] leading-relaxed">
           {subtitle}
         </p>
       )}
 
       {trend && (
-        <div className="mt-3 pt-3 border-t border-[#EDE7DE] flex items-center gap-2 text-base font-semibold">
+        <div className="mt-2.5 pt-2 border-t border-[#EDE7DE] flex items-center gap-2 text-sm font-semibold">
           {trend.isPositive ? (
-            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2.5 py-1 rounded-lg border border-[#A7D9B7]">
-              <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
+            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2 py-0.5 rounded-lg border border-[#A7D9B7]">
+              <ArrowUpRight className="h-4 w-4 stroke-[2.5]" />
               {trend.value}
             </span>
           ) : (
-            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2.5 py-1 rounded-lg border border-[#FECACA]">
-              <ArrowDownRight className="h-5 w-5 stroke-[2.5]" />
+            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2 py-0.5 rounded-lg border border-[#FECACA]">
+              <ArrowDownRight className="h-4 w-4 stroke-[2.5]" />
               {trend.value}
             </span>
           )}

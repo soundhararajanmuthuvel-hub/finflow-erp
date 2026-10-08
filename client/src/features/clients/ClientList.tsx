@@ -156,14 +156,14 @@ export const ClientList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
             Client Directory
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-0.5">
             Manage client borrower profiles, active financings, and KYC records
           </p>
         </div>
@@ -177,16 +177,16 @@ export const ClientList: React.FC = () => {
         </AccessibleButton>
       </div>
 
-      {/* Large Accessible Search Bar */}
-      <div className="p-4 sm:p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm">
+      {/* Search Bar */}
+      <div className="p-3 sm:p-4 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm">
         <div className="relative max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[#52525B] stroke-[2.2]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#52525B] stroke-[2.2]" />
           <input
             type="text"
             placeholder="Search by client name, business, phone, or PAN..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-14 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-13 pr-4 text-lg font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
+            className="w-full h-11 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-11 pr-3.5 text-base font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
           />
         </div>
       </div>
@@ -197,20 +197,20 @@ export const ClientList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-base font-bold">Client Code</th>
-                <th className="py-4 px-6 text-base font-bold">Client / Business</th>
-                <th className="py-4 px-6 text-base font-bold">Contact</th>
-                <th className="py-4 px-6 text-base font-bold">Total Finance</th>
-                <th className="py-4 px-6 text-base font-bold">Outstanding</th>
-                <th className="py-4 px-6 text-base font-bold">Deals</th>
-                <th className="py-4 px-6 text-base font-bold">Status</th>
-                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Client Code</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Client / Business</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Contact</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Total Finance</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Outstanding</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Deals</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Status</th>
+                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                  <td colSpan={8} className="py-10 text-center text-base font-bold text-[#52525B]">
                     Loading client directory...
                   </td>
                 </tr>
@@ -223,36 +223,36 @@ export const ClientList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
                       {c.clientCode}
                     </td>
-                    <td className="py-5 px-6">
-                      <p className="font-bold text-lg text-[#1A1A1A]">{c.fullName}</p>
-                      <p className="text-sm font-semibold text-[#52525B] mt-0.5">
+                    <td className="py-3.5 px-5">
+                      <p className="font-bold text-base text-[#1A1A1A]">{c.fullName}</p>
+                      <p className="text-xs font-semibold text-[#52525B] mt-0.5">
                         {c.businessName || 'Individual'}
                       </p>
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
-                      <p className="font-bold text-[#1A1A1A]">{c.phone}</p>
-                      <p className="text-sm text-[#52525B] font-medium mt-0.5">{c.city || '—'}</p>
+                    <td className="py-3.5 px-5 whitespace-nowrap">
+                      <p className="font-bold text-sm text-[#1A1A1A]">{c.phone}</p>
+                      <p className="text-xs text-[#52525B] font-medium mt-0.5">{c.city || '—'}</p>
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A] whitespace-nowrap">
                       {formatCurrency(c.totalFinanceReceived)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#B45309] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-extrabold text-base text-[#B45309] whitespace-nowrap">
                       {formatCurrency(c.outstandingAmount)}
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
-                      <span className="px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-sm font-bold text-[#1A1A1A]">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
+                      <span className="px-2.5 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-xs font-bold text-[#1A1A1A]">
                         {c.dealsCount} deals
                       </span>
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
                       <StatusBadge status={c.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <div
-                        className="flex items-center justify-end gap-2"
+                        className="flex items-center justify-end gap-1.5"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button

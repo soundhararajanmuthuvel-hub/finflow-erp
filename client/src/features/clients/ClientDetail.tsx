@@ -128,21 +128,21 @@ export const ClientDetail: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Navigation Breadcrumb & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <button
           onClick={() => navigate('/clients')}
-          className="inline-flex items-center gap-2 text-lg font-bold text-[#8B1A1A] hover:underline"
+          className="inline-flex items-center gap-1.5 text-base font-bold text-[#8B1A1A] hover:underline"
         >
-          <ArrowLeft className="h-5 w-5 stroke-[2.5]" />
+          <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
           <span>Back to Client Directory</span>
         </button>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <AccessibleButton
             variant="outline"
-            size="compact"
+            size="normal"
             icon={Edit2}
             onClick={handleOpenEdit}
           >
@@ -150,7 +150,7 @@ export const ClientDetail: React.FC = () => {
           </AccessibleButton>
           <AccessibleButton
             variant="danger"
-            size="compact"
+            size="normal"
             icon={Trash2}
             onClick={() => setIsDeleteModalOpen(true)}
           >
@@ -158,7 +158,7 @@ export const ClientDetail: React.FC = () => {
           </AccessibleButton>
           <AccessibleButton
             variant="primary"
-            size="compact"
+            size="normal"
             icon={PlusCircle}
             onClick={() => navigate('/deals/new')}
           >
@@ -168,43 +168,43 @@ export const ClientDetail: React.FC = () => {
       </div>
 
       {/* Client Profile Banner Card */}
-      <AccessibleCard withTopAccent className="p-6 sm:p-8">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b-2 border-[#EDE7DE]">
-          <div className="flex items-start gap-4 sm:gap-5">
-            <div className="h-16 w-16 rounded-2xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-black text-2xl shrink-0">
-              <User className="h-8 w-8 stroke-[2.3]" />
+      <AccessibleCard withTopAccent className="p-4 sm:p-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b-2 border-[#EDE7DE]">
+          <div className="flex items-start gap-3.5 sm:gap-4">
+            <div className="h-12 w-12 rounded-xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-black text-xl shrink-0">
+              <User className="h-6 w-6 stroke-[2.2]" />
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A]">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A]">
                   {client.fullName}
                 </h1>
-                <span className="font-mono text-sm px-3 py-1 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#8B1A1A] font-bold">
+                <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#8B1A1A] font-bold">
                   {client.clientCode}
                 </span>
-                <StatusBadge status={client.status || 'ACTIVE'} size="md" />
+                <StatusBadge status={client.status || 'ACTIVE'} size="sm" />
               </div>
-              <p className="text-base sm:text-lg font-bold text-[#52525B] mt-1">
+              <p className="text-sm font-semibold text-[#52525B] mt-0.5">
                 {client.businessName ? `${client.businessName} • ` : ''}
                 {client.industry || client.businessType || 'General Commercial Trading'}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-base bg-[#FAF7F2] p-4 rounded-xl border border-[#D6CFC4]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm bg-[#FAF7F2] p-3 rounded-xl border border-[#D6CFC4]">
             <div>
-              <span className="text-sm font-bold text-[#3F3F46] block">Phone</span>
-              <span className="font-bold text-[#1A1A1A] text-lg mt-0.5 block">{client.phone}</span>
+              <span className="text-xs font-bold text-[#3F3F46] block">Phone</span>
+              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block">{client.phone}</span>
             </div>
             <div>
-              <span className="text-sm font-bold text-[#3F3F46] block">Email</span>
-              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block break-words">
+              <span className="text-xs font-bold text-[#3F3F46] block">Email</span>
+              <span className="font-bold text-[#1A1A1A] text-sm mt-0.5 block break-words">
                 {client.email || '—'}
               </span>
             </div>
             <div>
-              <span className="text-sm font-bold text-[#3F3F46] block">Location</span>
-              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block">
+              <span className="text-xs font-bold text-[#3F3F46] block">Location</span>
+              <span className="font-bold text-[#1A1A1A] text-sm mt-0.5 block">
                 {client.city ? `${client.city}, ${client.state || ''}` : '—'}
               </span>
             </div>
@@ -212,28 +212,28 @@ export const ClientDetail: React.FC = () => {
         </div>
 
         {/* Aggregate Financial Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-          <div className="p-5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-sm font-bold text-[#3F3F46] block">Total Finance Taken</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A] mt-1 whitespace-nowrap">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
+            <span className="text-xs font-bold text-[#3F3F46] block">Total Finance Taken</span>
+            <p className="text-lg sm:text-xl font-extrabold text-[#1A1A1A] mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.totalFinanceReceived)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-            <span className="text-sm font-bold text-[#1F6B3A] block">Total Repaid (P+I)</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
+            <span className="text-xs font-bold text-[#1F6B3A] block">Total Repaid (P+I)</span>
+            <p className="text-lg sm:text-xl font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.totalRepaid)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-            <span className="text-sm font-bold text-[#B45309] block">Outstanding Total</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#B45309] mt-1 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
+            <span className="text-xs font-bold text-[#B45309] block">Outstanding Total</span>
+            <p className="text-lg sm:text-xl font-extrabold text-[#B45309] mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.outstandingAmount)}
             </p>
           </div>
-          <div className="p-5 rounded-xl bg-[#FEF2F2] border-2 border-[#FECACA]">
-            <span className="text-sm font-bold text-[#B91C1C] block">Overdue Balance</span>
-            <p className="text-xl sm:text-2xl font-extrabold text-[#B91C1C] mt-1 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border-2 border-[#FECACA]">
+            <span className="text-xs font-bold text-[#B91C1C] block">Overdue Balance</span>
+            <p className="text-lg sm:text-xl font-extrabold text-[#B91C1C] mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.overdueAmount)}
             </p>
           </div>

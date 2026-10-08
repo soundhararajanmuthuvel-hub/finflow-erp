@@ -134,14 +134,14 @@ export const PartnerList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
             Company Partners & Capital
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
             Manage company co-owners, equity ownership shares, and partner profit distributions
           </p>
         </div>
@@ -161,19 +161,19 @@ export const PartnerList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-base font-bold">Partner Code</th>
-                <th className="py-4 px-6 text-base font-bold">Partner Name</th>
-                <th className="py-4 px-6 text-base font-bold">Contact</th>
-                <th className="py-4 px-6 text-base font-bold">Capital Contributed</th>
-                <th className="py-4 px-6 text-base font-bold">Equity Share %</th>
-                <th className="py-4 px-6 text-base font-bold">Status</th>
-                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Partner Code</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Partner Name</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Contact</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Capital Contributed</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Equity Share %</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Status</th>
+                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                  <td colSpan={7} className="py-12 text-center text-base font-bold text-[#52525B]">
                     Loading partner records...
                   </td>
                 </tr>
@@ -185,41 +185,41 @@ export const PartnerList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
                       {p.partnerCode}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A]">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A]">
                       {p.name}
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
-                      <p className="font-bold text-[#1A1A1A]">{p.phone}</p>
-                      <p className="text-sm text-[#52525B] mt-0.5">{p.email || '—'}</p>
+                    <td className="py-3.5 px-5 whitespace-nowrap">
+                      <p className="font-bold text-[#1A1A1A] text-sm">{p.phone}</p>
+                      <p className="text-xs text-[#52525B] mt-0.5">{p.email || '—'}</p>
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#1E3A8A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1E3A8A] whitespace-nowrap">
                       {formatCurrency(p.capitalContribution)}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatPercentage(p.sharePercentage)}
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
                       <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           title="Edit Partner"
                           onClick={() => handleOpenEdit(p)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          className="h-9 px-2.5 rounded-lg bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-xs flex items-center gap-1 shadow-sm transition-all"
                         >
-                          <Edit2 className="h-4 w-4 stroke-[2.3]" />
+                          <Edit2 className="h-3.5 w-3.5 stroke-[2.3]" />
                           <span>Edit</span>
                         </button>
                         <button
                           title="Delete Partner"
                           onClick={() => handleOpenDelete(p)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          className="h-9 px-2.5 rounded-lg bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-xs flex items-center gap-1 shadow-sm transition-all"
                         >
-                          <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                          <Trash2 className="h-3.5 w-3.5 stroke-[2.3]" />
                           <span>Delete</span>
                         </button>
                       </div>
@@ -436,8 +436,8 @@ export const PartnerList: React.FC = () => {
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               options={[
-                { value: 'ACTIVE', label: 'ACTIVE' },
-                { value: 'INACTIVE', label: 'INACTIVE' },
+                { value: 'ACTIVE', label: 'Active' },
+                { value: 'INACTIVE', label: 'Inactive' },
               ]}
             />
           </div>

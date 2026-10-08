@@ -101,14 +101,14 @@ export const DealList: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
             Finance Deals Master
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-0.5">
             Manage syndication contracts, funding sources, and collection status
           </p>
         </div>
@@ -123,24 +123,24 @@ export const DealList: React.FC = () => {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 sm:p-6 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col md:flex-row gap-4 justify-between items-center">
+      <div className="p-3 sm:p-4 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col md:flex-row gap-3 justify-between items-center">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[#52525B] stroke-[2.2]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#52525B] stroke-[2.2]" />
           <input
             type="text"
             placeholder="Search by Deal #, Client name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-14 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-13 pr-4 text-lg font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
+            className="w-full h-11 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-11 pr-3.5 text-base font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
           />
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <Filter className="h-6 w-6 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
+        <div className="flex items-center gap-2.5 w-full md:w-auto">
+          <Filter className="h-5 w-5 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-14 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] rounded-xl px-4 text-lg font-bold text-[#1A1A1A] cursor-pointer w-full md:w-auto"
+            className="h-11 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] rounded-xl px-3.5 text-sm sm:text-base font-bold text-[#1A1A1A] cursor-pointer w-full md:w-auto"
           >
             <option value="">All Deal Statuses</option>
             <option value="ACTIVE">Active Deals</option>
@@ -158,20 +158,20 @@ export const DealList: React.FC = () => {
           <table className="w-full text-left text-base">
             <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
               <tr>
-                <th className="py-4 px-6 text-base font-bold">Deal Number</th>
-                <th className="py-4 px-6 text-base font-bold">Client Name</th>
-                <th className="py-4 px-6 text-base font-bold">Finance Amount</th>
-                <th className="py-4 px-6 text-base font-bold">Total Repaid</th>
-                <th className="py-4 px-6 text-base font-bold">Outstanding</th>
-                <th className="py-4 px-6 text-base font-bold">Installment</th>
-                <th className="py-4 px-6 text-base font-bold">Status</th>
-                <th className="py-4 px-6 text-base font-bold text-right">Actions</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Deal Number</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Client Name</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Finance Amount</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Total Repaid</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Outstanding</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Installment</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Status</th>
+                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                  <td colSpan={8} className="py-10 text-center text-base font-bold text-[#52525B]">
                     Loading finance deals...
                   </td>
                 </tr>
@@ -184,8 +184,8 @@ export const DealList: React.FC = () => {
                       index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
                     }`}
                   >
-                    <td className="py-5 px-6 font-mono font-bold text-[#8B1A1A] text-lg flex items-center gap-2 whitespace-nowrap">
-                      <Briefcase className="h-5 w-5 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
+                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base flex items-center gap-2 whitespace-nowrap">
+                      <Briefcase className="h-4 w-4 text-[#8B1A1A] shrink-0 stroke-[2.3]" />
                       <span>{d.dealNumber}</span>
                       {(d.notes?.includes('DEMO') || d.purpose?.includes('DEMO') || d.dealNumber === 'FIN-000001') && (
                         <span className="text-xs font-bold text-[#B45309] bg-[#FEF3C7] px-2 py-0.5 rounded-full border border-[#FDE68A]">
@@ -193,31 +193,31 @@ export const DealList: React.FC = () => {
                         </span>
                       )}
                     </td>
-                    <td className="py-5 px-6">
-                      <p className="font-bold text-lg text-[#1A1A1A]">{d.client?.fullName}</p>
-                      <p className="text-sm font-semibold text-[#52525B] mt-0.5">
+                    <td className="py-3.5 px-5">
+                      <p className="font-bold text-base text-[#1A1A1A]">{d.client?.fullName}</p>
+                      <p className="text-xs font-semibold text-[#52525B] mt-0.5">
                         {d.client?.businessName || d.client?.phone}
                       </p>
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1A1A1A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A] whitespace-nowrap">
                       {formatCurrency(d.financeAmountApproved)}
                     </td>
-                    <td className="py-5 px-6 font-bold text-lg text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-base text-[#1F6B3A] whitespace-nowrap">
                       {formatCurrency(Number(d.totalPrincipalRepaid || 0) + Number(d.totalInterestRepaid || 0))}
                     </td>
-                    <td className="py-5 px-6 font-extrabold text-lg text-[#B45309] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-extrabold text-base text-[#B45309] whitespace-nowrap">
                       {formatCurrency(d.outstandingTotal)}
                     </td>
-                    <td className="py-5 px-6 text-[#1A1A1A] font-bold whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-[#1A1A1A] font-bold text-base whitespace-nowrap">
                       {formatCurrency(d.installmentAmount)}
                       <span className="text-xs text-[#52525B] font-medium block">
                         /{d.repaymentFrequency?.toLowerCase()}
                       </span>
                     </td>
-                    <td className="py-5 px-6 whitespace-nowrap">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
                       <StatusBadge status={d.status} size="sm" />
                     </td>
-                    <td className="py-5 px-6 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <div
                         className="flex items-center justify-end gap-2"
                         onClick={(e) => e.stopPropagation()}

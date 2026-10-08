@@ -56,14 +56,14 @@ export const ReportsHub: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 print-container">
+    <div className="space-y-6 print-container">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b-2 border-[#D6CFC4] no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4] no-print">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
             Financial Intelligence & Reports
           </h1>
-          <p className="text-base sm:text-lg font-medium text-[#52525B] mt-1">
+          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
             Exportable audits, investor statements, collection ledgers, and profit reconciliations
           </p>
         </div>
@@ -89,8 +89,8 @@ export const ReportsHub: React.FC = () => {
       </div>
 
       {/* Report Selector & Date Filters Card */}
-      <AccessibleCard withTopAccent className="p-6 sm:p-8 no-print space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <AccessibleCard withTopAccent className="p-4 sm:p-5 no-print space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-1">
             <AccessibleSelect
               label="Select Financial Report"
@@ -100,7 +100,7 @@ export const ReportsHub: React.FC = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:col-span-2">
             <AccessibleInput
               label="From Date"
               type="date"
@@ -119,11 +119,11 @@ export const ReportsHub: React.FC = () => {
 
       {/* Dynamic Report Table */}
       <div className="rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
-        <div className="p-5 border-b-2 border-[#EDE7DE] bg-[#FAF7F2] flex items-center justify-between">
-          <h3 className="text-lg font-bold text-[#1A1A1A]">
+        <div className="p-4 border-b-2 border-[#EDE7DE] bg-[#FAF7F2] flex items-center justify-between">
+          <h3 className="text-base font-bold text-[#1A1A1A]">
             {reportOptions.find((r) => r.value === reportType)?.label}
           </h3>
-          <span className="text-base font-bold text-[#8B1A1A]">
+          <span className="text-sm font-bold text-[#8B1A1A]">
             Total Records: {reportData?.length || 0}
           </span>
         </div>
@@ -134,7 +134,7 @@ export const ReportsHub: React.FC = () => {
               <tr>
                 {reportData?.length > 0 &&
                   Object.keys(reportData[0]).map((col) => (
-                    <th key={col} className="py-4 px-5 text-base font-bold whitespace-nowrap">
+                    <th key={col} className="py-3 px-4 text-xs sm:text-sm font-bold whitespace-nowrap">
                       {col.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
                     </th>
                   ))}
@@ -143,7 +143,7 @@ export const ReportsHub: React.FC = () => {
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={10} className="py-12 text-center text-lg font-bold text-[#52525B]">
+                  <td colSpan={10} className="py-12 text-center text-base font-bold text-[#52525B]">
                     Generating financial report...
                   </td>
                 </tr>
@@ -166,13 +166,13 @@ export const ReportsHub: React.FC = () => {
                           k.toLowerCase().includes('total'));
 
                       return (
-                        <td key={j} className="py-4 px-5 whitespace-nowrap">
+                        <td key={j} className="py-3 px-4 whitespace-nowrap text-sm sm:text-base">
                           {isMoney ? (
-                            <span className="font-bold text-[#1A1A1A] font-mono text-lg whitespace-nowrap">
+                            <span className="font-bold text-[#1A1A1A] font-mono text-sm sm:text-base whitespace-nowrap">
                               {formatCurrency(val)}
                             </span>
                           ) : (
-                            <span className="font-semibold text-[#1A1A1A]">{String(val || '—')}</span>
+                            <span className="font-medium text-[#1A1A1A]">{String(val || '—')}</span>
                           )}
                         </td>
                       );

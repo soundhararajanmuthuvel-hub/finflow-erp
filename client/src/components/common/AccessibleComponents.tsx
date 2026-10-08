@@ -46,12 +46,12 @@ export const AccessibleButton: React.FC<ButtonProps> = ({
   const getSizeStyles = () => {
     switch (size) {
       case 'large':
-        return 'h-16 px-8 text-xl font-bold gap-3 rounded-2xl';
+        return 'h-12 px-6 text-lg font-bold gap-2.5 rounded-xl';
       case 'compact':
-        return 'min-h-[48px] px-4 py-2 text-base font-bold gap-2 rounded-xl';
+        return 'h-9 px-3.5 text-sm font-semibold gap-1.5 rounded-lg';
       case 'normal':
       default:
-        return 'h-14 px-6 text-lg font-bold gap-2.5 rounded-xl';
+        return 'h-11 px-5 text-base font-semibold gap-2 rounded-xl';
     }
   };
 
@@ -61,7 +61,7 @@ export const AccessibleButton: React.FC<ButtonProps> = ({
       return Icon;
     }
     const IconComp = Icon as LucideIcon;
-    return <IconComp className="h-6 w-6 shrink-0 stroke-[2.3]" aria-hidden="true" />;
+    return <IconComp className="h-5 w-5 shrink-0 stroke-[2.2]" aria-hidden="true" />;
   };
 
   return (
@@ -76,7 +76,7 @@ export const AccessibleButton: React.FC<ButtonProps> = ({
       {...props}
     >
       {isLoading ? (
-        <span className="inline-block h-6 w-6 border-3 border-current border-t-transparent rounded-full animate-spin mr-2" />
+        <span className="inline-block h-5 w-5 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
       ) : (
         iconPosition === 'left' && renderIcon()
       )}
@@ -87,7 +87,7 @@ export const AccessibleButton: React.FC<ButtonProps> = ({
 };
 
 // ==========================================
-// ACCESSIBLE INPUT FIELD (56px, visible label, 2px border)
+// ACCESSIBLE INPUT FIELD (44px, visible label, 2px border)
 // ==========================================
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -102,17 +102,17 @@ export const AccessibleInput = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
     return (
-      <div className="w-full space-y-2">
+      <div className="w-full space-y-1.5">
         <div className="flex items-center justify-between">
-          <label htmlFor={inputId} className="block text-base sm:text-lg font-bold text-[#1A1A1A]">
-            {label} {required && <span className="text-[#B91C1C] text-sm font-bold ml-1">(Required)</span>}
+          <label htmlFor={inputId} className="block text-sm sm:text-base font-semibold text-[#1A1A1A]">
+            {label} {required && <span className="text-[#B91C1C] text-xs font-bold ml-1">(Required)</span>}
           </label>
         </div>
 
         <div className="relative">
           {Icon && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#52525B]">
-              <Icon className="h-6 w-6 stroke-[2]" aria-hidden="true" />
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#52525B]">
+              <Icon className="h-5 w-5 stroke-[2]" aria-hidden="true" />
             </div>
           )}
           <input
@@ -122,10 +122,10 @@ export const AccessibleInput = React.forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={!!error}
             aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
             className={clsx(
-              'w-full h-14 bg-white text-[#1A1A1A] text-lg font-medium rounded-xl border-2 transition-all duration-150',
+              'w-full h-11 bg-white text-[#1A1A1A] text-base font-medium rounded-xl border-2 transition-all duration-150',
               'placeholder:text-[#71717A] placeholder:font-normal',
               'focus:outline-none focus:ring-4 focus:ring-[#8B1A1A]/20 focus:border-[#8B1A1A]',
-              Icon ? 'pl-13 pr-4' : 'px-4',
+              Icon ? 'pl-11 pr-3.5' : 'px-3.5',
               error ? 'border-[#B91C1C] bg-[#FEF2F2]' : 'border-[#A8A29E] hover:border-[#52525B]',
               className
             )}
@@ -134,14 +134,14 @@ export const AccessibleInput = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p id={`${inputId}-error`} className="flex items-center gap-1.5 text-base font-bold text-[#B91C1C]">
-            <AlertCircle className="h-5 w-5 shrink-0 stroke-[2.5]" />
+          <p id={`${inputId}-error`} className="flex items-center gap-1.5 text-sm font-bold text-[#B91C1C]">
+            <AlertCircle className="h-4 w-4 shrink-0 stroke-[2.5]" />
             <span>{error}</span>
           </p>
         )}
 
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-sm font-semibold text-[#52525B]">
+          <p id={`${inputId}-helper`} className="text-xs font-semibold text-[#52525B]">
             {helperText}
           </p>
         )}
@@ -167,9 +167,9 @@ export const AccessibleSelect = React.forwardRef<HTMLSelectElement, SelectProps>
     const selectId = id || `select-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
     return (
-      <div className="w-full space-y-2">
-        <label htmlFor={selectId} className="block text-base sm:text-lg font-bold text-[#1A1A1A]">
-          {label} {required && <span className="text-[#B91C1C] text-sm font-bold ml-1">(Required)</span>}
+      <div className="w-full space-y-1.5">
+        <label htmlFor={selectId} className="block text-sm sm:text-base font-semibold text-[#1A1A1A]">
+          {label} {required && <span className="text-[#B91C1C] text-xs font-bold ml-1">(Required)</span>}
         </label>
 
         <select
@@ -178,7 +178,7 @@ export const AccessibleSelect = React.forwardRef<HTMLSelectElement, SelectProps>
           required={required}
           aria-invalid={!!error}
           className={clsx(
-            'w-full h-14 bg-white text-[#1A1A1A] text-lg font-medium rounded-xl border-2 px-4 transition-all duration-150 cursor-pointer',
+            'w-full h-11 bg-white text-[#1A1A1A] text-base font-medium rounded-xl border-2 px-3.5 transition-all duration-150 cursor-pointer',
             'focus:outline-none focus:ring-4 focus:ring-[#8B1A1A]/20 focus:border-[#8B1A1A]',
             error ? 'border-[#B91C1C] bg-[#FEF2F2]' : 'border-[#A8A29E] hover:border-[#52525B]',
             className
@@ -187,7 +187,7 @@ export const AccessibleSelect = React.forwardRef<HTMLSelectElement, SelectProps>
         >
           {options
             ? options.map((opt) => (
-                <option key={opt.value} value={opt.value} className="text-lg py-2">
+                <option key={opt.value} value={opt.value} className="text-base py-1.5">
                   {opt.label}
                 </option>
               ))
@@ -195,8 +195,8 @@ export const AccessibleSelect = React.forwardRef<HTMLSelectElement, SelectProps>
         </select>
 
         {error && (
-          <p className="flex items-center gap-1.5 text-base font-bold text-[#B91C1C]">
-            <AlertCircle className="h-5 w-5 shrink-0 stroke-[2.5]" />
+          <p className="flex items-center gap-1.5 text-sm font-bold text-[#B91C1C]">
+            <AlertCircle className="h-4 w-4 shrink-0 stroke-[2.5]" />
             <span>{error}</span>
           </p>
         )}
@@ -227,7 +227,7 @@ export const AccessibleCard: React.FC<CardProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        'relative bg-white rounded-2xl border-2 border-[#D6CFC4] p-6 sm:p-8 shadow-warm transition-all duration-200',
+        'relative bg-white rounded-2xl border-2 border-[#D6CFC4] p-4 sm:p-5 shadow-warm transition-all duration-200',
         withTopAccent && 'tamil-accent-top',
         onClick && 'cursor-pointer hover:border-[#8B1A1A] hover:shadow-warm-lg',
         className

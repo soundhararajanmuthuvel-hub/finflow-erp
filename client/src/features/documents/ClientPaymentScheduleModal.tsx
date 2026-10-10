@@ -96,17 +96,8 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
           {/* 1. Letterhead Header (Dynamic Company Profile) */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 border-b-2 border-stone-900 pb-6">
             <div className="space-y-1">
-              {company.logoUrl ? (
+              {company.logoUrl && (
                 <img src={company.logoUrl} alt={company.name} className="h-12 w-auto object-contain mb-2" />
-              ) : (
-                <div className="flex items-center gap-2 mb-2">
-                  <img
-                    src="/brand/apple-touch-icon.png"
-                    alt="FinFlow Mark"
-                    className="h-10 w-10 rounded-xl object-contain bg-[#072661] p-0.5 border border-stone-300"
-                  />
-                  <span className="text-xs font-bold text-stone-500">FinFlow Letterhead</span>
-                </div>
               )}
               <h1 className="text-3xl font-black text-stone-900 tracking-tight leading-none">{company.name}</h1>
               {company.legalName && (

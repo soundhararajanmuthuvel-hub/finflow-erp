@@ -16,7 +16,7 @@ interface BottomNavProps {
 export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
   const primaryMobileNav = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { name: 'Deals', href: '/deals', icon: Briefcase },
+    { name: 'Finance Deals', href: '/deals', icon: Briefcase },
     { name: 'Repayments', href: '/repayments', icon: Receipt },
     { name: 'Clients', href: '/clients', icon: Users },
   ];
@@ -24,7 +24,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg flex items-center justify-around z-40 px-2"
+      className="lg:hidden fixed bottom-0 left-0 right-0 min-h-16 bg-white/95 backdrop-blur-md border-t border-[#D6CFC4] shadow-lg flex items-center justify-around z-40 px-2 pb-[env(safe-area-inset-bottom,0px)]"
     >
       {primaryMobileNav.map((item) => (
         <NavLink

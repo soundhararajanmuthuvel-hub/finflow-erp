@@ -10,6 +10,7 @@ import {
   AccessibleCard,
   AccessibleEmptyState,
 } from '../../components/common/AccessibleComponents';
+import { ContinuousTabs } from '../../components/common/ContinuousTabs';
 
 export const ReportsHub: React.FC = () => {
   const [reportType, setReportType] = useState('client-finance');
@@ -55,6 +56,15 @@ export const ReportsHub: React.FC = () => {
     { value: 'overdue', label: '6. Portfolio Overdue & Aging Analysis Report' },
   ];
 
+  const reportTabs = [
+    { id: 'client-finance', label: '1. Client Portfolio' },
+    { id: 'investor-returns', label: '2. Investor Returns' },
+    { id: 'partner-capital', label: '3. Partner Capital' },
+    { id: 'company-profit', label: '4. Company Profit' },
+    { id: 'collections', label: '5. Collections' },
+    { id: 'overdue', label: '6. Overdue & Aging' },
+  ];
+
   return (
     <div className="space-y-6 print-container">
       {/* Header */}
@@ -86,6 +96,15 @@ export const ReportsHub: React.FC = () => {
             Print Report
           </AccessibleButton>
         </div>
+      </div>
+
+      {/* Quick Report Continuous Pill Tabs */}
+      <div className="no-print">
+        <ContinuousTabs
+          tabs={reportTabs}
+          activeId={reportType}
+          onChange={(newTab) => setReportType(newTab)}
+        />
       </div>
 
       {/* Report Selector & Date Filters Card */}

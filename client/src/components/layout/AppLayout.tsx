@@ -11,9 +11,9 @@ export const AppLayout: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-6 text-center">
         <div className="h-12 w-12 border-3 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
-        <p className="text-base font-semibold text-slate-700">Loading FinFlow ERP...</p>
+        <p className="text-base font-semibold text-[#3F3F46]">Loading FinFlow ERP...</p>
       </div>
     );
   }
@@ -23,7 +23,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] text-slate-900 font-sans">
+    <div className="min-h-screen flex bg-[#FAF7F2] text-[#1A1A1A] font-sans">
       {/* Desktop Sidebar (Persistent) */}
       <Sidebar />
 
@@ -44,9 +44,9 @@ export const AppLayout: React.FC = () => {
       )}
 
       {/* Main Content Viewport */}
-      <div className="flex-1 flex flex-col min-w-0 pb-20 lg:pb-0">
+      <div className="flex-1 flex flex-col min-w-0 pb-24 lg:pb-0">
         <Navbar onOpenMobileMenu={() => setMobileDrawerOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 overflow-y-auto max-w-7xl w-full mx-auto">
           <Outlet />
         </main>
       </div>

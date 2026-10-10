@@ -20,6 +20,7 @@ import {
   AccessibleCard,
   AccessibleBanner,
 } from '../../components/common/AccessibleComponents';
+import { ContinuousTabs } from '../../components/common/ContinuousTabs';
 import { formatRole } from '../../utils/formatters';
 
 export const Settings: React.FC = () => {
@@ -90,6 +91,15 @@ export const Settings: React.FC = () => {
     }
   };
 
+  const [activeSection, setActiveSection] = useState<'all' | 'branding' | 'financial' | 'session'>('all');
+
+  const settingsTabs = [
+    { id: 'all', label: 'All Settings' },
+    { id: 'branding', label: 'Company Profile & Branding' },
+    { id: 'financial', label: 'Financial Defaults' },
+    { id: 'session', label: 'Operator Session' },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="pb-4 border-b border-slate-200/60">
@@ -100,6 +110,13 @@ export const Settings: React.FC = () => {
           Configure dynamic business branding, letterhead details, and financial parameters
         </p>
       </div>
+
+      {/* Sub-Navigation Continuous Tabs */}
+      <ContinuousTabs
+        tabs={settingsTabs}
+        activeId={activeSection}
+        onChange={(newTab: any) => setActiveSection(newTab)}
+      />
 
       {savedSuccess && (
         <AccessibleBanner
@@ -118,7 +135,8 @@ export const Settings: React.FC = () => {
       )}
 
       {/* Company Profile Form */}
-      <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-6">
+      {(activeSection === 'all' || activeSection === 'branding' || activeSection === 'financial') && (
+        <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div className="flex items-center gap-3">
@@ -249,36 +267,39 @@ export const Settings: React.FC = () => {
           </div>
         </form>
       </AccessibleCard>
+      )}
 
       {/* Operator Session Details */}
-      <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-4">
-        <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-          <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold shrink-0">
-            <Users className="h-5 w-5 stroke-[2.2]" />
+      {(activeSection === 'all' || activeSection === 'session') && (
+        <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+            <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold shrink-0">
+              <Users className="h-5 w-5 stroke-[2.2]" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 text-base sm:text-lg">Active Operator Session</h3>
+              <p className="text-sm text-[#52525B] font-medium">
+                Authenticated user identity and role authorizations
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-slate-900 text-base sm:text-lg">Active Operator Session</h3>
-            <p className="text-sm text-[#52525B] font-medium">
-              Authenticated user identity and role authorizations
-            </p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-sm">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <span className="text-xs font-medium text-slate-500 block">Operator Name</span>
-            <p className="font-bold text-slate-900 text-sm sm:text-base mt-1">{user?.fullName}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-sm">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+              <span className="text-xs font-medium text-slate-500 block">Operator Name</span>
+              <p className="font-bold text-slate-900 text-sm sm:text-base mt-1">{user?.fullName}</p>
+            </div>
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+              <span className="text-xs font-medium text-slate-500 block">Email Address</span>
+              <p className="font-semibold text-slate-900 text-xs sm:text-sm mt-1 break-words">{user?.email}</p>
+            </div>
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+              <span className="text-xs font-medium text-slate-500 block">Assigned Role</span>
+              <p className="font-bold text-[#8B1A1A] text-sm sm:text-base mt-1">{formatRole(user?.role)}</p>
+            </div>
           </div>
-          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <span className="text-xs font-medium text-slate-500 block">Email Address</span>
-            <p className="font-semibold text-slate-900 text-xs sm:text-sm mt-1 break-words">{user?.email}</p>
-          </div>
-          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <span className="text-xs font-medium text-slate-500 block">Assigned Role</span>
-            <p className="font-bold text-[#8B1A1A] text-sm sm:text-base mt-1">{formatRole(user?.role)}</p>
-          </div>
-        </div>
-      </AccessibleCard>
+        </AccessibleCard>
+      )}
     </div>
   );
 };

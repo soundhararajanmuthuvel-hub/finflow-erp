@@ -34,32 +34,32 @@ export default {
           900: '#603A17',
         },
         surface: {
-          bg: '#F8FAFC',     // Modern soft warm/neutral gray
-          card: '#FFFFFF',   // Pure crisp white
-          border: '#E2E8F0', // Subtle modern border
-          'border-subtle': '#F1F5F9',
-          hover: '#F8FAFC',  // Hover background
-          subtle: '#F1F5F9', // Secondary subtle surface
+          bg: '#FAF7F2',     // FinFlow warm business canvas
+          card: '#FFFFFF',   // Pure white card
+          border: '#D6CFC4', // Subtle warm border
+          'border-subtle': '#E5DFD5',
+          hover: '#F4EFE6',  // Hover background
+          subtle: '#F5EFEB', // Secondary subtle surface
         },
         status: {
-          success: '#059669',
-          'success-bg': '#ECFDF5',
-          'success-border': '#A7F3D0',
-          warning: '#D97706',
+          success: '#1F6B3A',
+          'success-bg': '#EDF7ED',
+          'success-border': '#B7E1CD',
+          warning: '#B45309',
           'warning-bg': '#FFFBEB',
           'warning-border': '#FDE68A',
-          danger: '#DC2626',
+          danger: '#B91C1C',
           'danger-bg': '#FEF2F2',
           'danger-border': '#FECACA',
-          info: '#2563EB',
+          info: '#1E3A8A',
           'info-bg': '#EFF6FF',
           'info-border': '#BFDBFE',
         },
         content: {
-          primary: '#0F172A',   // Slate 900
-          secondary: '#334155', // Slate 700
-          muted: '#64748B',     // Slate 500
-          light: '#94A3B8',     // Slate 400
+          primary: '#1A1A1A',   // Main text
+          secondary: '#3F3F46', // Secondary text
+          muted: '#6B7280',     // Slate 500
+          light: '#9CA3AF',     // Slate 400
         }
       },
       fontFamily: {

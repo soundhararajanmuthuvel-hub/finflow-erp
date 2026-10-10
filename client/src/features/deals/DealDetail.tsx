@@ -47,6 +47,7 @@ import {
   AccessibleInput,
   AccessibleSelect,
 } from '../../components/common/AccessibleComponents';
+import { ContinuousTabs } from '../../components/common/ContinuousTabs';
 
 export const DealDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -492,29 +493,14 @@ export const DealDetail: React.FC = () => {
       </AccessibleCard>
 
       {/* ========================================================================= */}
-      {/* 3. 9 DEDICATED TABS NAVIGATION */}
+      {/* 3. 9 DEDICATED TABS NAVIGATION (CONTINUOUS PILL TABS) */}
       {/* ========================================================================= */}
-      <div className="border-b-2 border-stone-200 overflow-x-auto">
-        <nav className="flex space-x-2 pb-px min-w-max">
-          {tabs.map((t) => {
-            const Icon = t.icon;
-            const isActive = activeTab === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id)}
-                className={`flex items-center gap-2.5 px-5 py-3.5 text-base font-bold rounded-t-2xl transition-all border-b-4 ${
-                  isActive
-                    ? 'text-maroon-900 border-maroon-800 bg-white shadow-sm'
-                    : 'text-stone-600 border-transparent hover:text-stone-900 hover:bg-stone-100'
-                }`}
-              >
-                <Icon className={`h-5 w-5 ${isActive ? 'text-maroon-800' : 'text-stone-500'}`} />
-                <span>{t.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+      <div className="py-1">
+        <ContinuousTabs
+          tabs={tabs}
+          activeId={activeTab}
+          onChange={(newTab) => setActiveTab(newTab)}
+        />
       </div>
 
       {/* ========================================================================= */}

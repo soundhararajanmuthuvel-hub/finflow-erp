@@ -75,25 +75,35 @@ export const Dashboard: React.FC = () => {
   const upcomingRepayments = dashboardData?.upcomingRepayments || [];
   const overdueRepayments = dashboardData?.overdueRepayments || [];
 
+  const totalSyndicateCapital = Number(kpis.totalInvestorCapital || 0) + Number(kpis.totalCompanyCapital || 0);
+  const investorCapitalPct = totalSyndicateCapital > 0 ? (Number(kpis.totalInvestorCapital || 0) / totalSyndicateCapital) * 100 : 0;
+  const companyCapitalPct = totalSyndicateCapital > 0 ? (Number(kpis.totalCompanyCapital || 0) / totalSyndicateCapital) * 100 : 0;
+
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Header with Contextual Greeting and Primary Action Buttons */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#D6CFC4]/60">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
-            Welcome back, {firstName} 👋
-          </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1 leading-relaxed">
-            Monitor finance operations, collections, investor returns and portfolio performance.
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl sm:text-[28px] font-bold text-[#1A1A1A] tracking-tight leading-tight">
+              Executive Dashboard
+            </h1>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#8B1A1A]/10 text-[#8B1A1A] border border-[#8B1A1A]/20">
+              {firstName}
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm font-medium text-[#3F3F46] mt-1 leading-relaxed">
+            Private finance portfolio, syndicated funding, collections, and distributions.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full sm:w-auto">
           <AccessibleButton
             variant="secondary"
             size="normal"
             icon={Receipt}
             onClick={() => setRepaymentModalOpen(true)}
+            className="w-full sm:w-auto justify-center"
           >
             Record Repayment
           </AccessibleButton>
@@ -102,6 +112,7 @@ export const Dashboard: React.FC = () => {
             size="normal"
             icon={PlusCircle}
             onClick={() => navigate('/deals/new')}
+            className="w-full sm:w-auto justify-center"
           >
             Create Finance Deal
           </AccessibleButton>
@@ -119,7 +130,7 @@ export const Dashboard: React.FC = () => {
           onClick={() => navigate('/deals')}
         />
         <StatCard
-          title="Total Client Outstanding"
+          title="Client Outstanding"
           value={formatCurrency(kpis.totalClientOutstanding)}
           subtitle="Principal + expected charges"
           icon={CreditCard}
@@ -155,7 +166,7 @@ export const Dashboard: React.FC = () => {
           onClick={() => navigate('/repayments')}
         />
         <StatCard
-          title="Company-Owned Capital"
+          title="Company Own Capital"
           value={formatCurrency(kpis.totalCompanyCapital)}
           subtitle="Committed by partners & company"
           icon={Building2}
@@ -275,21 +286,27 @@ export const Dashboard: React.FC = () => {
             <div className="mt-6 space-y-4">
               <div>
                 <div className="flex justify-between text-xs sm:text-sm font-semibold mb-1.5">
-                  <span className="text-slate-700">Outside Investors</span>
+                  <span className="text-[#3F3F46]">Outside Investors ({investorCapitalPct.toFixed(1)}%)</span>
                   <span className="text-purple-700 font-bold whitespace-nowrap">{formatCurrency(kpis.totalInvestorCapital)}</span>
                 </div>
-                <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                  <div className="h-full bg-purple-600 rounded-full" style={{ width: '60%' }} />
+                <div className="h-2.5 rounded-full bg-[#E5DFD5]/60 overflow-hidden">
+                  <div
+                    className="h-full bg-purple-600 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(0, investorCapitalPct))}%` }}
+                  />
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between text-xs sm:text-sm font-semibold mb-1.5">
-                  <span className="text-slate-700">Company & Partner Capital</span>
+                  <span className="text-[#3F3F46]">Company & Partner Capital ({companyCapitalPct.toFixed(1)}%)</span>
                   <span className="text-emerald-700 font-bold whitespace-nowrap">{formatCurrency(kpis.totalCompanyCapital)}</span>
                 </div>
-                <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                  <div className="h-full bg-emerald-600 rounded-full" style={{ width: '40%' }} />
+                <div className="h-2.5 rounded-full bg-[#E5DFD5]/60 overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(0, companyCapitalPct))}%` }}
+                  />
                 </div>
               </div>
             </div>

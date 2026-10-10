@@ -112,16 +112,27 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
               {company.legalName && (
                 <p className="text-base text-stone-600 font-semibold">{company.legalName}</p>
               )}
-              <p className="text-sm text-stone-600 max-w-sm leading-relaxed">
-                {company.address ? `${company.address}, ` : ''}{company.city ? `${company.city}, ` : ''}{company.state} {company.pincode}
-              </p>
+              {[
+                company.address,
+                company.city,
+                company.state,
+                company.pincode,
+              ].filter((part) => String(part || '').trim()).length > 0 && (
+                <p className="text-sm text-stone-600 max-w-sm leading-relaxed">
+                  {[company.address, company.city, company.state, company.pincode]
+                    .filter((part) => String(part || '').trim())
+                    .join(', ')}
+                </p>
+              )}
             </div>
 
-            <div className="sm:text-right space-y-1 text-sm text-stone-600">
-              <p className="font-bold text-stone-900">Phone: <span className="font-normal">{company.phone || 'N/A'}</span></p>
-              <p className="font-bold text-stone-900">Email: <span className="font-normal">{company.email || 'N/A'}</span></p>
-              {company.website && <p className="font-bold text-stone-900">Web: <span className="font-normal">{company.website}</span></p>}
-            </div>
+            {(company.phone || company.email || company.website) && (
+              <div className="sm:text-right space-y-1 text-sm text-stone-600">
+                {company.phone && <p className="font-bold text-stone-900">Phone: <span className="font-normal">{company.phone}</span></p>}
+                {company.email && <p className="font-bold text-stone-900">Email: <span className="font-normal">{company.email}</span></p>}
+                {company.website && <p className="font-bold text-stone-900">Web: <span className="font-normal">{company.website}</span></p>}
+              </div>
+            )}
           </div>
 
           {/* 2. Document Title */}
@@ -168,6 +179,8 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
                   <th className="p-3.5 text-right">Principal (₹)</th>
                   <th className="p-3.5 text-right">Interest / Charges (₹)</th>
                   <th className="p-3.5 text-right">Total Due (₹)</th>
+                  <th className="p-3.5 text-right">Paid (₹)</th>
+                  <th className="p-3.5 text-right">Balance (₹)</th>
                   <th className="p-3.5 text-center">Status</th>
                 </tr>
               </thead>
@@ -179,6 +192,12 @@ export const ClientPaymentScheduleModal: React.FC<ClientPaymentScheduleModalProp
                     <td className="p-3.5 text-right font-mono font-medium text-stone-800 whitespace-nowrap">{formatCurrency(sch.principalAmount)}</td>
                     <td className="p-3.5 text-right font-mono font-medium text-stone-800 whitespace-nowrap">{formatCurrency(sch.interestAmount)}</td>
                     <td className="p-3.5 text-right font-mono font-bold text-stone-900 whitespace-nowrap">{formatCurrency(sch.totalDue)}</td>
+                    <td className="p-3.5 text-right font-mono font-medium text-emerald-800 whitespace-nowrap">
+                      {formatCurrency(sch.paidAmount ?? (Number(sch.paidPrincipal || 0) + Number(sch.paidInterest || 0)))}
+                    </td>
+                    <td className="p-3.5 text-right font-mono font-bold text-rose-800 whitespace-nowrap">
+                      {formatCurrency(sch.balanceAmount ?? Math.max(0, Number(sch.totalDue || 0) - Number(sch.paidAmount ?? (Number(sch.paidPrincipal || 0) + Number(sch.paidInterest || 0)))))}
+                    </td>
                     <td className="p-3.5 text-center">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${

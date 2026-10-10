@@ -23,39 +23,39 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="md">
-      <div className="space-y-6">
-        <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FEE2E2] border-2 border-[#FECACA] text-[#B91C1C]">
-          <AlertTriangle className="h-8 w-8 shrink-0 stroke-[2.2] mt-0.5" />
+      <div className="space-y-5">
+        <div className="flex items-start gap-3.5 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
+          <AlertTriangle className="h-5 w-5 shrink-0 stroke-[2] mt-0.5 text-red-600" />
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-[#B91C1C]">Warning: Destructive Action</h3>
-            <p className="mt-1 text-base font-semibold leading-relaxed text-[#7F1D1D]">{message}</p>
+            <h3 className="text-sm font-bold text-red-900">Warning: Destructive Action</h3>
+            <p className="mt-0.5 text-xs sm:text-sm font-medium leading-relaxed text-red-700">{message}</p>
           </div>
         </div>
 
         {itemDescription && (
-          <div className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4] text-base font-semibold text-[#1A1A1A]">
-            <span className="text-sm font-bold text-[#52525B] block mb-1">Target Record:</span>
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800">
+            <span className="text-xs font-bold text-slate-500 block mb-0.5">Target Record:</span>
             {itemDescription}
           </div>
         )}
 
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t-2 border-[#EDE7DE]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="h-14 px-6 rounded-xl text-base font-bold text-[#1A1A1A] bg-white hover:bg-[#FAF7F2] border-2 border-[#D6CFC4] shadow-sm transition-all flex items-center justify-center gap-2"
+            className="h-11 px-5 rounded-xl text-sm font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-sm transition-all flex items-center justify-center gap-2"
           >
-            <X className="h-5 w-5 stroke-[2.5]" />
-            <span>Cancel (Keep Safe)</span>
+            <X className="h-4 w-4 stroke-[2]" />
+            <span>Cancel</span>
           </button>
           <button
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="h-14 px-7 rounded-xl bg-[#B91C1C] hover:bg-[#991B1B] text-white font-bold text-base shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="h-11 px-5 rounded-xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold text-sm shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <Trash2 className="h-5 w-5 stroke-[2.5]" />
+            <Trash2 className="h-4 w-4 stroke-[2]" />
             <span>{isLoading ? 'Deleting...' : 'Confirm Delete'}</span>
           </button>
         </div>

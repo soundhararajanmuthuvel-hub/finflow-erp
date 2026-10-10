@@ -30,45 +30,38 @@ export const StatCard: React.FC<StatCardProps> = ({
     switch (colorScheme) {
       case 'maroon':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#8B1A1A]',
-          iconBg: 'bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF]',
+          iconBg: 'bg-red-50 text-[#8B1A1A] border border-red-100',
           accentBar: 'bg-[#8B1A1A]',
         };
       case 'emerald':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#1F6B3A]',
-          iconBg: 'bg-[#EAF5EE] text-[#1F6B3A] border-2 border-[#A7D9B7]',
-          accentBar: 'bg-[#1F6B3A]',
+          iconBg: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
+          accentBar: 'bg-emerald-600',
         };
       case 'blue':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#1E3A8A]',
-          iconBg: 'bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE]',
-          accentBar: 'bg-[#1E3A8A]',
+          iconBg: 'bg-blue-50 text-blue-700 border border-blue-100',
+          accentBar: 'bg-blue-600',
         };
       case 'purple':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#6B21A8]',
-          iconBg: 'bg-[#F3E8FF] text-[#6B21A8] border-2 border-[#D8B4FE]',
-          accentBar: 'bg-[#6B21A8]',
+          iconBg: 'bg-purple-50 text-purple-700 border border-purple-100',
+          accentBar: 'bg-purple-600',
         };
       case 'amber':
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#B45309]',
-          iconBg: 'bg-[#FEF3C7] text-[#B45309] border-2 border-[#FDE68A]',
-          accentBar: 'bg-[#B45309]',
+          iconBg: 'bg-amber-50 text-amber-700 border border-amber-100',
+          accentBar: 'bg-amber-600',
         };
       case 'rose':
         return {
-          cardBorder: 'border-[#FECACA] hover:border-[#B91C1C] bg-[#FEF2F2]',
-          iconBg: 'bg-white text-[#B91C1C] border-2 border-[#FECACA]',
-          accentBar: 'bg-[#B91C1C]',
+          iconBg: 'bg-rose-50 text-rose-700 border border-rose-100',
+          accentBar: 'bg-rose-600',
         };
       default:
         return {
-          cardBorder: 'border-[#D6CFC4] hover:border-[#3F3F46]',
-          iconBg: 'bg-[#F4F4F5] text-[#18181B] border-2 border-[#D4D4D8]',
-          accentBar: 'bg-[#3F3F46]',
+          iconBg: 'bg-slate-100 text-slate-700 border border-slate-200',
+          accentBar: 'bg-slate-700',
         };
     }
   };
@@ -79,53 +72,49 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        'relative bg-white rounded-2xl p-4 sm:p-5 border-2 shadow-warm transition-all duration-200 flex flex-col justify-between min-h-[160px]',
-        colors.cardBorder,
-        onClick && 'cursor-pointer hover:shadow-warm-lg',
+        'relative bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm transition-all duration-200 flex flex-col justify-between min-h-[148px]',
+        onClick && 'cursor-pointer hover:border-slate-300 hover:shadow-card-hover group',
         className
       )}
     >
-      {/* Top Accent Strip */}
-      <div className={clsx('absolute top-0 left-0 right-0 h-1', colors.accentBar)} />
-
-      {/* Top Line: Icon badge placed beside the label */}
-      <div className="flex items-center gap-3">
-        <div className={clsx('h-9 w-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm', colors.iconBg)}>
-          <Icon className="h-5 w-5 stroke-[2.2]" aria-hidden="true" />
-        </div>
-        <p className="text-base font-semibold text-[#1A1A1A] leading-snug">
+      {/* Top Header: Label & Icon Badge */}
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs sm:text-sm font-semibold text-slate-500 leading-snug">
           {title}
         </p>
+        <div className={clsx('h-9 w-9 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105', colors.iconBg)}>
+          <Icon className="h-4.5 w-4.5 stroke-[2]" aria-hidden="true" />
+        </div>
       </div>
 
-      {/* Full-width Big Amount on its own line: 26-30px bold, never wrapped, never truncated */}
+      {/* Prominent Amount */}
       <div className="mt-3 my-1">
-        <div className="text-[26px] sm:text-[28px] font-bold text-[#1A1A1A] tracking-tight whitespace-nowrap leading-none">
+        <div className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
           {value}
         </div>
       </div>
 
-      {/* Helper text below: 14-15px, normal weight, dark gray #3F3F46 */}
+      {/* Helper Subtitle or Trend */}
       {subtitle && (
-        <p className="mt-1 text-sm font-normal text-[#3F3F46] leading-relaxed">
+        <p className="mt-1 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed truncate">
           {subtitle}
         </p>
       )}
 
       {trend && (
-        <div className="mt-2.5 pt-2 border-t border-[#EDE7DE] flex items-center gap-2 text-sm font-semibold">
+        <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold">
           {trend.isPositive ? (
-            <span className="inline-flex items-center text-[#1F6B3A] gap-1 bg-[#EAF5EE] px-2 py-0.5 rounded-lg border border-[#A7D9B7]">
-              <ArrowUpRight className="h-4 w-4 stroke-[2.5]" />
+            <span className="inline-flex items-center text-emerald-700 gap-1 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
               {trend.value}
             </span>
           ) : (
-            <span className="inline-flex items-center text-[#B91C1C] gap-1 bg-[#FEE2E2] px-2 py-0.5 rounded-lg border border-[#FECACA]">
-              <ArrowDownRight className="h-4 w-4 stroke-[2.5]" />
+            <span className="inline-flex items-center text-rose-700 gap-1 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+              <ArrowDownRight className="h-3.5 w-3.5 stroke-[2.5]" />
               {trend.value}
             </span>
           )}
-          <span className="text-[#3F3F46]">vs last period</span>
+          <span className="text-slate-400">vs last period</span>
         </div>
       )}
     </div>

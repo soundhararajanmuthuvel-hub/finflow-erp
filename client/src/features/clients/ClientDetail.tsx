@@ -169,42 +169,42 @@ export const ClientDetail: React.FC = () => {
 
       {/* Client Profile Banner Card */}
       <AccessibleCard withTopAccent className="p-4 sm:p-5">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b-2 border-[#EDE7DE]">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
           <div className="flex items-start gap-3.5 sm:gap-4">
             <div className="h-12 w-12 rounded-xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-black text-xl shrink-0">
               <User className="h-6 w-6 stroke-[2.2]" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#1A1A1A]">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
                   {client.fullName}
                 </h1>
-                <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-[#FAF7F2] border border-[#D6CFC4] text-[#8B1A1A] font-bold">
+                <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[#8B1A1A] font-semibold">
                   {client.clientCode}
                 </span>
                 <StatusBadge status={client.status || 'ACTIVE'} size="sm" />
               </div>
-              <p className="text-sm font-semibold text-[#52525B] mt-0.5">
+              <p className="text-sm font-medium text-slate-500 mt-0.5">
                 {client.businessName ? `${client.businessName} • ` : ''}
                 {client.industry || client.businessType || 'General Commercial Trading'}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm bg-[#FAF7F2] p-3 rounded-xl border border-[#D6CFC4]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
             <div>
-              <span className="text-xs font-bold text-[#3F3F46] block">Phone</span>
-              <span className="font-bold text-[#1A1A1A] text-base mt-0.5 block">{client.phone}</span>
+              <span className="text-xs font-semibold text-slate-500 block">Phone</span>
+              <span className="font-semibold text-slate-900 text-sm sm:text-base mt-0.5 block">{client.phone}</span>
             </div>
             <div>
-              <span className="text-xs font-bold text-[#3F3F46] block">Email</span>
-              <span className="font-bold text-[#1A1A1A] text-sm mt-0.5 block break-words">
+              <span className="text-xs font-semibold text-slate-500 block">Email</span>
+              <span className="font-semibold text-slate-900 text-sm mt-0.5 block break-words">
                 {client.email || '—'}
               </span>
             </div>
             <div>
-              <span className="text-xs font-bold text-[#3F3F46] block">Location</span>
-              <span className="font-bold text-[#1A1A1A] text-sm mt-0.5 block">
+              <span className="text-xs font-semibold text-slate-500 block">Location</span>
+              <span className="font-semibold text-slate-900 text-sm mt-0.5 block">
                 {client.city ? `${client.city}, ${client.state || ''}` : '—'}
               </span>
             </div>
@@ -213,27 +213,27 @@ export const ClientDetail: React.FC = () => {
 
         {/* Aggregate Financial Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4">
-          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs font-bold text-[#3F3F46] block">Total Finance Taken</span>
-            <p className="text-lg sm:text-xl font-extrabold text-[#1A1A1A] mt-0.5 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-xs font-medium text-slate-500 block">Total Finance Taken</span>
+            <p className="text-lg sm:text-xl font-bold text-slate-900 mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.totalFinanceReceived)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-            <span className="text-xs font-bold text-[#1F6B3A] block">Total Repaid (P+I)</span>
-            <p className="text-lg sm:text-xl font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
+            <span className="text-xs font-medium text-emerald-800 block">Total Repaid (P+I)</span>
+            <p className="text-lg sm:text-xl font-bold text-emerald-700 mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.totalRepaid)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-            <span className="text-xs font-bold text-[#B45309] block">Outstanding Total</span>
-            <p className="text-lg sm:text-xl font-extrabold text-[#B45309] mt-0.5 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
+            <span className="text-xs font-medium text-amber-800 block">Outstanding Total</span>
+            <p className="text-lg sm:text-xl font-bold text-amber-700 mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.outstandingAmount)}
             </p>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border-2 border-[#FECACA]">
-            <span className="text-xs font-bold text-[#B91C1C] block">Overdue Balance</span>
-            <p className="text-lg sm:text-xl font-extrabold text-[#B91C1C] mt-0.5 whitespace-nowrap">
+          <div className="p-3.5 rounded-xl bg-rose-50/70 border border-rose-200/80">
+            <span className="text-xs font-medium text-rose-800 block">Overdue Balance</span>
+            <p className="text-lg sm:text-xl font-bold text-rose-700 mt-0.5 whitespace-nowrap">
               {formatCurrency(summary.overdueAmount)}
             </p>
           </div>
@@ -242,10 +242,10 @@ export const ClientDetail: React.FC = () => {
 
       {/* Finance Deals History */}
       <AccessibleCard withTopAccent className="space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b-2 border-[#EDE7DE]">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <Briefcase className="h-6 w-6 text-[#8B1A1A] stroke-[2.3]" />
-            <h3 className="text-2xl font-bold text-[#1A1A1A]">
+            <Briefcase className="h-5 w-5 text-[#8B1A1A] stroke-[2.2]" />
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900">
               Finance Deal History ({client.deals?.length || 0} Deals)
             </h3>
           </div>
@@ -260,47 +260,47 @@ export const ClientDetail: React.FC = () => {
         </div>
 
         {client.deals && client.deals.length > 0 ? (
-          <div className="overflow-x-auto rounded-xl border-2 border-[#D6CFC4]">
-            <table className="w-full text-left text-base">
-              <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-bold border-b-2 border-[#D6CFC4]">
+          <div className="overflow-x-auto rounded-xl border border-slate-200/80">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-slate-50/80 text-slate-600 font-semibold text-xs tracking-wider uppercase border-b border-slate-200">
                 <tr>
-                  <th className="py-4 px-5 text-base font-bold">Deal #</th>
-                  <th className="py-4 px-5 text-base font-bold">Approved Finance</th>
-                  <th className="py-4 px-5 text-base font-bold">Contract Interest</th>
-                  <th className="py-4 px-5 text-base font-bold">Total Repaid</th>
-                  <th className="py-4 px-5 text-base font-bold">Outstanding</th>
-                  <th className="py-4 px-5 text-base font-bold">Status</th>
-                  <th className="py-4 px-5 text-base font-bold text-right">Action</th>
+                  <th className="py-3 px-5">Deal #</th>
+                  <th className="py-3 px-5">Approved Finance</th>
+                  <th className="py-3 px-5">Contract Interest</th>
+                  <th className="py-3 px-5">Total Repaid</th>
+                  <th className="py-3 px-5">Outstanding</th>
+                  <th className="py-3 px-5">Status</th>
+                  <th className="py-3 px-5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+              <tbody className="divide-y divide-slate-100 text-slate-800">
                 {client.deals.map((d: any) => (
                   <tr
                     key={d.id}
                     onClick={() => navigate(`/deals/${d.id}`)}
-                    className="hover:bg-[#FAF7F2] cursor-pointer transition-colors"
+                    className="hover:bg-slate-50/80 cursor-pointer transition-colors"
                   >
-                    <td className="py-4 px-5 font-mono font-bold text-[#8B1A1A] text-lg whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-mono font-semibold text-[#8B1A1A] text-sm whitespace-nowrap">
                       {d.dealNumber}
                     </td>
-                    <td className="py-4 px-5 font-bold text-lg whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-slate-900 whitespace-nowrap">
                       {formatCurrency(d.financeAmountApproved)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-emerald-700 whitespace-nowrap">
                       {formatCurrency(d.totalInterest)}
                     </td>
-                    <td className="py-4 px-5 font-bold text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-emerald-700 whitespace-nowrap">
                       {formatCurrency(
                         Number(d.totalPrincipalRepaid || 0) + Number(d.totalInterestRepaid || 0)
                       )}
                     </td>
-                    <td className="py-4 px-5 font-extrabold text-lg text-[#B45309] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-bold text-sm text-amber-700 whitespace-nowrap">
                       {formatCurrency(d.outstandingTotal)}
                     </td>
-                    <td className="py-4 px-5 whitespace-nowrap">
+                    <td className="py-3.5 px-5 whitespace-nowrap">
                       <StatusBadge status={d.status} size="sm" />
                     </td>
-                    <td className="py-4 px-5 text-right whitespace-nowrap">
+                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <AccessibleButton
                         variant="secondary"
                         size="compact"
@@ -320,7 +320,7 @@ export const ClientDetail: React.FC = () => {
             </table>
           </div>
         ) : (
-          <div className="text-center py-10 text-base font-semibold text-[#52525B]">
+          <div className="text-center py-10 text-sm font-medium text-slate-500">
             No finance deals registered for this client yet.
           </div>
         )}
@@ -385,7 +385,7 @@ export const ClientDetail: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
               type="button"
               variant="outline"

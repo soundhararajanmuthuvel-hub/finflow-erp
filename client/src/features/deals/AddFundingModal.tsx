@@ -163,13 +163,13 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
                 key={st.type}
                 type="button"
                 onClick={() => setSourceType(st.type as any)}
-                className={`h-16 px-4 rounded-xl border-2 font-bold text-base flex items-center justify-center gap-2.5 transition-all ${
+                className={`h-12 px-3 rounded-xl border font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
                   sourceType === st.type
-                    ? 'bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-md'
-                    : 'bg-white text-[#1A1A1A] border-[#D6CFC4] hover:border-[#8B1A1A]'
+                    ? 'bg-[#8B1A1A] text-white border-[#8B1A1A] shadow-xs'
+                    : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                <st.icon className="h-5 w-5 stroke-[2.3]" />
+                <st.icon className="h-4 w-4" />
                 <span>{st.label}</span>
               </button>
             ))}
@@ -237,7 +237,7 @@ export const AddFundingModal: React.FC<AddFundingModalProps> = ({
           placeholder="e.g. Committed via Cheque / Bank Transfer"
         />
 
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
           <AccessibleButton type="button" variant="outline" onClick={handleClose}>
             Cancel
           </AccessibleButton>

@@ -52,30 +52,30 @@ export const Modal: React.FC<ModalProps> = ({
       aria-labelledby="modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
     >
-      {/* High contrast Backdrop */}
+      {/* Modern Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog Box */}
       <div
         className={clsx(
-          'relative w-full overflow-hidden rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-modal transition-all my-6 z-10 flex flex-col max-h-[92vh]',
+          'relative w-full overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-modal transition-all my-6 z-10 flex flex-col max-h-[90vh]',
           maxWidthClasses[maxWidth]
         )}
       >
-        {/* Tamil Culture Decorative Accent Bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-[#8B1A1A] via-[#8B1A1A] to-[#B7791F]" />
+        {/* Subtle Brand Accent Bar */}
+        <div className="h-1 w-full bg-gradient-to-r from-[#8B1A1A] via-[#8B1A1A] to-[#EA580C]" />
 
-        {/* Header with High-Contrast Clear Labeled Close Button */}
-        <div className="flex items-center justify-between border-b-2 border-[#EDE7DE] px-6 py-5 bg-[#FAF7F2] shrink-0">
+        {/* Header with Clear Close Button */}
+        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4.5 bg-slate-50/60 shrink-0">
           <div className="pr-4">
-            <h2 id="modal-title" className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight">
+            <h2 id="modal-title" className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-1 text-base font-semibold text-[#52525B] leading-relaxed">
+              <p className="mt-0.5 text-xs sm:text-sm font-medium text-slate-500 leading-relaxed">
                 {subtitle}
               </p>
             )}
@@ -84,15 +84,14 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#F3EFEA] text-[#1A1A1A] font-bold text-base border-2 border-[#D6CFC4] hover:border-[#8B1A1A] shadow-sm transition-all shrink-0 min-h-[44px]"
+            className="inline-flex items-center justify-center p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0"
           >
-            <X className="h-5 w-5 text-[#8B1A1A] stroke-[2.5]" />
-            <span>Close</span>
+            <X className="h-5 w-5 stroke-[2]" />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 sm:p-8 overflow-y-auto text-base text-[#1A1A1A] leading-relaxed bg-white">
+        <div className="p-5 sm:p-7 overflow-y-auto text-sm sm:text-base text-slate-800 leading-relaxed bg-white">
           {children}
         </div>
       </div>

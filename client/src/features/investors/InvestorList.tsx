@@ -162,12 +162,12 @@ export const InvestorList: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/60">
         <div>
-          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">
             Outside Investors
           </h1>
-          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-0.5">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-0.5">
             Manage syndication capital providers, committed pools, and waterfall ROI payouts
           </p>
         </div>
@@ -182,41 +182,41 @@ export const InvestorList: React.FC = () => {
       </div>
 
       {/* Accessible Search Bar */}
-      <div className="p-3 sm:p-4 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm">
+      <div className="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
         <div className="relative max-w-xl">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#52525B] stroke-[2.2]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 stroke-[2.2]" />
           <input
             type="text"
             placeholder="Search by investor name, code, phone, or bank..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-11 bg-[#FAF7F2] border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-3 focus:ring-[#8B1A1A]/20 rounded-xl pl-11 pr-3.5 text-base font-medium text-[#1A1A1A] placeholder-[#71717A] transition-all"
+            className="w-full h-11 bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#8B1A1A] focus:ring-2 focus:ring-[#8B1A1A]/10 rounded-xl pl-10 pr-3.5 text-sm font-medium text-slate-800 placeholder-slate-400 transition-all outline-none"
           />
         </div>
       </div>
 
       {/* Desktop / Tablet High-Contrast Table View */}
-      <div className="hidden md:block rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
+      <div className="hidden md:block rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-base">
-            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50/80 text-slate-600 font-semibold text-xs tracking-wider uppercase border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-5 text-sm font-bold">Investor Code</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Investor Name</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Contact</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Total Capital</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Principal Returned</th>
-                <th className="py-3.5 px-5 text-sm font-bold">ROI Earned</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Total Payout</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Pending Principal</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Status</th>
-                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
+                <th className="py-3 px-5">Investor Code</th>
+                <th className="py-3 px-5">Investor Name</th>
+                <th className="py-3 px-5">Contact</th>
+                <th className="py-3 px-5">Total Capital</th>
+                <th className="py-3 px-5">Principal Returned</th>
+                <th className="py-3 px-5">ROI Earned</th>
+                <th className="py-3 px-5">Total Payout</th>
+                <th className="py-3 px-5">Pending Principal</th>
+                <th className="py-3 px-5">Status</th>
+                <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+            <tbody className="divide-y divide-slate-100 text-slate-800">
               {isLoading ? (
                 <tr>
-                  <td colSpan={10} className="py-10 text-center text-base font-bold text-[#52525B]">
+                  <td colSpan={10} className="py-10 text-center text-sm font-medium text-slate-500">
                     Loading investor records...
                   </td>
                 </tr>
@@ -232,36 +232,34 @@ export const InvestorList: React.FC = () => {
                     <tr
                       key={inv.id}
                       onClick={() => navigate(`/investors/${inv.id}`)}
-                      className={`cursor-pointer hover:bg-[#FAF7F2] transition-colors ${
-                        index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
-                      }`}
+                      className="cursor-pointer hover:bg-slate-50/80 transition-colors bg-white"
                     >
-                      <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-mono font-semibold text-[#8B1A1A] text-sm whitespace-nowrap">
                         {inv.investorCode}
                       </td>
                       <td className="py-3.5 px-5">
-                        <p className="font-bold text-base text-[#1A1A1A]">{inv.name}</p>
-                        <p className="text-xs font-semibold text-[#52525B] mt-0.5">
+                        <p className="font-semibold text-sm text-slate-900">{inv.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">
                           {inv.bankName ? `Bank: ${inv.bankName}` : 'Bank details unlisted'}
                         </p>
                       </td>
                       <td className="py-3.5 px-5 whitespace-nowrap">
-                        <p className="font-bold text-sm text-[#1A1A1A]">{inv.phone}</p>
-                        <p className="text-xs text-[#52525B] mt-0.5">{inv.email || '—'}</p>
+                        <p className="font-medium text-sm text-slate-800">{inv.phone}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{inv.email || '—'}</p>
                       </td>
-                      <td className="py-3.5 px-5 font-bold text-base text-[#6B21A8] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-semibold text-sm text-purple-700 whitespace-nowrap">
                         {formatCurrency(totalInvested)}
                       </td>
-                      <td className="py-3.5 px-5 font-bold text-base text-[#1F6B3A] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-semibold text-sm text-emerald-700 whitespace-nowrap">
                         {formatCurrency(principalReturned)}
                       </td>
-                      <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-bold text-sm text-emerald-700 whitespace-nowrap">
                         {formatCurrency(interestEarned)}
                       </td>
-                      <td className="py-3.5 px-5 font-bold text-base text-[#1E3A8A] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-semibold text-sm text-blue-700 whitespace-nowrap">
                         {formatCurrency(totalPayout)}
                       </td>
-                      <td className="py-3.5 px-5 font-bold text-base text-[#B45309] whitespace-nowrap">
+                      <td className="py-3.5 px-5 font-bold text-sm text-amber-700 whitespace-nowrap">
                         {formatCurrency(pendingPrincipal)}
                       </td>
                       <td className="py-3.5 px-5 whitespace-nowrap">
@@ -275,17 +273,17 @@ export const InvestorList: React.FC = () => {
                           <button
                             title="Edit Investor"
                             onClick={(e) => handleOpenEdit(inv, e)}
-                            className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                            className="h-8 px-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 font-medium text-xs flex items-center gap-1.5 shadow-2xs transition-all"
                           >
-                            <Edit2 className="h-4 w-4 stroke-[2.3]" />
+                            <Edit2 className="h-3.5 w-3.5" />
                             <span>Edit</span>
                           </button>
                           <button
                             title="Delete Investor"
                             onClick={(e) => handleOpenDelete(inv, e)}
-                            className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                            className="h-8 px-2.5 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 hover:border-rose-300 font-medium text-xs flex items-center gap-1.5 shadow-2xs transition-all"
                           >
-                            <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                            <Trash2 className="h-3.5 w-3.5" />
                             <span>Delete</span>
                           </button>
                         </div>
@@ -315,7 +313,7 @@ export const InvestorList: React.FC = () => {
       {/* Mobile Stacked Card View (<768px) */}
       <div className="md:hidden space-y-4">
         {isLoading ? (
-          <div className="p-8 text-center text-lg font-bold text-[#52525B]">
+          <div className="p-8 text-center text-sm font-medium text-slate-500">
             Loading investor records...
           </div>
         ) : investors?.length > 0 ? (
@@ -325,53 +323,53 @@ export const InvestorList: React.FC = () => {
               onClick={() => navigate(`/investors/${inv.id}`)}
               className="p-5"
             >
-              <div className="flex items-start justify-between gap-3 pb-3 border-b-2 border-[#EDE7DE]">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
-                  <span className="font-mono text-sm font-bold text-[#8B1A1A] block">
+                  <span className="font-mono text-xs font-semibold text-[#8B1A1A] block">
                     {inv.investorCode}
                   </span>
-                  <h3 className="text-xl font-bold text-[#1A1A1A] mt-0.5">{inv.name}</h3>
-                  <p className="text-base font-semibold text-[#52525B] mt-0.5">
+                  <h3 className="text-base font-bold text-slate-900 mt-0.5">{inv.name}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
                     {inv.phone}
                   </p>
                 </div>
                 <StatusBadge status={inv.status || 'ACTIVE'} size="sm" />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 py-4 border-b-2 border-[#EDE7DE] text-base">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 py-3.5 border-b border-slate-100 text-sm">
                 <div>
-                  <p className="text-xs font-bold text-[#3F3F46]">Total Capital</p>
-                  <p className="text-base font-bold text-[#6B21A8] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-slate-500">Total Capital</p>
+                  <p className="text-sm font-semibold text-purple-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.totalInvested ?? 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#1F6B3A]">Principal Returned</p>
-                  <p className="text-base font-bold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-emerald-700">Principal Returned</p>
+                  <p className="text-sm font-semibold text-emerald-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.principalReturned ?? inv.totalPrincipalReturned ?? 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#1F6B3A]">ROI Earned</p>
-                  <p className="text-base font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-emerald-700">ROI Earned</p>
+                  <p className="text-sm font-bold text-emerald-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.interestEarned ?? inv.totalInterestEarned ?? 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#1E3A8A]">Total Payout</p>
-                  <p className="text-base font-bold text-[#1E3A8A] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-blue-700">Total Payout</p>
+                  <p className="text-sm font-semibold text-blue-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.totalPayout ?? ((inv.principalReturned ?? inv.totalPrincipalReturned ?? 0) + (inv.interestEarned ?? inv.totalInterestEarned ?? 0)))}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#B45309]">Pending Principal</p>
-                  <p className="text-base font-bold text-[#B45309] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-amber-700">Pending Principal</p>
+                  <p className="text-sm font-bold text-amber-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(inv.pendingPrincipal ?? Math.max(0, (inv.totalInvested ?? 0) - (inv.principalReturned ?? inv.totalPrincipalReturned ?? 0)))}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#3F3F46]">Bank Name</p>
-                  <p className="text-sm font-bold text-[#1A1A1A] mt-0.5 break-words">
+                  <p className="text-xs font-medium text-slate-500">Bank Name</p>
+                  <p className="text-xs font-medium text-slate-800 mt-0.5 break-words">
                     {inv.bankName || '—'}
                   </p>
                 </div>
@@ -384,16 +382,16 @@ export const InvestorList: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={(e) => handleOpenEdit(inv, e)}
-                    className="h-12 px-4 rounded-xl bg-white border-2 border-[#D6CFC4] text-[#1E3A8A] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                    className="h-9 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-slate-50"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    <Edit2 className="h-3.5 w-3.5" />
                     <span>Edit</span>
                   </button>
                   <button
                     onClick={(e) => handleOpenDelete(inv, e)}
-                    className="h-12 px-4 rounded-xl bg-white border-2 border-[#FECACA] text-[#B91C1C] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                    className="h-9 px-3 rounded-xl bg-white border border-rose-200 text-rose-600 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-rose-50"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                     <span>Delete</span>
                   </button>
                 </div>
@@ -482,7 +480,7 @@ export const InvestorList: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
               type="button"
               variant="outline"
@@ -565,7 +563,7 @@ export const InvestorList: React.FC = () => {
             ]}
           />
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
               type="button"
               variant="outline"

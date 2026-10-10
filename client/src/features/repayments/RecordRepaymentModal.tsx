@@ -176,32 +176,32 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#FAF7F2] border-2 border-[#D6CFC4] space-y-4">
-            <h5 className="text-lg font-bold text-[#1A1A1A]">
+          <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+            <h5 className="text-base sm:text-lg font-bold text-slate-900">
               Settled Waterfall Payouts
             </h5>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-base">
-              <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                <p className="text-sm font-bold text-[#3F3F46]">Company Principal</p>
-                <p className="font-extrabold text-[#1A1A1A] text-lg mt-1 whitespace-nowrap">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-sm">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+                <p className="text-xs font-medium text-slate-500">Company Principal</p>
+                <p className="font-bold text-slate-900 text-base sm:text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.principalRecovered)}
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                <p className="text-sm font-bold text-[#3F3F46]">Company Commission</p>
-                <p className="font-extrabold text-[#1E3A8A] text-lg mt-1 whitespace-nowrap">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+                <p className="text-xs font-medium text-slate-500">Company Commission</p>
+                <p className="font-bold text-blue-700 text-base sm:text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.managementCommission)}
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-                <p className="text-sm font-bold text-[#1F6B3A]">Company Net Profit</p>
-                <p className="font-extrabold text-[#1F6B3A] text-lg mt-1 whitespace-nowrap">
+              <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
+                <p className="text-xs font-medium text-emerald-800">Company Net Profit</p>
+                <p className="font-bold text-emerald-700 text-base sm:text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.distributionResult?.companyProfit?.totalCompanyProfit)}
                 </p>
               </div>
-              <div className="p-4 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">
-                <p className="text-sm font-bold text-[#B45309]">Outstanding Remaining</p>
-                <p className="font-extrabold text-[#B45309] text-lg mt-1 whitespace-nowrap">
+              <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80">
+                <p className="text-xs font-medium text-amber-800">Outstanding Remaining</p>
+                <p className="font-bold text-amber-700 text-base sm:text-lg mt-1 whitespace-nowrap">
                   {formatCurrency(result.dealUpdated?.outstandingTotal)}
                 </p>
               </div>
@@ -298,62 +298,62 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
 
           {/* WATERFALL ALLOCATION PREVIEW */}
           {previewData && (
-            <div className="p-6 rounded-2xl bg-[#FAF7F2] border-2 border-[#A7D9B7] shadow-sm space-y-4">
-              <div className="flex items-center justify-between border-b-2 border-[#D6CFC4] pb-3">
+            <div className="p-5 sm:p-6 rounded-2xl bg-slate-50 border border-emerald-200/80 shadow-xs space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-[#1F6B3A] stroke-[2.3]" />
-                  <h4 className="text-lg font-bold text-[#1A1A1A]">
+                  <Sparkles className="h-4 w-4 text-emerald-700 stroke-[2.2]" />
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900">
                     Waterfall Distribution Preview
                   </h4>
                 </div>
-                <span className="text-xs font-bold text-[#1F6B3A] bg-[#EAF5EE] px-3 py-1 rounded-full border border-[#A7D9B7]">
+                <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                   Exact Calculations Verified
                 </span>
               </div>
 
               {/* Allocation Top Row */}
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4]">
-                  <span className="text-sm text-[#3F3F46] font-bold block">Total Received</span>
-                  <p className="text-xl font-extrabold text-[#1A1A1A] mt-1 whitespace-nowrap">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+                  <span className="text-xs text-slate-500 font-medium block">Total Received</span>
+                  <p className="text-base sm:text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap">
                     {formatCurrency(previewData.amountReceived)}
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#EFF6FF] border-2 border-[#BFDBFE]">
-                  <span className="text-sm text-[#1E3A8A] font-bold block">Principal Portion</span>
-                  <p className="text-xl font-extrabold text-[#1E3A8A] mt-1 whitespace-nowrap">
+                <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200/80">
+                  <span className="text-xs text-blue-800 font-medium block">Principal Portion</span>
+                  <p className="text-base sm:text-lg font-bold text-blue-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(previewData.principalPortion)}
                   </p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
-                  <span className="text-sm text-[#1F6B3A] font-bold block">Interest / Finance Charge</span>
-                  <p className="text-xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
+                <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80">
+                  <span className="text-xs text-emerald-800 font-medium block">Interest Charge</span>
+                  <p className="text-base sm:text-lg font-bold text-emerald-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(previewData.interestPortion)}
                   </p>
                 </div>
               </div>
 
               {/* Visual Breakdown */}
-              <div className="space-y-3 pt-2">
-                <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4] space-y-2">
-                  <div className="flex items-center justify-between text-base font-bold text-[#1A1A1A]">
-                    <span className="flex items-center gap-2 text-[#1E3A8A]">
-                      <ShieldCheck className="h-5 w-5" />
+              <div className="space-y-3 pt-1">
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 space-y-2 shadow-xs">
+                  <div className="flex items-center justify-between text-sm font-semibold text-slate-900">
+                    <span className="flex items-center gap-2 text-blue-700">
+                      <ShieldCheck className="h-4 w-4" />
                       1. Principal Recovery Breakdown
                     </span>
-                    <span className="font-mono">{formatCurrency(previewData.principalPortion)}</span>
+                    <span className="font-mono text-sm">{formatCurrency(previewData.principalPortion)}</span>
                   </div>
-                  <div className="space-y-1.5 text-base pt-1">
-                    <div className="flex justify-between items-center px-3 py-2 rounded-lg bg-[#FAF7F2] border border-[#EDE7DE]">
+                  <div className="space-y-1.5 text-xs sm:text-sm pt-1">
+                    <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100">
                       <span>Company Capital ({previewData.waterfall?.companyCapital?.sharePercentage}%)</span>
                       <span className="font-bold font-mono">
                         {formatCurrency(previewData.waterfall?.companyCapital?.principalRecovered)}
                       </span>
                     </div>
                     {previewData.waterfall?.investorReturns?.map((inv: any, i: number) => (
-                      <div key={i} className="flex justify-between items-center px-3 py-2 rounded-lg bg-[#FAF7F2] border border-[#EDE7DE]">
-                        <span className="text-[#6B21A8]">{inv.investorName} ({inv.sharePercentage}%)</span>
-                        <span className="font-bold font-mono text-[#6B21A8]">
+                      <div key={i} className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100">
+                        <span className="text-purple-700">{inv.investorName} ({inv.sharePercentage}%)</span>
+                        <span className="font-bold font-mono text-purple-700">
                           {formatCurrency(inv.principalReturned)}
                         </span>
                       </div>
@@ -361,26 +361,26 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white border-2 border-[#D6CFC4] space-y-2">
-                  <div className="flex items-center justify-between text-base font-bold text-[#1A1A1A]">
-                    <span className="flex items-center gap-2 text-[#1F6B3A]">
-                      <TrendingUp className="h-5 w-5" />
+                <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 space-y-2 shadow-xs">
+                  <div className="flex items-center justify-between text-sm font-semibold text-slate-900">
+                    <span className="flex items-center gap-2 text-emerald-700">
+                      <TrendingUp className="h-4 w-4" />
                       2. Profit & Interest Distribution
                     </span>
-                    <span className="font-mono text-[#1F6B3A]">{formatCurrency(previewData.interestPortion)}</span>
+                    <span className="font-mono text-sm text-emerald-700">{formatCurrency(previewData.interestPortion)}</span>
                   </div>
-                  <div className="space-y-1.5 text-base pt-1">
+                  <div className="space-y-1.5 text-xs sm:text-sm pt-1">
                     {previewData.waterfall?.investorReturns?.map((inv: any, i: number) => (
-                      <div key={i} className="flex justify-between items-center px-3 py-2 rounded-lg bg-[#FAF7F2] border border-[#EDE7DE]">
-                        <span className="text-[#6B21A8]">{inv.investorName} ROI (Interest)</span>
-                        <span className="font-bold font-mono text-[#6B21A8]">
+                      <div key={i} className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100">
+                        <span className="text-purple-700">{inv.investorName} ROI (Interest)</span>
+                        <span className="font-bold font-mono text-purple-700">
                           {formatCurrency(inv.interestEarned)}
                         </span>
                       </div>
                     ))}
-                    <div className="flex justify-between items-center px-3 py-2 rounded-lg bg-[#FAF7F2] border border-[#EDE7DE]">
+                    <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100">
                       <span>Company Management Commission</span>
-                      <span className="font-bold font-mono text-[#1E3A8A]">
+                      <span className="font-bold font-mono text-blue-700">
                         {formatCurrency(previewData.waterfall?.companyCapital?.managementCommission)}
                       </span>
                     </div>
@@ -397,7 +397,7 @@ export const RecordRepaymentModal: React.FC<RecordRepaymentModalProps> = ({
           )}
 
           {/* Action buttons */}
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton type="button" variant="outline" onClick={handleReset}>
               Cancel
             </AccessibleButton>

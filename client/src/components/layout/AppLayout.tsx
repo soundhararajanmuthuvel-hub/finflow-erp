@@ -11,9 +11,9 @@ export const AppLayout: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-6 text-center">
-        <div className="h-14 w-14 border-4 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
-        <p className="text-xl font-bold text-[#1A1A1A]">Loading FinFlow ERP...</p>
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center">
+        <div className="h-12 w-12 border-3 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
+        <p className="text-base font-semibold text-slate-700">Loading FinFlow ERP...</p>
       </div>
     );
   }
@@ -23,7 +23,7 @@ export const AppLayout: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#FAF7F2] text-[#1A1A1A] font-sans">
+    <div className="min-h-screen flex bg-[#F8FAFC] text-slate-900 font-sans">
       {/* Desktop Sidebar (Persistent) */}
       <Sidebar />
 
@@ -32,12 +32,12 @@ export const AppLayout: React.FC = () => {
         <div className="fixed inset-0 z-50 flex lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileDrawerOpen(false)}
           />
 
           {/* Drawer */}
-          <div className="relative z-10 flex w-full max-w-xs sm:max-w-sm flex-col bg-white shadow-2xl">
+          <div className="relative z-10 flex w-full max-w-xs flex-col bg-white shadow-2xl">
             <Sidebar onCloseMobile={() => setMobileDrawerOpen(false)} isMobile={true} />
           </div>
         </div>
@@ -46,7 +46,7 @@ export const AppLayout: React.FC = () => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0 pb-20 lg:pb-0">
         <Navbar onOpenMobileMenu={() => setMobileDrawerOpen(true)} />
-        <main className="flex-1 p-4 sm:p-5 lg:p-6 overflow-y-auto max-w-[1400px] w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-7xl w-full mx-auto">
           <Outlet />
         </main>
       </div>

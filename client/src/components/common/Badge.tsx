@@ -25,14 +25,14 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
       case 'DISBURSED':
         return {
           icon: CheckCircle2,
-          style: 'bg-[#EAF5EE] text-[#1F6B3A] border-[#A7D9B7]',
+          style: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
           symbol: '✓',
         };
       case 'APPROVED':
       case 'COMMITTED':
         return {
           icon: ShieldCheck,
-          style: 'bg-[#EFF6FF] text-[#1E3A8A] border-[#BFDBFE]',
+          style: 'bg-blue-50 text-blue-700 border-blue-200/80',
           symbol: '✓',
         };
       case 'PENDING_APPROVAL':
@@ -43,7 +43,7 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
       case 'READY_FOR_APPROVAL':
         return {
           icon: Clock,
-          style: 'bg-[#FEF3C7] text-[#B45309] border-[#FDE68A]',
+          style: 'bg-amber-50 text-amber-700 border-amber-200/80',
           symbol: '⏱',
         };
       case 'OVERDUE':
@@ -52,7 +52,7 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
       case 'BLOCKED':
         return {
           icon: AlertTriangle,
-          style: 'bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]',
+          style: 'bg-rose-50 text-rose-700 border-rose-200/80',
           symbol: '!',
         };
       case 'COMPLETED':
@@ -60,13 +60,13 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
       case 'CLOSED':
         return {
           icon: CheckCheck,
-          style: 'bg-[#F3E8FF] text-[#6B21A8] border-[#D8B4FE]',
+          style: 'bg-purple-50 text-purple-700 border-purple-200/80',
           symbol: '✓✓',
         };
       case 'DRAFT':
         return {
           icon: FileText,
-          style: 'bg-[#F4F4F5] text-[#3F3F46] border-[#D4D4D8]',
+          style: 'bg-slate-100 text-slate-700 border-slate-200',
           symbol: '✎',
         };
       case 'CANCELLED':
@@ -75,7 +75,7 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
       default:
         return {
           icon: Ban,
-          style: 'bg-[#F4F4F5] text-[#52525B] border-[#D4D4D8]',
+          style: 'bg-slate-100 text-slate-600 border-slate-200',
           symbol: '✕',
         };
     }
@@ -93,21 +93,21 @@ export const StatusBadge: React.FC<BadgeProps> = ({ status, className, size = 'm
   const IconComponent = config.icon;
 
   const sizeClasses = {
-    sm: 'text-sm px-2.5 py-1 gap-1.5',
-    md: 'text-base px-3.5 py-1.5 gap-2',
-    lg: 'text-lg px-4 py-2 gap-2.5',
+    sm: 'text-xs px-2.5 py-0.5 gap-1',
+    md: 'text-xs sm:text-sm px-3 py-1 gap-1.5',
+    lg: 'text-sm px-3.5 py-1.5 gap-2',
   };
 
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-lg font-bold border-2 shadow-sm select-none whitespace-nowrap',
+        'inline-flex items-center rounded-full font-semibold border select-none whitespace-nowrap',
         config.style,
         sizeClasses[size],
         className
       )}
     >
-      <IconComponent className="h-4 w-4 shrink-0 stroke-[2.5]" aria-hidden="true" />
+      <IconComponent className="h-3.5 w-3.5 shrink-0 stroke-[2.2]" aria-hidden="true" />
       <span>{formatText(status)}</span>
     </span>
   );

@@ -58,12 +58,12 @@ export const ReportsHub: React.FC = () => {
   return (
     <div className="space-y-6 print-container">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4] no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/60 no-print">
         <div>
-          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">
             Financial Intelligence & Reports
           </h1>
-          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
             Exportable audits, investor statements, collection ledgers, and profit reconciliations
           </p>
         </div>
@@ -118,32 +118,32 @@ export const ReportsHub: React.FC = () => {
       </AccessibleCard>
 
       {/* Dynamic Report Table */}
-      <div className="rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
-        <div className="p-4 border-b-2 border-[#EDE7DE] bg-[#FAF7F2] flex items-center justify-between">
-          <h3 className="text-base font-bold text-[#1A1A1A]">
+      <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between">
+          <h3 className="text-sm sm:text-base font-bold text-slate-900">
             {reportOptions.find((r) => r.value === reportType)?.label}
           </h3>
-          <span className="text-sm font-bold text-[#8B1A1A]">
+          <span className="text-xs sm:text-sm font-semibold text-[#8B1A1A] bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
             Total Records: {reportData?.length || 0}
           </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-base">
-            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50/70 text-slate-600 font-semibold text-xs tracking-wider uppercase border-b border-slate-200">
               <tr>
                 {reportData?.length > 0 &&
                   Object.keys(reportData[0]).map((col) => (
-                    <th key={col} className="py-3 px-4 text-xs sm:text-sm font-bold whitespace-nowrap">
+                    <th key={col} className="py-3 px-4 font-semibold whitespace-nowrap">
                       {col.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
                     </th>
                   ))}
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+            <tbody className="divide-y divide-slate-100 text-slate-800">
               {isLoading ? (
                 <tr>
-                  <td colSpan={10} className="py-12 text-center text-base font-bold text-[#52525B]">
+                  <td colSpan={10} className="py-12 text-center text-sm font-medium text-slate-500">
                     Generating financial report...
                   </td>
                 </tr>
@@ -151,9 +151,7 @@ export const ReportsHub: React.FC = () => {
                 reportData.map((row: any, i: number) => (
                   <tr
                     key={i}
-                    className={`hover:bg-[#FAF7F2] transition-colors ${
-                      i % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
-                    }`}
+                    className="hover:bg-slate-50/80 transition-colors bg-white"
                   >
                     {Object.entries(row).map(([k, val]: [string, any], j: number) => {
                       const isMoney =

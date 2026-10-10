@@ -92,11 +92,11 @@ export const Settings: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="pb-4 border-b-2 border-[#D6CFC4]">
-        <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
+      <div className="pb-4 border-b border-slate-200/60">
+        <h1 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">
           Company Profile & System Settings
         </h1>
-        <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
+        <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
           Configure dynamic business branding, letterhead details, and financial parameters
         </p>
       </div>
@@ -120,16 +120,16 @@ export const Settings: React.FC = () => {
       {/* Company Profile Form */}
       <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#EDE7DE] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-[#FDF2F2] text-[#8B1A1A] border-2 border-[#F8CFCF] flex items-center justify-center font-bold shrink-0">
-                <Building2 className="h-5 w-5 stroke-[2.3]" />
+              <div className="h-10 w-10 rounded-xl bg-rose-50 text-[#8B1A1A] border border-rose-200 flex items-center justify-center font-bold shrink-0">
+                <Building2 className="h-5 w-5 stroke-[2.2]" />
               </div>
               <div>
-                <h3 className="font-bold text-[#1A1A1A] text-lg">
+                <h3 className="font-bold text-slate-900 text-base sm:text-lg">
                   Company Branding & Letterhead
                 </h3>
-                <p className="text-sm text-[#52525B] font-medium">
+                <p className="text-xs sm:text-sm text-slate-500">
                   Dynamic company name and contact info used across all official documents
                 </p>
               </div>
@@ -236,7 +236,7 @@ export const Settings: React.FC = () => {
             />
           </div>
 
-          <div className="flex justify-end pt-4 border-t-2 border-[#EDE7DE]">
+          <div className="flex justify-end pt-4 border-t border-slate-100">
             <AccessibleButton
               type="submit"
               variant="primary"
@@ -252,30 +252,30 @@ export const Settings: React.FC = () => {
 
       {/* Operator Session Details */}
       <AccessibleCard withTopAccent className="p-4 sm:p-6 space-y-4">
-        <div className="flex items-center gap-3 pb-3 border-b-2 border-[#EDE7DE]">
-          <div className="h-10 w-10 rounded-xl bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE] flex items-center justify-center font-bold shrink-0">
-            <Users className="h-5 w-5 stroke-[2.3]" />
+        <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+          <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold shrink-0">
+            <Users className="h-5 w-5 stroke-[2.2]" />
           </div>
           <div>
-            <h3 className="font-bold text-[#1A1A1A] text-lg">Active Operator Session</h3>
+            <h3 className="font-bold text-slate-900 text-base sm:text-lg">Active Operator Session</h3>
             <p className="text-sm text-[#52525B] font-medium">
               Authenticated user identity and role authorizations
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-base">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs sm:text-sm font-bold text-[#3F3F46] block">Operator Name</span>
-            <p className="font-extrabold text-[#1A1A1A] text-base mt-1">{user?.fullName}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-sm">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-xs font-medium text-slate-500 block">Operator Name</span>
+            <p className="font-bold text-slate-900 text-sm sm:text-base mt-1">{user?.fullName}</p>
           </div>
-          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs sm:text-sm font-bold text-[#3F3F46] block">Email Address</span>
-            <p className="font-bold text-[#1A1A1A] text-sm mt-1 break-words">{user?.email}</p>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-xs font-medium text-slate-500 block">Email Address</span>
+            <p className="font-semibold text-slate-900 text-xs sm:text-sm mt-1 break-words">{user?.email}</p>
           </div>
-          <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <span className="text-xs sm:text-sm font-bold text-[#3F3F46] block">Assigned Role</span>
-            <p className="font-extrabold text-[#8B1A1A] text-base mt-1">{formatRole(user?.role)}</p>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-xs font-medium text-slate-500 block">Assigned Role</span>
+            <p className="font-bold text-[#8B1A1A] text-sm sm:text-base mt-1">{formatRole(user?.role)}</p>
           </div>
         </div>
       </AccessibleCard>

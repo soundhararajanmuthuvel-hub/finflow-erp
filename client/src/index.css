@@ -4,32 +4,32 @@
 
 @layer base {
   html {
-    font-size: 16px; /* 1rem = 16px, 1.125rem = 18px */
+    font-size: 16px;
     font-family: 'Inter', 'Noto Sans', system-ui, -apple-system, sans-serif;
-    color: #1A1A1A;
-    background-color: #FAF7F2;
+    color: #0F172A;
+    background-color: #F8FAFC;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-[#FAF7F2] text-[#1A1A1A] font-sans min-h-screen text-base leading-relaxed;
+    @apply bg-[#F8FAFC] text-slate-900 font-sans min-h-screen text-sm sm:text-base leading-relaxed antialiased;
   }
 
   /* Accessible focus indicators */
   :focus-visible {
-    outline: 3px solid #8B1A1A !important;
+    outline: 2px solid #8B1A1A !important;
     outline-offset: 2px !important;
   }
 
   /* High legibility headings */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-[#1A1A1A] tracking-tight;
+    @apply font-bold text-slate-900 tracking-tight;
   }
 }
 
 @layer utilities {
-  /* Subtle Tamil culture decorative accent border (maroon + turmeric gold) */
+  /* Subtle decorative accent border */
   .tamil-accent-top {
     position: relative;
   }
@@ -39,37 +39,36 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #8B1A1A 0%, #8B1A1A 65%, #B7791F 65%, #B7791F 100%);
+    height: 3px;
+    background: linear-gradient(90deg, #8B1A1A 0%, #8B1A1A 70%, #EA580C 100%);
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
   }
 
-  /* 56px accessible touch target helper */
-  .touch-target-56 {
-    min-height: 56px;
-    min-width: 56px;
+  /* Touch target helper */
+  .touch-target-44 {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
-/* Custom accessible scrollbar */
+/* Custom sleek accessible scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #EDE7DE;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #A8A29E;
+  background: #CBD5E1;
   border-radius: 9999px;
-  border: 2px solid #EDE7DE;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #78716C;
+  background: #94A3B8;
 }
 
 /* Respect user reduced motion preferences */

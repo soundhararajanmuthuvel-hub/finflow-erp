@@ -25,6 +25,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import apiClient from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
 import { StatCard } from '../../components/common/StatCard';
 import { StatusBadge } from '../../components/common/Badge';
 import { AccessibleButton, AccessibleCard } from '../../components/common/AccessibleComponents';
@@ -34,7 +35,10 @@ import { RecordRepaymentModal } from '../repayments/RecordRepaymentModal';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [repaymentModalOpen, setRepaymentModalOpen] = useState(false);
+
+  const firstName = user?.fullName ? user.fullName.split(' ')[0] : 'Operator';
 
   const { data: dashboardData, isLoading, refetch } = useQuery({
     queryKey: ['dashboard-metrics'],
@@ -47,8 +51,8 @@ export const Dashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-        <div className="h-14 w-14 border-4 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
-        <p className="text-xl font-bold text-[#1A1A1A]">Loading Executive Dashboard...</p>
+        <div className="h-12 w-12 border-3 border-[#8B1A1A]/20 border-t-[#8B1A1A] rounded-full animate-spin mb-4" />
+        <p className="text-base font-semibold text-slate-700">Loading Executive Dashboard...</p>
       </div>
     );
   }
@@ -72,19 +76,19 @@ export const Dashboard: React.FC = () => {
   const overdueRepayments = dashboardData?.overdueRepayments || [];
 
   return (
-    <div className="space-y-6">
-      {/* Header with Title and Action Buttons */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header with Contextual Greeting and Primary Action Buttons */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/80">
         <div>
-          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight leading-tight">
-            Executive Dashboard
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
+            Welcome back, {firstName} 👋
           </h1>
-          <p className="text-sm sm:text-base font-medium text-[#3F3F46] mt-0.5 leading-relaxed">
-            Real-time portfolio metrics, syndicate capital pools & waterfall distributions
+          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1 leading-relaxed">
+            Monitor finance operations, collections, investor returns and portfolio performance.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <AccessibleButton
             variant="secondary"
             size="normal"
@@ -104,7 +108,7 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Primary KPI Cards Grid (4 cards in one row on laptop, 2 on tablet, 1 on mobile) */}
+      {/* Primary KPI Cards Grid (4 cards on desktop, 2 on tablet, 1 on mobile) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <StatCard
           title="Active Finance Portfolio"
@@ -115,7 +119,7 @@ export const Dashboard: React.FC = () => {
           onClick={() => navigate('/deals')}
         />
         <StatCard
-          title="Client Outstanding"
+          title="Total Client Outstanding"
           value={formatCurrency(kpis.totalClientOutstanding)}
           subtitle="Principal + expected charges"
           icon={CreditCard}
@@ -140,114 +144,98 @@ export const Dashboard: React.FC = () => {
         />
       </div>
 
-      {/* Secondary Performance Metrics Row */}
+      {/* Secondary Performance Metrics Row (3 cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-        <div className="p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col justify-between min-h-[140px]">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-base font-semibold text-[#1A1A1A] leading-snug">
-              Total Interest Collected
-            </p>
-            <div className="h-9 w-9 rounded-xl bg-[#FEF3C7] text-[#B45309] border-2 border-[#FDE68A] flex items-center justify-center shrink-0">
-              <Percent className="h-5 w-5 stroke-[2.2]" />
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <h4 className="text-[24px] sm:text-[26px] font-bold text-[#1A1A1A] whitespace-nowrap leading-none">
-              {formatCurrency(kpis.interestCollected)}
-            </h4>
-            <p className="text-sm font-normal text-[#3F3F46] mt-1">Across all repayments</p>
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#D6CFC4] shadow-warm flex flex-col justify-between min-h-[140px]">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-base font-semibold text-[#1A1A1A] leading-snug">
-              Company Own Capital
-            </p>
-            <div className="h-9 w-9 rounded-xl bg-[#EFF6FF] text-[#1E3A8A] border-2 border-[#BFDBFE] flex items-center justify-center shrink-0">
-              <Building2 className="h-5 w-5 stroke-[2.2]" />
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <h4 className="text-[24px] sm:text-[26px] font-bold text-[#1A1A1A] whitespace-nowrap leading-none">
-              {formatCurrency(kpis.totalCompanyCapital)}
-            </h4>
-            <p className="text-sm font-normal text-[#3F3F46] mt-1">Committed by partners</p>
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#FEF2F2] border-2 border-[#FECACA] shadow-warm flex flex-col justify-between min-h-[140px]">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-base font-semibold text-[#B91C1C] leading-snug">
-              Overdue Repayments
-            </p>
-            <div className="h-9 w-9 rounded-xl bg-white text-[#B91C1C] border-2 border-[#FECACA] flex items-center justify-center shrink-0 shadow-sm">
-              <AlertTriangle className="h-5 w-5 stroke-[2.2]" />
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <h4 className="text-[24px] sm:text-[26px] font-bold text-[#B91C1C] whitespace-nowrap leading-none">
-              {formatCurrency(kpis.overdueAmount)}
-            </h4>
-            <p className="text-sm font-semibold text-[#991B1B] mt-1">
-              {overdueRepayments.length} installments pending
-            </p>
-          </div>
-        </div>
+        <StatCard
+          title="Total Interest Collected"
+          value={formatCurrency(kpis.interestCollected)}
+          subtitle="Across all client repayments"
+          icon={Percent}
+          colorScheme="amber"
+          onClick={() => navigate('/repayments')}
+        />
+        <StatCard
+          title="Company-Owned Capital"
+          value={formatCurrency(kpis.totalCompanyCapital)}
+          subtitle="Committed by partners & company"
+          icon={Building2}
+          colorScheme="blue"
+          onClick={() => navigate('/partners')}
+        />
+        <StatCard
+          title="Overdue Repayments"
+          value={formatCurrency(kpis.overdueAmount)}
+          subtitle={`${overdueRepayments.length} installments pending`}
+          icon={AlertTriangle}
+          colorScheme="rose"
+          onClick={() => navigate('/reports')}
+        />
       </div>
 
       {/* Analytics & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
         {/* Cash Flow Trends */}
         <AccessibleCard withTopAccent className="lg:col-span-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b-2 border-[#EDE7DE]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
             <div>
-              <h3 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                 Disbursement vs Collection Flow
               </h3>
-              <p className="text-sm text-[#3F3F46] font-normal mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
                 Monthly capital deployed vs client repayments collected
               </p>
+            </div>
+            <div className="flex items-center gap-4 text-xs font-semibold">
+              <span className="flex items-center gap-1.5 text-blue-600">
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                Disbursed
+              </span>
+              <span className="flex items-center gap-1.5 text-emerald-600">
+                <span className="h-2 w-2 rounded-full bg-emerald-600" />
+                Collected
+              </span>
             </div>
           </div>
 
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={monthlyFlows} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+              <AreaChart data={monthlyFlows} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDisbursed" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1E3A8A" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#1E3A8A" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#2563EB" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorCollected" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1F6B3A" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#1F6B3A" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#059669" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#D6CFC4" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
                 <XAxis
                   dataKey="month"
-                  stroke="#1A1A1A"
-                  fontSize={13}
-                  fontWeight={600}
+                  stroke="#94A3B8"
+                  fontSize={12}
+                  fontWeight={500}
                   tickLine={false}
+                  axisLine={{ stroke: '#E2E8F0' }}
                 />
                 <YAxis
-                  stroke="#1A1A1A"
-                  fontSize={13}
-                  fontWeight={600}
+                  stroke="#94A3B8"
+                  fontSize={12}
+                  fontWeight={500}
                   tickLine={false}
+                  axisLine={{ stroke: '#E2E8F0' }}
                   tickFormatter={(val) => `₹${val / 1000}k`}
                 />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
-                    borderColor: '#D6CFC4',
-                    borderWidth: '2px',
+                    borderColor: '#E2E8F0',
+                    borderWidth: '1px',
                     borderRadius: '12px',
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
-                    fontSize: '14px',
-                    fontWeight: '700',
+                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.08)',
+                    fontSize: '13px',
+                    fontWeight: '600',
                   }}
                   formatter={(val: any) => [`₹${Number(val).toLocaleString('en-IN')}`, '']}
                 />
@@ -255,8 +243,8 @@ export const Dashboard: React.FC = () => {
                   type="monotone"
                   dataKey="disbursed"
                   name="Disbursed"
-                  stroke="#1E3A8A"
-                  strokeWidth={2.5}
+                  stroke="#2563EB"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorDisbursed)"
                 />
@@ -264,8 +252,8 @@ export const Dashboard: React.FC = () => {
                   type="monotone"
                   dataKey="collected"
                   name="Collected"
-                  stroke="#1F6B3A"
-                  strokeWidth={2.5}
+                  stroke="#059669"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorCollected)"
                 />
@@ -277,42 +265,42 @@ export const Dashboard: React.FC = () => {
         {/* Capital Pool Breakdown */}
         <AccessibleCard withTopAccent className="flex flex-col justify-between">
           <div>
-            <h3 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
               Syndicate Capital Pool
             </h3>
-            <p className="text-sm text-[#3F3F46] font-normal mt-0.5">
+            <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
               Capital distribution across active deals
             </p>
 
             <div className="mt-6 space-y-4">
               <div>
-                <div className="flex justify-between text-sm sm:text-base font-bold mb-1.5">
-                  <span className="text-[#1A1A1A]">Outside Investors</span>
-                  <span className="text-[#6B21A8] whitespace-nowrap">{formatCurrency(kpis.totalInvestorCapital)}</span>
+                <div className="flex justify-between text-xs sm:text-sm font-semibold mb-1.5">
+                  <span className="text-slate-700">Outside Investors</span>
+                  <span className="text-purple-700 font-bold whitespace-nowrap">{formatCurrency(kpis.totalInvestorCapital)}</span>
                 </div>
-                <div className="h-3.5 rounded-full bg-[#EDE7DE] overflow-hidden border border-[#D6CFC4]">
-                  <div className="h-full bg-[#6B21A8] rounded-full" style={{ width: '60%' }} />
+                <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-full bg-purple-600 rounded-full" style={{ width: '60%' }} />
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between text-sm sm:text-base font-bold mb-1.5">
-                  <span className="text-[#1A1A1A]">Company & Partner Capital</span>
-                  <span className="text-[#1F6B3A] whitespace-nowrap">{formatCurrency(kpis.totalCompanyCapital)}</span>
+                <div className="flex justify-between text-xs sm:text-sm font-semibold mb-1.5">
+                  <span className="text-slate-700">Company & Partner Capital</span>
+                  <span className="text-emerald-700 font-bold whitespace-nowrap">{formatCurrency(kpis.totalCompanyCapital)}</span>
                 </div>
-                <div className="h-3.5 rounded-full bg-[#EDE7DE] overflow-hidden border border-[#D6CFC4]">
-                  <div className="h-full bg-[#1F6B3A] rounded-full" style={{ width: '40%' }} />
+                <div className="h-2.5 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-full bg-emerald-600 rounded-full" style={{ width: '40%' }} />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
-            <div className="flex items-center gap-2 text-sm font-bold text-[#8B1A1A]">
-              <CircleDollarSign className="h-5 w-5 stroke-[2.3]" />
+          <div className="mt-6 p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#8B1A1A]">
+              <CircleDollarSign className="h-4 w-4 stroke-[2.2]" />
               <span>Double-Entry Financial Integrity</span>
             </div>
-            <p className="text-xs sm:text-sm font-medium text-[#3F3F46] mt-1 leading-relaxed">
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
               Every client repayment is automatically journaled into balanced debit/credit ledger accounts.
             </p>
           </div>
@@ -323,44 +311,44 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
         {/* Upcoming Repayments */}
         <AccessibleCard withTopAccent>
-          <div className="flex items-center justify-between pb-3 border-b-2 border-[#EDE7DE] mb-3">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-[#1F6B3A] stroke-[2.3]" />
-              <h3 className="text-lg font-bold text-[#1A1A1A]">Upcoming Repayments</h3>
+              <Clock className="h-4.5 w-4.5 text-emerald-600 stroke-[2.2]" />
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Upcoming Repayments</h3>
             </div>
             <button
               onClick={() => navigate('/repayments')}
-              className="text-sm text-[#8B1A1A] hover:underline font-bold flex items-center gap-1"
+              className="text-xs sm:text-sm text-[#8B1A1A] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
             >
               <span>View All</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          <div className="divide-y-2 divide-[#EDE7DE]">
+          <div className="divide-y divide-slate-100">
             {upcomingRepayments.length > 0 ? (
               upcomingRepayments.slice(0, 5).map((item: any) => (
                 <div key={item.id} className="py-3 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-base font-bold text-[#1A1A1A]">{item.deal?.client?.fullName}</p>
-                    <p className="text-sm text-[#3F3F46] font-medium mt-0.5">
+                    <p className="text-sm font-semibold text-slate-900">{item.deal?.client?.fullName}</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
                       Deal {item.deal?.dealNumber} • Inst #{item.installmentNumber}
                     </p>
-                    <p className="text-xs sm:text-sm text-[#1F6B3A] font-bold mt-0.5">
+                    <p className="text-xs text-emerald-700 font-semibold mt-0.5">
                       Due: {formatDate(item.dueDate)}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-lg font-extrabold text-[#1F6B3A] whitespace-nowrap">
+                    <p className="text-base font-bold text-emerald-700 whitespace-nowrap">
                       {formatCurrency(item.balanceAmount)}
                     </p>
-                    <StatusBadge status="UPCOMING" size="sm" className="mt-0.5" />
+                    <StatusBadge status="UPCOMING" size="sm" className="mt-1" />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-6 text-sm font-semibold text-[#3F3F46]">
-                <CheckCircle2 className="h-7 w-7 text-[#1F6B3A] mx-auto mb-1.5" />
+              <div className="text-center py-6 text-xs sm:text-sm font-medium text-slate-500">
+                <CheckCircle2 className="h-6 w-6 text-emerald-600 mx-auto mb-1" />
                 No upcoming repayments scheduled
               </div>
             )}
@@ -369,45 +357,45 @@ export const Dashboard: React.FC = () => {
 
         {/* Critical Overdue Follow-ups */}
         <AccessibleCard withTopAccent>
-          <div className="flex items-center justify-between pb-3 border-b-2 border-[#EDE7DE] mb-3">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-[#B91C1C] stroke-[2.3]" />
-              <h3 className="text-lg font-bold text-[#B91C1C]">Overdue Follow-ups</h3>
+              <AlertTriangle className="h-4.5 w-4.5 text-rose-600 stroke-[2.2]" />
+              <h3 className="text-base sm:text-lg font-bold text-rose-700">Overdue Follow-ups</h3>
             </div>
             <button
               onClick={() => navigate('/reports')}
-              className="text-sm text-[#B91C1C] hover:underline font-bold flex items-center gap-1"
+              className="text-xs sm:text-sm text-rose-700 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
             >
               <span>Overdue Report</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          <div className="divide-y-2 divide-[#EDE7DE]">
+          <div className="divide-y divide-slate-100">
             {overdueRepayments.length > 0 ? (
               overdueRepayments.slice(0, 5).map((item: any) => (
                 <div key={item.id} className="py-3 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-base font-bold text-[#1A1A1A]">{item.deal?.client?.fullName}</p>
-                    <div className="flex items-center gap-1.5 mt-0.5 text-sm font-bold text-[#B91C1C]">
-                      <Phone className="h-3.5 w-3.5 shrink-0" />
+                    <p className="text-sm font-semibold text-slate-900">{item.deal?.client?.fullName}</p>
+                    <div className="flex items-center gap-1.5 mt-0.5 text-xs font-semibold text-slate-600">
+                      <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" />
                       <span>{item.deal?.client?.phone}</span>
                     </div>
-                    <p className="text-xs text-[#7F1D1D] font-semibold mt-0.5">
+                    <p className="text-xs text-rose-600 font-medium mt-0.5">
                       Overdue since {formatDate(item.dueDate)}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-lg font-extrabold text-[#B91C1C] whitespace-nowrap">
+                    <p className="text-base font-bold text-rose-700 whitespace-nowrap">
                       {formatCurrency(item.balanceAmount)}
                     </p>
-                    <StatusBadge status="OVERDUE" size="sm" className="mt-0.5" />
+                    <StatusBadge status="OVERDUE" size="sm" className="mt-1" />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-6 text-sm font-semibold text-[#1F6B3A]">
-                <CheckCircle2 className="h-7 w-7 text-[#1F6B3A] mx-auto mb-1.5" />
+              <div className="text-center py-6 text-xs sm:text-sm font-medium text-emerald-700">
+                <CheckCircle2 className="h-6 w-6 text-emerald-600 mx-auto mb-1" />
                 Portfolio healthy! No overdue repayments pending.
               </div>
             )}

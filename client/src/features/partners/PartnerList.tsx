@@ -136,12 +136,12 @@ export const PartnerList: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b-2 border-[#D6CFC4]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/60">
         <div>
-          <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#1A1A1A] tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">
             Company Partners & Capital
           </h1>
-          <p className="text-sm sm:text-base font-medium text-[#52525B] mt-1">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
             Manage company co-owners, equity ownership shares, and partner profit distributions
           </p>
         </div>
@@ -156,70 +156,68 @@ export const PartnerList: React.FC = () => {
       </div>
 
       {/* Desktop / Tablet High-Contrast Table View */}
-      <div className="hidden md:block rounded-2xl border-2 border-[#D6CFC4] bg-white overflow-hidden shadow-warm">
+      <div className="hidden md:block rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-base">
-            <thead className="bg-[#FAF7F2] text-[#1A1A1A] font-extrabold border-b-2 border-[#D6CFC4]">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50/80 text-slate-600 font-semibold text-xs tracking-wider uppercase border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-5 text-sm font-bold">Partner Code</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Partner Name</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Contact</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Capital Contributed</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Equity Share %</th>
-                <th className="py-3.5 px-5 text-sm font-bold">Status</th>
-                <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
+                <th className="py-3 px-5">Partner Code</th>
+                <th className="py-3 px-5">Partner Name</th>
+                <th className="py-3 px-5">Contact</th>
+                <th className="py-3 px-5">Capital Contributed</th>
+                <th className="py-3 px-5">Equity Share %</th>
+                <th className="py-3 px-5">Status</th>
+                <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
+            <tbody className="divide-y divide-slate-100 text-slate-800">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-base font-bold text-[#52525B]">
+                  <td colSpan={7} className="py-12 text-center text-sm font-medium text-slate-500">
                     Loading partner records...
                   </td>
                 </tr>
               ) : partners?.length > 0 ? (
-                partners.map((p: any, index: number) => (
+                partners.map((p: any) => (
                   <tr
                     key={p.id}
-                    className={`hover:bg-[#FAF7F2] transition-colors ${
-                      index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
-                    }`}
+                    className="hover:bg-slate-50/80 transition-colors bg-white"
                   >
-                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-mono font-semibold text-[#8B1A1A] text-sm whitespace-nowrap">
                       {p.partnerCode}
                     </td>
-                    <td className="py-3.5 px-5 font-bold text-base text-[#1A1A1A]">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-slate-900">
                       {p.name}
                     </td>
                     <td className="py-3.5 px-5 whitespace-nowrap">
-                      <p className="font-bold text-[#1A1A1A] text-sm">{p.phone}</p>
-                      <p className="text-xs text-[#52525B] mt-0.5">{p.email || '—'}</p>
+                      <p className="font-medium text-slate-800 text-sm">{p.phone}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{p.email || '—'}</p>
                     </td>
-                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1E3A8A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-blue-700 whitespace-nowrap">
                       {formatCurrency(p.capitalContribution)}
                     </td>
-                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
+                    <td className="py-3.5 px-5 font-semibold text-sm text-emerald-700 whitespace-nowrap">
                       {formatPercentage(p.sharePercentage)}
                     </td>
                     <td className="py-3.5 px-5 whitespace-nowrap">
                       <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
                     </td>
                     <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           title="Edit Partner"
                           onClick={() => handleOpenEdit(p)}
-                          className="h-9 px-2.5 rounded-lg bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-xs flex items-center gap-1 shadow-sm transition-all"
+                          className="h-8 px-2.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 font-medium text-xs flex items-center gap-1.5 shadow-2xs transition-all"
                         >
-                          <Edit2 className="h-3.5 w-3.5 stroke-[2.3]" />
+                          <Edit2 className="h-3.5 w-3.5" />
                           <span>Edit</span>
                         </button>
                         <button
                           title="Delete Partner"
                           onClick={() => handleOpenDelete(p)}
-                          className="h-9 px-2.5 rounded-lg bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-xs flex items-center gap-1 shadow-sm transition-all"
+                          className="h-8 px-2.5 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 hover:border-rose-300 font-medium text-xs flex items-center gap-1.5 shadow-2xs transition-all"
                         >
-                          <Trash2 className="h-3.5 w-3.5 stroke-[2.3]" />
+                          <Trash2 className="h-3.5 w-3.5" />
                           <span>Delete</span>
                         </button>
                       </div>
@@ -254,27 +252,27 @@ export const PartnerList: React.FC = () => {
         ) : partners?.length > 0 ? (
           partners.map((p: any) => (
             <AccessibleCard key={p.id} className="p-5">
-              <div className="flex items-start justify-between gap-3 pb-3 border-b-2 border-[#EDE7DE]">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
-                  <span className="font-mono text-sm font-bold text-[#8B1A1A] block">
+                  <span className="font-mono text-xs font-semibold text-[#8B1A1A] block">
                     {p.partnerCode}
                   </span>
-                  <h3 className="text-xl font-bold text-[#1A1A1A] mt-0.5">{p.name}</h3>
-                  <p className="text-base font-semibold text-[#52525B] mt-0.5">{p.phone}</p>
+                  <h3 className="text-base font-bold text-slate-900 mt-0.5">{p.name}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">{p.phone}</p>
                 </div>
                 <StatusBadge status={p.status || 'ACTIVE'} size="sm" />
               </div>
 
-              <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
+              <div className="grid grid-cols-2 gap-3.5 py-3.5 border-b border-slate-100 text-sm">
                 <div>
-                  <p className="text-sm font-bold text-[#3F3F46]">Capital Contributed</p>
-                  <p className="text-lg font-extrabold text-[#1E3A8A] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-slate-500">Capital Contributed</p>
+                  <p className="text-sm font-semibold text-blue-700 mt-0.5 whitespace-nowrap">
                     {formatCurrency(p.capitalContribution)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A]">Equity Share</p>
-                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
+                  <p className="text-xs font-medium text-emerald-700">Equity Share</p>
+                  <p className="text-sm font-semibold text-emerald-700 mt-0.5 whitespace-nowrap">
                     {formatPercentage(p.sharePercentage)}
                   </p>
                 </div>
@@ -283,16 +281,16 @@ export const PartnerList: React.FC = () => {
               <div className="flex items-center justify-end gap-2 pt-3">
                 <button
                   onClick={() => handleOpenEdit(p)}
-                  className="h-12 px-4 rounded-xl bg-white border-2 border-[#D6CFC4] text-[#1E3A8A] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                  className="h-9 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-slate-50"
                 >
-                  <Edit2 className="h-4 w-4" />
+                  <Edit2 className="h-3.5 w-3.5" />
                   <span>Edit</span>
                 </button>
                 <button
                   onClick={() => handleOpenDelete(p)}
-                  className="h-12 px-4 rounded-xl bg-white border-2 border-[#FECACA] text-[#B91C1C] font-bold text-base flex items-center gap-1.5 shadow-sm"
+                  className="h-9 px-3 rounded-xl bg-white border border-rose-200 text-rose-600 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-rose-50"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5" />
                   <span>Delete</span>
                 </button>
               </div>
@@ -363,7 +361,7 @@ export const PartnerList: React.FC = () => {
             placeholder="partner@domain.in"
           />
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
               type="button"
               variant="outline"
@@ -442,7 +440,7 @@ export const PartnerList: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-6 border-t-2 border-[#EDE7DE]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
               type="button"
               variant="outline"

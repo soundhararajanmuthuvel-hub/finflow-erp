@@ -24,7 +24,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 h-18 bg-white border-t-2 border-[#D6CFC4] shadow-lg flex items-center justify-around z-40 px-2"
+      className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-lg flex items-center justify-around z-40 px-2"
     >
       {primaryMobileNav.map((item) => (
         <NavLink
@@ -34,8 +34,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
             clsx(
               'flex flex-col items-center justify-center flex-1 h-full py-1 transition-colors select-none',
               isActive
-                ? 'text-[#8B1A1A] font-extrabold'
-                : 'text-[#52525B] hover:text-[#1A1A1A] font-semibold'
+                ? 'text-[#8B1A1A] font-bold'
+                : 'text-slate-500 hover:text-slate-900 font-medium'
             )
           }
         >
@@ -43,13 +43,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
             <>
               <div
                 className={clsx(
-                  'p-1 rounded-lg flex items-center justify-center transition-all',
-                  isActive && 'bg-[#FDF2F2]'
+                  'p-1 rounded-xl flex items-center justify-center transition-all',
+                  isActive && 'bg-red-50 text-[#8B1A1A]'
                 )}
               >
-                <item.icon className="h-6 w-6 stroke-[2.3]" aria-hidden="true" />
+                <item.icon className="h-5 w-5 stroke-[2.2]" aria-hidden="true" />
               </div>
-              <span className="text-xs sm:text-sm mt-0.5 leading-tight">{item.name}</span>
+              <span className="text-[11px] font-semibold mt-0.5 leading-tight">{item.name}</span>
             </>
           )}
         </NavLink>
@@ -58,12 +58,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore }) => {
       {/* More / Menu Drawer Toggle */}
       <button
         onClick={onOpenMore}
-        className="flex flex-col items-center justify-center flex-1 h-full py-1 text-[#52525B] hover:text-[#1A1A1A] font-semibold select-none"
+        className="flex flex-col items-center justify-center flex-1 h-full py-1 text-slate-500 hover:text-slate-900 font-medium select-none"
       >
-        <div className="p-1 rounded-lg flex items-center justify-center">
-          <Menu className="h-6 w-6 stroke-[2.3]" aria-hidden="true" />
+        <div className="p-1 rounded-xl flex items-center justify-center">
+          <Menu className="h-5 w-5 stroke-[2.2]" aria-hidden="true" />
         </div>
-        <span className="text-xs sm:text-sm mt-0.5 leading-tight">More</span>
+        <span className="text-[11px] font-semibold mt-0.5 leading-tight">More</span>
       </button>
     </nav>
   );

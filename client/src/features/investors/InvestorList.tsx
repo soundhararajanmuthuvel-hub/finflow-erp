@@ -207,6 +207,8 @@ export const InvestorList: React.FC = () => {
                 <th className="py-3.5 px-5 text-sm font-bold">Total Capital</th>
                 <th className="py-3.5 px-5 text-sm font-bold">Principal Returned</th>
                 <th className="py-3.5 px-5 text-sm font-bold">ROI Earned</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Total Payout</th>
+                <th className="py-3.5 px-5 text-sm font-bold">Pending Principal</th>
                 <th className="py-3.5 px-5 text-sm font-bold">Status</th>
                 <th className="py-3.5 px-5 text-sm font-bold text-right">Actions</th>
               </tr>
@@ -214,72 +216,86 @@ export const InvestorList: React.FC = () => {
             <tbody className="divide-y-2 divide-[#EDE7DE] text-[#1A1A1A]">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="py-10 text-center text-base font-bold text-[#52525B]">
+                  <td colSpan={10} className="py-10 text-center text-base font-bold text-[#52525B]">
                     Loading investor records...
                   </td>
                 </tr>
               ) : investors?.length > 0 ? (
-                investors.map((inv: any, index: number) => (
-                  <tr
-                    key={inv.id}
-                    onClick={() => navigate(`/investors/${inv.id}`)}
-                    className={`cursor-pointer hover:bg-[#FAF7F2] transition-colors ${
-                      index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
-                    }`}
-                  >
-                    <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
-                      {inv.investorCode}
-                    </td>
-                    <td className="py-3.5 px-5">
-                      <p className="font-bold text-base text-[#1A1A1A]">{inv.name}</p>
-                      <p className="text-xs font-semibold text-[#52525B] mt-0.5">
-                        {inv.bankName ? `Bank: ${inv.bankName}` : 'Bank details unlisted'}
-                      </p>
-                    </td>
-                    <td className="py-3.5 px-5 whitespace-nowrap">
-                      <p className="font-bold text-sm text-[#1A1A1A]">{inv.phone}</p>
-                      <p className="text-xs text-[#52525B] mt-0.5">{inv.email || '—'}</p>
-                    </td>
-                    <td className="py-3.5 px-5 font-bold text-base text-[#6B21A8] whitespace-nowrap">
-                      {formatCurrency(inv.totalInvested)}
-                    </td>
-                    <td className="py-3.5 px-5 font-bold text-base text-[#1F6B3A] whitespace-nowrap">
-                      {formatCurrency(inv.totalPrincipalReturned)}
-                    </td>
-                    <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
-                      {formatCurrency(inv.totalInterestEarned)}
-                    </td>
-                    <td className="py-3.5 px-5 whitespace-nowrap">
-                      <StatusBadge status={inv.status || 'ACTIVE'} size="sm" />
-                    </td>
-                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                      <div
-                        className="flex items-center justify-end gap-1.5"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <button
-                          title="Edit Investor"
-                          onClick={(e) => handleOpenEdit(inv, e)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                investors.map((inv: any, index: number) => {
+                  const totalInvested = inv.totalInvested ?? 0;
+                  const principalReturned = inv.principalReturned ?? inv.totalPrincipalReturned ?? 0;
+                  const interestEarned = inv.interestEarned ?? inv.totalInterestEarned ?? 0;
+                  const totalPayout = inv.totalPayout ?? (principalReturned + interestEarned);
+                  const pendingPrincipal = inv.pendingPrincipal ?? Math.max(0, totalInvested - principalReturned);
+
+                  return (
+                    <tr
+                      key={inv.id}
+                      onClick={() => navigate(`/investors/${inv.id}`)}
+                      className={`cursor-pointer hover:bg-[#FAF7F2] transition-colors ${
+                        index % 2 === 1 ? 'bg-[#FCFAF7]' : 'bg-white'
+                      }`}
+                    >
+                      <td className="py-3.5 px-5 font-mono font-bold text-[#8B1A1A] text-base whitespace-nowrap">
+                        {inv.investorCode}
+                      </td>
+                      <td className="py-3.5 px-5">
+                        <p className="font-bold text-base text-[#1A1A1A]">{inv.name}</p>
+                        <p className="text-xs font-semibold text-[#52525B] mt-0.5">
+                          {inv.bankName ? `Bank: ${inv.bankName}` : 'Bank details unlisted'}
+                        </p>
+                      </td>
+                      <td className="py-3.5 px-5 whitespace-nowrap">
+                        <p className="font-bold text-sm text-[#1A1A1A]">{inv.phone}</p>
+                        <p className="text-xs text-[#52525B] mt-0.5">{inv.email || '—'}</p>
+                      </td>
+                      <td className="py-3.5 px-5 font-bold text-base text-[#6B21A8] whitespace-nowrap">
+                        {formatCurrency(totalInvested)}
+                      </td>
+                      <td className="py-3.5 px-5 font-bold text-base text-[#1F6B3A] whitespace-nowrap">
+                        {formatCurrency(principalReturned)}
+                      </td>
+                      <td className="py-3.5 px-5 font-extrabold text-base text-[#1F6B3A] whitespace-nowrap">
+                        {formatCurrency(interestEarned)}
+                      </td>
+                      <td className="py-3.5 px-5 font-bold text-base text-[#1E3A8A] whitespace-nowrap">
+                        {formatCurrency(totalPayout)}
+                      </td>
+                      <td className="py-3.5 px-5 font-bold text-base text-[#B45309] whitespace-nowrap">
+                        {formatCurrency(pendingPrincipal)}
+                      </td>
+                      <td className="py-3.5 px-5 whitespace-nowrap">
+                        <StatusBadge status={inv.status || 'ACTIVE'} size="sm" />
+                      </td>
+                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
+                        <div
+                          className="flex items-center justify-end gap-1.5"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Edit2 className="h-4 w-4 stroke-[2.3]" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          title="Delete Investor"
-                          onClick={(e) => handleOpenDelete(inv, e)}
-                          className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
-                        >
-                          <Trash2 className="h-4 w-4 stroke-[2.3]" />
-                          <span>Delete</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          <button
+                            title="Edit Investor"
+                            onClick={(e) => handleOpenEdit(inv, e)}
+                            className="h-11 px-3 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1E3A8A] border-2 border-[#D6CFC4] hover:border-[#1E3A8A] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          >
+                            <Edit2 className="h-4 w-4 stroke-[2.3]" />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            title="Delete Investor"
+                            onClick={(e) => handleOpenDelete(inv, e)}
+                            className="h-11 px-3 rounded-xl bg-white hover:bg-[#FEE2E2] text-[#B91C1C] border-2 border-[#FECACA] hover:border-[#B91C1C] font-bold text-sm flex items-center gap-1.5 shadow-sm transition-all"
+                          >
+                            <Trash2 className="h-4 w-4 stroke-[2.3]" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan={8} className="py-12">
+                  <td colSpan={10} className="py-12">
                     <AccessibleEmptyState
                       icon={TrendingUp}
                       title="No investors registered"
@@ -322,28 +338,40 @@ export const InvestorList: React.FC = () => {
                 <StatusBadge status={inv.status || 'ACTIVE'} size="sm" />
               </div>
 
-              <div className="grid grid-cols-2 gap-4 py-4 border-b-2 border-[#EDE7DE] text-base">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 py-4 border-b-2 border-[#EDE7DE] text-base">
                 <div>
-                  <p className="text-sm font-bold text-[#3F3F46]">Total Capital</p>
-                  <p className="text-lg font-bold text-[#6B21A8] mt-0.5 whitespace-nowrap">
-                    {formatCurrency(inv.totalInvested)}
+                  <p className="text-xs font-bold text-[#3F3F46]">Total Capital</p>
+                  <p className="text-base font-bold text-[#6B21A8] mt-0.5 whitespace-nowrap">
+                    {formatCurrency(inv.totalInvested ?? 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#1F6B3A]">ROI Earned</p>
-                  <p className="text-lg font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
-                    {formatCurrency(inv.totalInterestEarned)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-[#3F3F46]">Principal Returned</p>
+                  <p className="text-xs font-bold text-[#1F6B3A]">Principal Returned</p>
                   <p className="text-base font-bold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
-                    {formatCurrency(inv.totalPrincipalReturned)}
+                    {formatCurrency(inv.principalReturned ?? inv.totalPrincipalReturned ?? 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#3F3F46]">Bank Name</p>
-                  <p className="text-base font-bold text-[#1A1A1A] mt-0.5 break-words">
+                  <p className="text-xs font-bold text-[#1F6B3A]">ROI Earned</p>
+                  <p className="text-base font-extrabold text-[#1F6B3A] mt-0.5 whitespace-nowrap">
+                    {formatCurrency(inv.interestEarned ?? inv.totalInterestEarned ?? 0)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#1E3A8A]">Total Payout</p>
+                  <p className="text-base font-bold text-[#1E3A8A] mt-0.5 whitespace-nowrap">
+                    {formatCurrency(inv.totalPayout ?? ((inv.principalReturned ?? inv.totalPrincipalReturned ?? 0) + (inv.interestEarned ?? inv.totalInterestEarned ?? 0)))}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#B45309]">Pending Principal</p>
+                  <p className="text-base font-bold text-[#B45309] mt-0.5 whitespace-nowrap">
+                    {formatCurrency(inv.pendingPrincipal ?? Math.max(0, (inv.totalInvested ?? 0) - (inv.principalReturned ?? inv.totalPrincipalReturned ?? 0)))}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#3F3F46]">Bank Name</p>
+                  <p className="text-sm font-bold text-[#1A1A1A] mt-0.5 break-words">
                     {inv.bankName || '—'}
                   </p>
                 </div>

@@ -195,7 +195,7 @@ export const InvestorDetail: React.FC = () => {
         </div>
 
         {/* Aggregate Financial Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mt-4">
           <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
             <span className="text-xs sm:text-sm font-bold text-[#3F3F46] block">Total Capital Deployed</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#6B21A8] mt-1 whitespace-nowrap">
@@ -205,13 +205,19 @@ export const InvestorDetail: React.FC = () => {
           <div className="p-3.5 sm:p-4 rounded-xl bg-[#EAF5EE] border-2 border-[#A7D9B7]">
             <span className="text-xs sm:text-sm font-bold text-[#1F6B3A] block">Principal Recovered</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
-              {formatCurrency(summary.principalReturned)}
+              {formatCurrency(summary.principalReturned ?? summary.totalPrincipalReturned ?? 0)}
             </p>
           </div>
           <div className="p-3.5 sm:p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#D6CFC4]">
             <span className="text-xs sm:text-sm font-bold text-[#1F6B3A] block">Total ROI Earned</span>
             <p className="text-xl sm:text-2xl font-extrabold text-[#1F6B3A] mt-1 whitespace-nowrap">
-              {formatCurrency(summary.interestEarned)}
+              {formatCurrency(summary.interestEarned ?? summary.totalInterestEarned ?? 0)}
+            </p>
+          </div>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#EFF6FF] border-2 border-[#BFDBFE]">
+            <span className="text-xs sm:text-sm font-bold text-[#1E3A8A] block">Total Payout</span>
+            <p className="text-xl sm:text-2xl font-extrabold text-[#1E3A8A] mt-1 whitespace-nowrap">
+              {formatCurrency(summary.totalPayout ?? ((summary.principalReturned || 0) + (summary.interestEarned || 0)))}
             </p>
           </div>
           <div className="p-3.5 sm:p-4 rounded-xl bg-[#FEF3C7] border-2 border-[#FDE68A]">

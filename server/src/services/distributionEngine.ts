@@ -77,12 +77,14 @@ export class DistributionEngine {
     const netDistributableInterest = roundMoney(I_rec.minus(managementCommission));
 
     // 2. Loop through funding sources
+    const companyFunding = fundings.find((f) => f.sourceType === 'COMPANY');
+
     for (const funding of fundings) {
       const shareFraction = funding.percentage.dividedBy(100);
       const principalShare = roundMoney(P_rec.times(shareFraction));
 
       if (funding.sourceType === 'OUTSIDE_INVESTOR' && funding.investorId) {
-        const interestShare = roundMoney(netDistributableInterest.times(shareFraction));
+        const interestShare = I_rec.isZero() ? new Prisma.Decimal(0) : roundMoney(netDistributableInterest.times(shareFraction));
         const totalPayout = roundMoney(principalShare.plus(interestShare));
 
         investorReturns.push({
@@ -95,7 +97,7 @@ export class DistributionEngine {
         totalInvestorPrincipal = totalInvestorPrincipal.plus(principalShare);
         totalInvestorInterest = totalInvestorInterest.plus(interestShare);
       } else if (funding.sourceType === 'PARTNER' && funding.partnerId) {
-        const profitShare = roundMoney(netDistributableInterest.times(shareFraction));
+        const profitShare = I_rec.isZero() ? new Prisma.Decimal(0) : roundMoney(netDistributableInterest.times(shareFraction));
         const totalPayout = roundMoney(principalShare.plus(profitShare));
 
         partnerReturns.push({
@@ -109,6 +111,24 @@ export class DistributionEngine {
         totalPartnerProfit = totalPartnerProfit.plus(profitShare);
       } else if (funding.sourceType === 'COMPANY') {
         companyPrincipalRecovered = companyPrincipalRecovered.plus(principalShare);
+      }
+    }
+
+    // Exact principal reconciliation:
+    // If company funding exists, absorb any minor 1-cent rounding difference to guarantee totalPrincipalSplit === P_rec
+    if (companyFunding) {
+      companyPrincipalRecovered = roundMoney(P_rec.minus(totalInvestorPrincipal).minus(totalPartnerPrincipal));
+      if (companyPrincipalRecovered.isNegative()) {
+        companyPrincipalRecovered = new Prisma.Decimal(0);
+      }
+    } else if (investorReturns.length > 0 && !P_rec.isZero()) {
+      // Reconcile remaining cents across participants if no company funding
+      const diff = roundMoney(P_rec.minus(totalInvestorPrincipal).minus(totalPartnerPrincipal));
+      if (!diff.isZero()) {
+        const lastInv = investorReturns[investorReturns.length - 1];
+        lastInv.principalReturned = roundMoney(lastInv.principalReturned.plus(diff));
+        lastInv.totalPayout = roundMoney(lastInv.principalReturned.plus(lastInv.interestEarned));
+        totalInvestorPrincipal = totalInvestorPrincipal.plus(diff);
       }
     }
 

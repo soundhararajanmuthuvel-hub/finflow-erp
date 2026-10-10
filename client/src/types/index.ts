@@ -93,7 +93,9 @@ export interface Investor {
   status: string;
   totalInvested?: number;
   principalReturned?: number;
+  totalPrincipalReturned?: number;
   interestEarned?: number;
+  totalInterestEarned?: number;
   totalPayout?: number;
   pendingPrincipal?: number;
   activeDealsCount?: number;

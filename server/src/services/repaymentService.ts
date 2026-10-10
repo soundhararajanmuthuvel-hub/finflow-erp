@@ -180,6 +180,14 @@ export class RepaymentService {
         });
       }
 
+      // Repeat protection: ensure no distribution already exists for this repayment
+      const existingDist = await tx.distribution.findFirst({
+        where: { repaymentId: repayment.id },
+      });
+      if (existingDist) {
+        throw new Error(`Repayment ${repayment.receiptNumber} already has processed distributions. Duplicate distribution prevented.`);
+      }
+
       const distribution = await tx.distribution.create({
         data: {
           dealId: deal.id,
@@ -337,17 +345,29 @@ export class RepaymentService {
     }, { timeout: 30000, maxWait: 10000 });
   }
 
-  static async deleteRepayment(companyId: string, repaymentId: string) {
+  static async deleteRepayment(companyId: string, repaymentId: string, userId?: string) {
     const repayment = await prisma.repayment.findFirst({
       where: { id: repaymentId, deal: { companyId } },
       include: {
         allocations: { include: { schedule: true } },
-        deal: true,
+        deal: {
+          include: {
+            fundings: true,
+          },
+        },
+        distributions: {
+          include: {
+            investorReturns: true,
+            partnerReturns: true,
+            companyProfits: true,
+          },
+        },
       },
     });
     if (!repayment) throw new Error('Repayment not found');
 
     return prisma.$transaction(async (tx) => {
+      // 1. Revert repayment schedule progress
       for (const alloc of repayment.allocations) {
         const sch = alloc.schedule;
         const newPaidPrinc = decimalMax(new Prisma.Decimal(0), toDecimal(sch.paidPrincipal).minus(alloc.allocatedPrincipal));
@@ -369,6 +389,7 @@ export class RepaymentService {
         });
       }
 
+      // 2. Revert deal aggregate balances
       const deal = repayment.deal;
       const newPrincRepaid = decimalMax(new Prisma.Decimal(0), toDecimal(deal.totalPrincipalRepaid).minus(repayment.principalPortion));
       const newIntRepaid = decimalMax(new Prisma.Decimal(0), toDecimal(deal.totalInterestRepaid).minus(repayment.interestPortion));
@@ -387,6 +408,96 @@ export class RepaymentService {
         },
       });
 
+      // 3. Revert deal funding principalReturned and interestEarned for participants
+      for (const dist of repayment.distributions) {
+        for (const invRet of dist.investorReturns) {
+          const f = deal.fundings.find((item) => item.investorId === invRet.investorId);
+          if (f) {
+            await tx.dealFunding.update({
+              where: { id: f.id },
+              data: {
+                principalReturned: decimalMax(new Prisma.Decimal(0), toDecimal(f.principalReturned).minus(invRet.principalReturned)).toString(),
+                interestEarned: decimalMax(new Prisma.Decimal(0), toDecimal(f.interestEarned).minus(invRet.interestEarned)).toString(),
+              },
+            });
+          }
+        }
+
+        for (const prtRet of dist.partnerReturns) {
+          const f = deal.fundings.find((item) => item.partnerId === prtRet.partnerId);
+          if (f) {
+            await tx.dealFunding.update({
+              where: { id: f.id },
+              data: {
+                principalReturned: decimalMax(new Prisma.Decimal(0), toDecimal(f.principalReturned).minus(prtRet.principalReturned)).toString(),
+                interestEarned: decimalMax(new Prisma.Decimal(0), toDecimal(f.interestEarned).minus(prtRet.profitShare)).toString(),
+              },
+            });
+          }
+        }
+
+        for (const compProf of dist.companyProfits) {
+          const f = deal.fundings.find((item) => item.sourceType === 'COMPANY');
+          if (f) {
+            await tx.dealFunding.update({
+              where: { id: f.id },
+              data: {
+                principalReturned: decimalMax(new Prisma.Decimal(0), toDecimal(f.principalReturned).minus(compProf.principalRecovered)).toString(),
+                interestEarned: decimalMax(new Prisma.Decimal(0), toDecimal(f.interestEarned).minus(compProf.totalCompanyProfit)).toString(),
+              },
+            });
+          }
+        }
+      }
+
+      // 4. Revert ledger account balances
+      const cashAccount = await tx.ledgerAccount.findFirst({ where: { companyId, accountCode: '1000' } });
+      if (cashAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: cashAccount.id },
+          data: {
+            balance: toDecimal(cashAccount.balance).minus(repayment.amountReceived).toString(),
+          },
+        });
+      }
+
+      const loanAccount = await tx.ledgerAccount.findFirst({ where: { companyId, accountCode: '1100' } });
+      if (loanAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: loanAccount.id },
+          data: {
+            balance: toDecimal(loanAccount.balance).plus(repayment.principalPortion).toString(),
+          },
+        });
+      }
+
+      const interestAccount = await tx.ledgerAccount.findFirst({ where: { companyId, accountCode: '4000' } });
+      if (interestAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: interestAccount.id },
+          data: {
+            balance: toDecimal(interestAccount.balance).minus(repayment.interestPortion).toString(),
+          },
+        });
+      }
+
+      // 5. Audit log for reversal
+      await recordAuditLog({
+        companyId,
+        userId,
+        action: 'REPAYMENT_VOIDED',
+        entity: 'Repayment',
+        entityId: repayment.id,
+        newValues: {
+          receiptNumber: repayment.receiptNumber,
+          dealNumber: deal.dealNumber,
+          amountReversed: repayment.amountReceived.toString(),
+          principalReversed: repayment.principalPortion.toString(),
+          interestReversed: repayment.interestPortion.toString(),
+        },
+      }, tx);
+
+      // 6. Delete dependent records cleanly
       await tx.repaymentAllocation.deleteMany({ where: { repaymentId } });
       await tx.companyProfit.deleteMany({ where: { distribution: { repaymentId } } });
       await tx.partnerReturn.deleteMany({ where: { distribution: { repaymentId } } });
@@ -396,6 +507,166 @@ export class RepaymentService {
       await tx.transaction.deleteMany({ where: { repaymentId } });
       return tx.repayment.delete({ where: { id: repaymentId } });
     });
+  }
+
+  static async reconcileRepayments(companyId: string, dryRun: boolean = true) {
+    const repayments = await prisma.repayment.findMany({
+      where: { deal: { companyId } },
+      include: {
+        deal: {
+          include: {
+            fundings: true,
+            distributionRules: true,
+          },
+        },
+        distributions: {
+          include: {
+            investorReturns: true,
+            partnerReturns: true,
+            companyProfits: true,
+          },
+        },
+      },
+      orderBy: { paymentDate: 'asc' },
+    });
+
+    const report = {
+      companyId,
+      dryRun,
+      totalRepayments: repayments.length,
+      validDistributionsCount: 0,
+      missingDistributionsCount: 0,
+      repairedCount: 0,
+      repairedRepayments: [] as any[],
+    };
+
+    for (const rep of repayments) {
+      const hasDistribution = rep.distributions.length > 0;
+      const hasInvestors = rep.deal.fundings.some((f) => f.sourceType === 'OUTSIDE_INVESTOR');
+      const hasInvestorReturns = hasDistribution && rep.distributions[0].investorReturns.length > 0;
+
+      if (hasDistribution && (!hasInvestors || hasInvestorReturns)) {
+        report.validDistributionsCount++;
+        continue;
+      }
+
+      report.missingDistributionsCount++;
+
+      const distRule = rep.deal.distributionRules[0] || {
+        companyCommissionRate: new Prisma.Decimal(0),
+      };
+
+      const fundingParticipants = rep.deal.fundings.map((f) => ({
+        id: f.id,
+        sourceType: f.sourceType as any,
+        partnerId: f.partnerId,
+        investorId: f.investorId,
+        amount: toDecimal(f.amount),
+        percentage: toDecimal(f.percentage),
+        expectedReturnRate: toDecimal(f.expectedReturnRate),
+      }));
+
+      const distributionResult = DistributionEngine.executeRepaymentSplit(
+        rep.principalPortion,
+        rep.interestPortion,
+        rep.deal.financeAmountApproved,
+        fundingParticipants,
+        {
+          companyCommissionRate: toDecimal(distRule.companyCommissionRate),
+        }
+      );
+
+      report.repairedRepayments.push({
+        repaymentId: rep.id,
+        receiptNumber: rep.receiptNumber,
+        paymentDate: rep.paymentDate,
+        amountReceived: rep.amountReceived,
+        principalPortion: rep.principalPortion,
+        interestPortion: rep.interestPortion,
+        calculatedInvestorReturns: distributionResult.investorReturns,
+      });
+
+      if (!dryRun) {
+        await prisma.$transaction(async (tx) => {
+          // Remove incomplete distributions if any existed
+          if (hasDistribution) {
+            await tx.companyProfit.deleteMany({ where: { distribution: { repaymentId: rep.id } } });
+            await tx.partnerReturn.deleteMany({ where: { distribution: { repaymentId: rep.id } } });
+            await tx.investorReturn.deleteMany({ where: { distribution: { repaymentId: rep.id } } });
+            await tx.distribution.deleteMany({ where: { repaymentId: rep.id } });
+          }
+
+          const dist = await tx.distribution.create({
+            data: {
+              dealId: rep.deal.id,
+              repaymentId: rep.id,
+              totalPrincipalSplit: distributionResult.totalPrincipalSplit.toString(),
+              totalInterestSplit: distributionResult.totalInterestSplit.toString(),
+              totalDistributed: distributionResult.totalDistributed.toString(),
+            },
+          });
+
+          for (const invRet of distributionResult.investorReturns) {
+            await tx.investorReturn.create({
+              data: {
+                distributionId: dist.id,
+                investorId: invRet.investorId,
+                principalReturned: invRet.principalReturned.toString(),
+                interestEarned: invRet.interestEarned.toString(),
+                totalPayout: invRet.totalPayout.toString(),
+              },
+            });
+
+            const f = rep.deal.fundings.find((item) => item.investorId === invRet.investorId);
+            if (f) {
+              await tx.dealFunding.update({
+                where: { id: f.id },
+                data: {
+                  principalReturned: toDecimal(f.principalReturned).plus(invRet.principalReturned).toString(),
+                  interestEarned: toDecimal(f.interestEarned).plus(invRet.interestEarned).toString(),
+                },
+              });
+            }
+          }
+
+          for (const prtRet of distributionResult.partnerReturns) {
+            await tx.partnerReturn.create({
+              data: {
+                distributionId: dist.id,
+                partnerId: prtRet.partnerId,
+                principalReturned: prtRet.principalReturned.toString(),
+                profitShare: prtRet.profitShare.toString(),
+                totalPayout: prtRet.totalPayout.toString(),
+              },
+            });
+
+            const f = rep.deal.fundings.find((item) => item.partnerId === prtRet.partnerId);
+            if (f) {
+              await tx.dealFunding.update({
+                where: { id: f.id },
+                data: {
+                  principalReturned: toDecimal(f.principalReturned).plus(prtRet.principalReturned).toString(),
+                  interestEarned: toDecimal(f.interestEarned).plus(prtRet.profitShare).toString(),
+                },
+              });
+            }
+          }
+
+          await tx.companyProfit.create({
+            data: {
+              distributionId: dist.id,
+              principalRecovered: distributionResult.companyProfit.principalRecovered.toString(),
+              managementCommission: distributionResult.companyProfit.managementCommission.toString(),
+              retainedInterestMargin: distributionResult.companyProfit.retainedInterestMargin.toString(),
+              totalCompanyProfit: distributionResult.companyProfit.totalCompanyProfit.toString(),
+            },
+          });
+        });
+        report.repairedCount++;
+      }
+    }
+
+    return report;
   }
 
   static async previewRepayment(params: { companyId: string; dealId: string; amountReceived: number | DecimalValue }) {

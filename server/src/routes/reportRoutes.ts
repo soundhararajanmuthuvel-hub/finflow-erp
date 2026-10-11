@@ -6,6 +6,9 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/client-finance', ReportController.getClientFinanceReport);
+router.get('/investor-options', ReportController.getInvestorOptions);
+router.get('/investor-statement/:investorId', ReportController.getIndividualInvestorReport);
+router.get('/investor-statement', ReportController.getIndividualInvestorReport);
 router.get('/investor-returns', ReportController.getInvestorReport);
 router.get('/partner-capital', ReportController.getPartnerReport);
 router.get('/company-profit', ReportController.getCompanyProfitReport);

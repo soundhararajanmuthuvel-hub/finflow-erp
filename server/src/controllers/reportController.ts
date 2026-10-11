@@ -14,9 +14,54 @@ export class ReportController {
     }
   }
 
+  static async getInvestorOptions(req: AuthenticatedRequest, res: Response) {
+    try {
+      const companyId = req.user!.companyId;
+      const { search } = req.query;
+      const data = await ReportService.getInvestorOptions(companyId, search as string);
+      sendSuccess(res, data, 'Investor dropdown options retrieved');
+    } catch (error: any) {
+      sendError(res, error.message);
+    }
+  }
+
+  static async getIndividualInvestorReport(req: AuthenticatedRequest, res: Response) {
+    try {
+      const companyId = req.user!.companyId;
+      const investorId = (req.params.investorId || req.query.investorId) as string;
+      const { startDate, endDate, period } = req.query;
+
+      if (!investorId) {
+        sendError(res, 'Investor ID is required for individual investor statement', 400);
+        return;
+      }
+
+      const data = await ReportService.getIndividualInvestorReport(companyId, investorId, {
+        startDate: startDate as string,
+        endDate: endDate as string,
+        period: period as string,
+      });
+      sendSuccess(res, data, 'Individual investor statement retrieved');
+    } catch (error: any) {
+      sendError(res, error.message);
+    }
+  }
+
   static async getInvestorReport(req: AuthenticatedRequest, res: Response) {
     try {
       const companyId = req.user!.companyId;
+      const { investorId, startDate, endDate, period } = req.query;
+
+      if (investorId) {
+        const data = await ReportService.getIndividualInvestorReport(companyId, investorId as string, {
+          startDate: startDate as string,
+          endDate: endDate as string,
+          period: period as string,
+        });
+        sendSuccess(res, data, 'Individual investor return statement retrieved');
+        return;
+      }
+
       const data = await ReportService.getInvestorReport(companyId);
       sendSuccess(res, data, 'Investor investment and return report retrieved');
     } catch (error: any) {

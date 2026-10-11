@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "prisma generate && tsc",
-    "test": "tsx tests/roiDistribution.test.ts",
+    "test": "tsx tests/roiDistribution.test.ts && tsx tests/investorReport.test.ts",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

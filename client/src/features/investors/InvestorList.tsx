@@ -38,6 +38,7 @@ export const InvestorList: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [pan, setPan] = useState('');
   const [bankName, setBankName] = useState('');
   const [bankAccountNo, setBankAccountNo] = useState('');
@@ -93,6 +94,7 @@ export const InvestorList: React.FC = () => {
     setName('');
     setPhone('');
     setEmail('');
+    setAddress('');
     setPan('');
     setBankName('');
     setBankAccountNo('');
@@ -112,6 +114,7 @@ export const InvestorList: React.FC = () => {
     setName(inv.name || '');
     setPhone(inv.phone || '');
     setEmail(inv.email || '');
+    setAddress(inv.address || '');
     setPan(inv.pan || '');
     setBankName(inv.bankName || '');
     setBankAccountNo(inv.bankAccountNo || '');
@@ -132,6 +135,7 @@ export const InvestorList: React.FC = () => {
       name,
       phone,
       email,
+      address,
       pan,
       bankName,
       bankAccountNo,
@@ -149,6 +153,7 @@ export const InvestorList: React.FC = () => {
         name,
         phone,
         email,
+        address,
         pan,
         bankName,
         bankAccountNo,
@@ -457,14 +462,30 @@ export const InvestorList: React.FC = () => {
             />
 
             <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+              placeholder="ABCDE1234F"
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Residential / Office Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Door No, Street Name, City, PIN Code"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleInput
               label="Bank Name"
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
               placeholder="e.g. HDFC Bank"
             />
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <AccessibleInput
               label="Bank Account Number"
               value={bankAccountNo}
@@ -477,6 +498,19 @@ export const InvestorList: React.FC = () => {
               value={ifscCode}
               onChange={(e) => setIfscCode(e.target.value)}
               placeholder="HDFC0001234"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Investor Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="KYC verification remarks, payout preferences..."
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
             />
           </div>
 
@@ -533,13 +567,27 @@ export const InvestorList: React.FC = () => {
             />
 
             <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Residential / Office Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleInput
               label="Bank Name"
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
             />
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <AccessibleInput
               label="Bank Account Number"
               value={bankAccountNo}
@@ -550,6 +598,18 @@ export const InvestorList: React.FC = () => {
               label="IFSC Code"
               value={ifscCode}
               onChange={(e) => setIfscCode(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Investor Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
             />
           </div>
 

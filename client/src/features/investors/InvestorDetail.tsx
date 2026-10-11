@@ -35,11 +35,13 @@ export const InvestorDetail: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [pan, setPan] = useState('');
   const [bankName, setBankName] = useState('');
   const [bankAccountNo, setBankAccountNo] = useState('');
   const [ifscCode, setIfscCode] = useState('');
   const [status, setStatus] = useState('ACTIVE');
+  const [notes, setNotes] = useState('');
 
   const { data: investor, isLoading, refetch } = useQuery({
     queryKey: ['investor', id],
@@ -77,11 +79,13 @@ export const InvestorDetail: React.FC = () => {
     setName(investor.name || '');
     setPhone(investor.phone || '');
     setEmail(investor.email || '');
+    setAddress(investor.address || '');
     setPan(investor.pan || '');
     setBankName(investor.bankName || '');
     setBankAccountNo(investor.bankAccountNo || '');
     setIfscCode(investor.ifscCode || '');
     setStatus(investor.status || 'ACTIVE');
+    setNotes(investor.notes || '');
     setIsEditModalOpen(true);
   };
 
@@ -91,11 +95,13 @@ export const InvestorDetail: React.FC = () => {
       name,
       phone,
       email,
+      address,
       pan,
       bankName,
       bankAccountNo,
       ifscCode,
       status,
+      notes,
     });
   };
 
@@ -343,13 +349,27 @@ export const InvestorDetail: React.FC = () => {
             />
 
             <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Residential / Office Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleInput
               label="Bank Name"
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
             />
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <AccessibleInput
               label="Bank Account Number"
               value={bankAccountNo}
@@ -360,6 +380,18 @@ export const InvestorDetail: React.FC = () => {
               label="IFSC Code"
               value={ifscCode}
               onChange={(e) => setIfscCode(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Investor Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
             />
           </div>
 

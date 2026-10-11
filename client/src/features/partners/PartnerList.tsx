@@ -24,6 +24,8 @@ export const PartnerList: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [pan, setPan] = useState('');
   const [capitalContribution, setCapitalContribution] = useState('');
   const [sharePercentage, setSharePercentage] = useState('');
   const [status, setStatus] = useState('ACTIVE');
@@ -77,6 +79,8 @@ export const PartnerList: React.FC = () => {
     setName('');
     setPhone('');
     setEmail('');
+    setAddress('');
+    setPan('');
     setCapitalContribution('');
     setSharePercentage('');
     setStatus('ACTIVE');
@@ -93,6 +97,8 @@ export const PartnerList: React.FC = () => {
     setName(p.name || '');
     setPhone(p.phone || '');
     setEmail(p.email || '');
+    setAddress(p.address || '');
+    setPan(p.pan || '');
     setCapitalContribution(p.capitalContribution?.toString() || '');
     setSharePercentage(p.sharePercentage?.toString() || '');
     setStatus(p.status || 'ACTIVE');
@@ -110,6 +116,8 @@ export const PartnerList: React.FC = () => {
       name,
       phone,
       email,
+      address,
+      pan,
       capitalContribution: Number(capitalContribution) || 0,
       sharePercentage: Number(sharePercentage) || 0,
       notes,
@@ -125,6 +133,8 @@ export const PartnerList: React.FC = () => {
         name,
         phone,
         email,
+        address,
+        pan,
         capitalContribution: Number(capitalContribution) || 0,
         sharePercentage: Number(sharePercentage) || 0,
         status,
@@ -353,13 +363,44 @@ export const PartnerList: React.FC = () => {
             />
           </div>
 
-          <AccessibleInput
-            label="Email Address"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="partner@domain.in"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
+              label="Email Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="partner@domain.in"
+            />
+
+            <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+              placeholder="ABCDE1234F"
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Residential / Office Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Door No, Street Name, City, PIN Code"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Partner Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Profit sharing terms, agreement references..."
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
+            />
+          </div>
 
           <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton
@@ -429,16 +470,42 @@ export const PartnerList: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <AccessibleSelect
-              label="Status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              options={[
-                { value: 'ACTIVE', label: 'Active' },
-                { value: 'INACTIVE', label: 'Inactive' },
-              ]}
+            <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
             />
           </div>
+
+          <div>
+            <AccessibleInput
+              label="Residential / Office Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Partner Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
+            />
+          </div>
+
+          <AccessibleSelect
+            label="Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            options={[
+              { value: 'ACTIVE', label: 'Active' },
+              { value: 'INACTIVE', label: 'Inactive' },
+            ]}
+          />
 
           <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
             <AccessibleButton

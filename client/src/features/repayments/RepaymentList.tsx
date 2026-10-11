@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { Receipt, Search, Plus, Trash2, Calendar, CreditCard, User } from 'lucide-react';
+import { Receipt, Search, Plus, Trash2, Edit2, Calendar, CreditCard, User } from 'lucide-react';
 import apiClient from '../../api/client';
 import { RecordRepaymentModal } from './RecordRepaymentModal';
+import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
 import {
   AccessibleButton,
+  AccessibleInput,
+  AccessibleSelect,
   AccessibleCard,
   AccessibleEmptyState,
 } from '../../components/common/AccessibleComponents';
@@ -15,12 +18,29 @@ export const RepaymentList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [repaymentToDelete, setRepaymentToDelete] = useState<any>(null);
+  const [repaymentToEdit, setRepaymentToEdit] = useState<any>(null);
+
+  // Edit form state
+  const [editPaymentMethod, setEditPaymentMethod] = useState('BANK_TRANSFER');
+  const [editReferenceNumber, setEditReferenceNumber] = useState('');
+  const [editNotes, setEditNotes] = useState('');
 
   const { data: repayments, isLoading, refetch } = useQuery({
     queryKey: ['repayments', searchTerm],
     queryFn: async () => {
       const res: any = await apiClient.get(`/reports/collections`);
       return res.data || [];
+    },
+  });
+
+  const updateRepaymentMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: string; payload: any }) => {
+      const res: any = await apiClient.patch(`/repayments/${id}`, payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      setRepaymentToEdit(null);
+      refetch();
     },
   });
 
@@ -35,9 +55,30 @@ export const RepaymentList: React.FC = () => {
     },
   });
 
+  const handleOpenEdit = (r: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setRepaymentToEdit(r);
+    setEditPaymentMethod(r.paymentMethod || 'BANK_TRANSFER');
+    setEditReferenceNumber(r.referenceNumber || '');
+    setEditNotes(r.notes || '');
+  };
+
   const handleOpenDelete = (r: any, e: React.MouseEvent) => {
     e.stopPropagation();
     setRepaymentToDelete(r);
+  };
+
+  const handleUpdateRepayment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!repaymentToEdit) return;
+    updateRepaymentMutation.mutate({
+      id: repaymentToEdit.repaymentId,
+      payload: {
+        paymentMethod: editPaymentMethod,
+        referenceNumber: editReferenceNumber,
+        notes: editNotes,
+      },
+    });
   };
 
   return (
@@ -120,14 +161,24 @@ export const RepaymentList: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                      <button
-                        title="Void / Reverse Repayment"
-                        onClick={(e) => handleOpenDelete(r, e)}
-                        className="h-8 px-2.5 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 hover:border-rose-300 font-medium text-xs inline-flex items-center gap-1 shadow-2xs transition-all cursor-pointer"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        <span>Void</span>
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          title="Edit Repayment Metadata"
+                          onClick={(e) => handleOpenEdit(r, e)}
+                          className="h-8 px-2.5 rounded-lg bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 hover:border-stone-300 font-medium text-xs inline-flex items-center gap-1 shadow-2xs transition-all cursor-pointer"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          title="Void / Reverse Repayment"
+                          onClick={(e) => handleOpenDelete(r, e)}
+                          className="h-8 px-2.5 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 hover:border-rose-300 font-medium text-xs inline-flex items-center gap-1 shadow-2xs transition-all cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span>Void</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -201,7 +252,14 @@ export const RepaymentList: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end pt-3">
+              <div className="flex items-center justify-end gap-2 pt-3">
+                <button
+                  onClick={(e) => handleOpenEdit(r, e)}
+                  className="h-9 px-3 rounded-xl bg-white border border-stone-200 text-stone-700 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-stone-50"
+                >
+                  <Edit2 className="h-3.5 w-3.5" />
+                  <span>Edit</span>
+                </button>
                 <button
                   onClick={(e) => handleOpenDelete(r, e)}
                   className="h-9 px-3 rounded-xl bg-white border border-rose-200 text-rose-600 font-medium text-xs flex items-center gap-1.5 shadow-2xs hover:bg-rose-50"
@@ -231,6 +289,67 @@ export const RepaymentList: React.FC = () => {
           refetch();
         }}
       />
+
+      {/* Edit Repayment Metadata Modal */}
+      {repaymentToEdit && (
+        <Modal
+          isOpen={!!repaymentToEdit}
+          onClose={() => setRepaymentToEdit(null)}
+          title={`Edit Repayment Details — ${repaymentToEdit.receiptNumber}`}
+          subtitle={`Deal ${repaymentToEdit.dealNumber} • Collected: ${formatCurrency(repaymentToEdit.amountReceived)}`}
+        >
+          <form onSubmit={handleUpdateRepayment} className="space-y-5">
+            <AccessibleSelect
+              label="Payment Method / Mode"
+              value={editPaymentMethod}
+              onChange={(e) => setEditPaymentMethod(e.target.value)}
+              options={[
+                { value: 'BANK_TRANSFER', label: 'Bank Transfer / NEFT / IMPS' },
+                { value: 'UPI', label: 'UPI' },
+                { value: 'CASH', label: 'Cash' },
+                { value: 'CHEQUE', label: 'Cheque' },
+              ]}
+            />
+
+            <AccessibleInput
+              label="Transaction Reference / Cheque #"
+              value={editReferenceNumber}
+              onChange={(e) => setEditReferenceNumber(e.target.value)}
+              placeholder="UTR / Ref Number"
+            />
+
+            <div>
+              <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                Notes & Remarks
+              </label>
+              <textarea
+                rows={3}
+                value={editNotes}
+                onChange={(e) => setEditNotes(e.target.value)}
+                placeholder="Collection notes..."
+                className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-5 border-t border-slate-100">
+              <AccessibleButton
+                type="button"
+                variant="outline"
+                onClick={() => setRepaymentToEdit(null)}
+              >
+                Cancel
+              </AccessibleButton>
+              <AccessibleButton
+                type="submit"
+                variant="primary"
+                isLoading={updateRepaymentMutation.isPending}
+              >
+                Save Changes
+              </AccessibleButton>
+            </div>
+          </form>
+        </Modal>
+      )}
 
       {/* Delete / Void Confirmation Modal */}
       <ConfirmDeleteModal

@@ -42,8 +42,14 @@ export const ClientList: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [pan, setPan] = useState('');
+  const [gstin, setGstin] = useState('');
+  const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [pincode, setPincode] = useState('');
   const [businessType, setBusinessType] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [notes, setNotes] = useState('');
   const [status, setStatus] = useState('ACTIVE');
 
   const { data: clients, isLoading, refetch } = useQuery({
@@ -96,8 +102,14 @@ export const ClientList: React.FC = () => {
     setPhone('');
     setEmail('');
     setPan('');
+    setGstin('');
+    setAddress('');
     setCity('');
+    setState('');
+    setPincode('');
     setBusinessType('');
+    setIndustry('');
+    setNotes('');
     setStatus('ACTIVE');
   };
 
@@ -114,8 +126,14 @@ export const ClientList: React.FC = () => {
     setPhone(c.phone || '');
     setEmail(c.email || '');
     setPan(c.pan || '');
+    setGstin(c.gstin || '');
+    setAddress(c.address || '');
     setCity(c.city || '');
+    setState(c.state || '');
+    setPincode(c.pincode || '');
     setBusinessType(c.businessType || '');
+    setIndustry(c.industry || '');
+    setNotes(c.notes || '');
     setStatus(c.status || 'ACTIVE');
     setIsEditModalOpen(true);
   };
@@ -133,8 +151,14 @@ export const ClientList: React.FC = () => {
       phone,
       email,
       pan,
+      gstin,
+      address,
       city,
+      state,
+      pincode,
       businessType,
+      industry,
+      notes,
     });
   };
 
@@ -149,8 +173,14 @@ export const ClientList: React.FC = () => {
         phone,
         email,
         pan,
+        gstin,
+        address,
         city,
+        state,
+        pincode,
         businessType,
+        industry,
+        notes,
         status,
       },
     });
@@ -430,6 +460,31 @@ export const ClientList: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+              placeholder="ABCDE1234F"
+            />
+
+            <AccessibleInput
+              label="GSTIN"
+              value={gstin}
+              onChange={(e) => setGstin(e.target.value)}
+              placeholder="33AAAAA0000A1Z5"
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Street Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Door No, Street Name, Area"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleInput
               label="City"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -437,10 +492,46 @@ export const ClientList: React.FC = () => {
             />
 
             <AccessibleInput
+              label="State"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              placeholder="Tamil Nadu"
+            />
+
+            <AccessibleInput
+              label="PIN Code"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+              placeholder="600001"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
               label="Business Type"
               value={businessType}
               onChange={(e) => setBusinessType(e.target.value)}
-              placeholder="Proprietorship / Retail"
+              placeholder="Proprietorship / Partnership"
+            />
+
+            <AccessibleInput
+              label="Industry / Sector"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              placeholder="Textiles / Manufacturing"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Client Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Verification remarks, guarantor info, or special terms..."
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
             />
           </div>
 
@@ -505,15 +596,69 @@ export const ClientList: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <AccessibleInput
+              label="PAN Number"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="GSTIN"
+              value={gstin}
+              onChange={(e) => setGstin(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <AccessibleInput
+              label="Street Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <AccessibleInput
               label="City"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
 
             <AccessibleInput
+              label="State"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="PIN Code"
+              value={pincode}
+              onChange={(e) => setPincode(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <AccessibleInput
               label="Business Type"
               value={businessType}
               onChange={(e) => setBusinessType(e.target.value)}
+            />
+
+            <AccessibleInput
+              label="Industry / Sector"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+              Client Remarks & Notes
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full bg-white border border-stone-300 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-2 focus:ring-maroon-800/20"
             />
           </div>
 

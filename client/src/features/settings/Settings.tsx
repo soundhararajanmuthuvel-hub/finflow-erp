@@ -29,6 +29,8 @@ export const Settings: React.FC = () => {
 
   const [name, setName] = useState('');
   const [legalName, setLegalName] = useState('');
+  const [pan, setPan] = useState('');
+  const [gstin, setGstin] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
   const [website, setWebsite] = useState('');
   const [email, setEmail] = useState('');
@@ -48,6 +50,8 @@ export const Settings: React.FC = () => {
     if (company) {
       setName(company.name || '');
       setLegalName(company.legalName || '');
+      setPan(company.pan || '');
+      setGstin(company.gstin || '');
       setLogoUrl(company.logoUrl || '');
       setWebsite(company.website || '');
       setEmail(company.email || '');
@@ -71,6 +75,8 @@ export const Settings: React.FC = () => {
       await updateCompany({
         name,
         legalName,
+        pan,
+        gstin,
         logoUrl,
         website,
         email,
@@ -177,6 +183,20 @@ export const Settings: React.FC = () => {
               value={legalName}
               onChange={(e) => setLegalName(e.target.value)}
               placeholder="e.g. Sri Lakshmi Finance & Investments Pvt. Ltd."
+            />
+
+            <AccessibleInput
+              label="Company PAN"
+              value={pan}
+              onChange={(e) => setPan(e.target.value)}
+              placeholder="ABCDE1234F"
+            />
+
+            <AccessibleInput
+              label="Company GSTIN"
+              value={gstin}
+              onChange={(e) => setGstin(e.target.value)}
+              placeholder="33AAAAA0000A1Z5"
             />
 
             <AccessibleInput

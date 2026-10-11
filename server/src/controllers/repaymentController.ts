@@ -43,11 +43,24 @@ export class RepaymentController {
     }
   }
 
+  static async update(req: AuthenticatedRequest, res: Response) {
+    try {
+      const companyId = req.user!.companyId;
+      const userId = req.user!.id;
+      const id = req.params.id as string;
+      const updated = await RepaymentService.updateRepayment(companyId, id, req.body, userId);
+      sendSuccess(res, updated, 'Repayment details updated successfully');
+    } catch (error: any) {
+      sendError(res, error.message);
+    }
+  }
+
   static async delete(req: AuthenticatedRequest, res: Response) {
     try {
       const companyId = req.user!.companyId;
+      const userId = req.user!.id;
       const id = req.params.id as string;
-      await RepaymentService.deleteRepayment(companyId, id);
+      await RepaymentService.deleteRepayment(companyId, id, userId);
       sendSuccess(res, { id }, 'Repayment voided and balances reversed successfully');
     } catch (error: any) {
       sendError(res, error.message);

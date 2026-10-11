@@ -37,6 +37,7 @@ import { formatCurrency, formatDate, formatPercentage, formatRole } from '../../
 import { RecordRepaymentModal } from '../repayments/RecordRepaymentModal';
 import { PaymentDetailDrawer } from '../repayments/PaymentDetailDrawer';
 import { AddFundingModal } from './AddFundingModal';
+import { EditDealModal } from './EditDealModal';
 import { ClientPaymentScheduleModal } from '../documents/ClientPaymentScheduleModal';
 import { InvestorStatementModal } from '../documents/InvestorStatementModal';
 import { useAuth } from '../../context/AuthContext';
@@ -1184,66 +1185,13 @@ export const DealDetail: React.FC = () => {
         deal={deal}
       />
 
-      {/* Edit Deal Modal */}
-      <Modal
+      {/* Comprehensive Edit Deal Modal */}
+      <EditDealModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        title="Edit Finance Deal Details"
-        subtitle={`Updating Deal ${deal.dealNumber}`}
-        maxWidth="md"
-      >
-        <form onSubmit={handleUpdate} className="space-y-5">
-          <AccessibleInput
-            label="Deal Purpose"
-            type="text"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
-          />
-
-          <AccessibleSelect
-            label="Deal Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="DRAFT">DRAFT</option>
-            <option value="PENDING_APPROVAL">PENDING_APPROVAL</option>
-            <option value="APPROVED">APPROVED</option>
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="COMPLETED">COMPLETED</option>
-            <option value="OVERDUE">OVERDUE</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </AccessibleSelect>
-
-          <div>
-            <label className="block text-base font-semibold text-stone-800 mb-2">
-              Internal Remarks & Notes
-            </label>
-            <textarea
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full bg-white border-2 border-stone-300 rounded-xl px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-maroon-800 focus:ring-4 focus:ring-maroon-800/20"
-            />
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-6 border-t-2 border-stone-200">
-            <AccessibleButton
-              type="button"
-              variant="outline"
-              onClick={() => setIsEditModalOpen(false)}
-            >
-              Cancel
-            </AccessibleButton>
-            <AccessibleButton
-              type="submit"
-              variant="primary"
-              disabled={updateDealMutation.isPending}
-            >
-              {updateDealMutation.isPending ? 'Updating...' : 'Save Changes'}
-            </AccessibleButton>
-          </div>
-        </form>
-      </Modal>
+        dealId={deal.id}
+        onSuccess={() => refetch()}
+      />
 
       {/* Delete Deal Modal */}
       <ConfirmDeleteModal

@@ -835,4 +835,36 @@ export class RepaymentService {
       },
     };
   }
+
+  static async updateRepayment(companyId: string, id: string, data: any, userId?: string) {
+    const existing = await prisma.repayment.findFirst({
+      where: { id, deal: { companyId } },
+    });
+    if (!existing) throw new Error('Repayment record not found');
+
+    const updated = await prisma.repayment.update({
+      where: { id },
+      data: {
+        paymentMethod: data.paymentMethod || existing.paymentMethod,
+        referenceNumber: data.referenceNumber !== undefined ? data.referenceNumber : existing.referenceNumber,
+        notes: data.notes !== undefined ? data.notes : existing.notes,
+      },
+    });
+
+    await recordAuditLog({
+      companyId,
+      userId,
+      action: 'REPAYMENT_METADATA_UPDATED',
+      entity: 'Repayment',
+      entityId: id,
+      newValues: {
+        paymentMethod: updated.paymentMethod,
+        referenceNumber: updated.referenceNumber,
+        notes: updated.notes,
+      },
+    });
+
+    return updated;
+  }
 }
+

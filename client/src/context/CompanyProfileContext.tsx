@@ -16,6 +16,8 @@ export interface CompanyProfile {
   state?: string;
   pincode?: string;
   country?: string;
+  pan?: string;
+  gstin?: string;
   currencySymbol: string;
   currencyCode: string;
   dateFormat: string;

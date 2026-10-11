@@ -1,9 +1,10 @@
 import prisma from '../prisma/client.js';
 import { Prisma } from '@prisma/client';
-import { DealStatus, TransactionType } from '../types/enums.js';
+import { DealStatus, TransactionType, ScheduleStatus } from '../types/enums.js';
 import { CalculationEngine } from './calculationEngine.js';
 import { LedgerService } from './ledgerService.js';
-import { roundMoney, toDecimal, calculatePercentage } from '../utils/decimal.js';
+import { roundMoney, toDecimal, calculatePercentage, decimalMax } from '../utils/decimal.js';
+import { recordAuditLog } from '../utils/audit.js';
 
 export class DealService {
   static async listDeals(companyId: string, status?: DealStatus, search?: string) {
@@ -315,19 +316,262 @@ export class DealService {
     });
   }
 
-  static async updateDeal(companyId: string, id: string, data: any) {
-    const existing = await prisma.financeDeal.findFirst({ where: { id, companyId } });
-    if (!existing) throw new Error('Deal not found');
-
-    return prisma.financeDeal.update({
-      where: { id },
-      data: {
-        purpose: data.purpose !== undefined ? data.purpose : existing.purpose,
-        notes: data.notes !== undefined ? data.notes : existing.notes,
-        status: data.status !== undefined ? data.status : existing.status,
+  static async updateDeal(companyId: string, id: string, data: any, userId?: string) {
+    const existing = await prisma.financeDeal.findFirst({
+      where: { id, companyId },
+      include: {
+        repayments: true,
+        fundings: true,
+        schedules: { orderBy: { installmentNumber: 'asc' } },
+        distributionRules: true,
+        client: true,
       },
     });
+
+    if (!existing) throw new Error('Finance deal not found');
+
+    return prisma.$transaction(async (tx) => {
+      // 1. Determine new parameters (using provided data or existing)
+      const clientId = data.clientId || existing.clientId;
+      const P_req = data.financeAmountRequired !== undefined ? roundMoney(data.financeAmountRequired) : toDecimal(existing.financeAmountRequired);
+      const P_app = data.financeAmountApproved !== undefined ? roundMoney(data.financeAmountApproved) : toDecimal(existing.financeAmountApproved);
+      const startDate = data.startDate ? new Date(data.startDate) : existing.startDate;
+      const interestType = data.interestType || existing.interestType;
+      const interestRate = data.interestRate !== undefined ? new Prisma.Decimal(data.interestRate) : toDecimal(existing.interestRate);
+      const frequency = data.repaymentFrequency || existing.repaymentFrequency;
+      const numberOfRepayments = data.numberOfRepayments !== undefined ? Number(data.numberOfRepayments) : existing.numberOfRepayments;
+      const customInstallmentAmount = data.customInstallmentAmount !== undefined ? roundMoney(data.customInstallmentAmount) : undefined;
+      const purpose = data.purpose !== undefined ? data.purpose : existing.purpose;
+      const notes = data.notes !== undefined ? data.notes : existing.notes;
+      const status = data.status || existing.status;
+
+      // 2. Handle fundings if provided
+      if (Array.isArray(data.fundings)) {
+        const fundingAmounts = data.fundings.map((f: any) => f.amount);
+        const fundingCheck = CalculationEngine.validateFundingMatch(P_app, fundingAmounts);
+
+        if (!fundingCheck.isValid && (status === DealStatus.APPROVED || status === DealStatus.ACTIVE)) {
+          throw new Error(
+            `Funding total (₹${fundingCheck.totalFunded}) does not match approved amount (₹${P_app}). Difference: ₹${fundingCheck.difference}`
+          );
+        }
+
+        // Delete existing fundings safely
+        await tx.dealFunding.deleteMany({ where: { dealId: id } });
+
+        // Insert updated fundings with recalculated percentages
+        for (const f of data.fundings) {
+          const itemAmount = roundMoney(f.amount);
+          const percentage = P_app.isPositive()
+            ? roundMoney(itemAmount.times(100).dividedBy(P_app))
+            : new Prisma.Decimal(0);
+
+          await tx.dealFunding.create({
+            data: {
+              dealId: id,
+              sourceType: f.sourceType,
+              partnerId: f.sourceType === 'PARTNER' ? f.partnerId : null,
+              investorId: f.sourceType === 'OUTSIDE_INVESTOR' ? f.investorId : null,
+              amount: itemAmount.toString(),
+              percentage: percentage.toString(),
+              expectedReturnRate: f.expectedReturnRate ? new Prisma.Decimal(f.expectedReturnRate).toString() : '0.00',
+              notes: f.notes || null,
+              status: existing.status === DealStatus.ACTIVE ? 'DISBURSED' : 'COMMITTED',
+            },
+          });
+        }
+      }
+
+      // 3. Handle Distribution Rules if provided
+      if (data.distributionRule) {
+        await tx.distributionRule.deleteMany({ where: { dealId: id } });
+        await tx.distributionRule.create({
+          data: {
+            dealId: id,
+            companyCommissionRate: new Prisma.Decimal(data.distributionRule.companyCommissionRate || 0).toString(),
+            outsideInvestorReturnRate: new Prisma.Decimal(data.distributionRule.outsideInvestorReturnRate || 0).toString(),
+            partnerProfitShareRate: new Prisma.Decimal(data.distributionRule.partnerProfitShareRate || 0).toString(),
+            ruleDescription: data.distributionRule.ruleDescription || 'Updated Distribution Rule',
+          },
+        });
+      }
+
+      // 4. Handle Repayment Schedules & Totals Recalculation
+      let totals = {
+        totalInterest: toDecimal(existing.totalInterest),
+        totalPayable: toDecimal(existing.totalPayable),
+        installmentAmount: toDecimal(existing.installmentAmount),
+      };
+      let calculatedEndDate = existing.endDate;
+      let newOutstandingPrincipal = toDecimal(existing.outstandingPrincipal);
+      let newOutstandingTotal = toDecimal(existing.outstandingTotal);
+
+      const termsChanged =
+        data.financeAmountApproved !== undefined ||
+        data.interestRate !== undefined ||
+        data.interestType !== undefined ||
+        data.repaymentFrequency !== undefined ||
+        data.numberOfRepayments !== undefined ||
+        data.startDate !== undefined ||
+        data.customInstallmentAmount !== undefined;
+
+      if (termsChanged) {
+        if (existing.repayments.length === 0) {
+          // Zero collections: clean recalculation of entire schedule
+          totals = CalculationEngine.calculateDealTotals(
+            P_app,
+            interestRate,
+            numberOfRepayments,
+            frequency,
+            interestType,
+            customInstallmentAmount
+          );
+
+          const schedulesData = CalculationEngine.generateSchedule({
+            financeAmount: P_app,
+            interestRate,
+            interestType,
+            frequency,
+            numberOfRepayments,
+            startDate,
+            customInstallmentAmount,
+          });
+
+          await tx.repaymentSchedule.deleteMany({ where: { dealId: id } });
+
+          for (const s of schedulesData) {
+            await tx.repaymentSchedule.create({
+              data: {
+                dealId: id,
+                installmentNumber: s.installmentNumber,
+                dueDate: s.dueDate,
+                principalAmount: s.principalAmount.toString(),
+                interestAmount: s.interestAmount.toString(),
+                totalDue: s.totalDue.toString(),
+                balanceAmount: s.balanceAmount.toString(),
+                status: ScheduleStatus.UPCOMING,
+              },
+            });
+          }
+
+          calculatedEndDate = schedulesData[schedulesData.length - 1]?.dueDate || calculatedEndDate;
+          newOutstandingPrincipal = P_app;
+          newOutstandingTotal = totals.totalPayable;
+        } else {
+          // Has repayments: preserve paid/partially paid schedules and recalculate future installments
+          const paidSchedules = existing.schedules.filter((s) => toDecimal(s.paidAmount).isPositive());
+          const lastPaidSchedule = paidSchedules[paidSchedules.length - 1];
+          const nextInstallmentNum = paidSchedules.length + 1;
+          const remainingRepayments = Math.max(1, numberOfRepayments - paidSchedules.length);
+
+          // Delete uncollected upcoming schedules
+          await tx.repaymentSchedule.deleteMany({
+            where: {
+              dealId: id,
+              paidAmount: 0,
+            },
+          });
+
+          // Generate remaining schedules from current outstanding principal
+          const scheduleStartDate = lastPaidSchedule ? new Date(lastPaidSchedule.dueDate) : startDate;
+          const remainingSchedulesData = CalculationEngine.generateSchedule({
+            financeAmount: existing.outstandingPrincipal,
+            interestRate,
+            interestType,
+            frequency,
+            numberOfRepayments: remainingRepayments,
+            startDate: scheduleStartDate,
+          });
+
+          for (let i = 0; i < remainingSchedulesData.length; i++) {
+            const item = remainingSchedulesData[i];
+            await tx.repaymentSchedule.create({
+              data: {
+                dealId: id,
+                installmentNumber: nextInstallmentNum + i,
+                dueDate: item.dueDate,
+                principalAmount: item.principalAmount.toString(),
+                interestAmount: item.interestAmount.toString(),
+                totalDue: item.totalDue.toString(),
+                balanceAmount: item.balanceAmount.toString(),
+                status: ScheduleStatus.UPCOMING,
+              },
+            });
+          }
+
+          if (remainingSchedulesData.length > 0) {
+            calculatedEndDate = remainingSchedulesData[remainingSchedulesData.length - 1].dueDate;
+          }
+        }
+      }
+
+      // 5. Update FinanceDeal record
+      const updatedDeal = await tx.financeDeal.update({
+        where: { id },
+        data: {
+          clientId,
+          financeAmountRequired: P_req.toString(),
+          financeAmountApproved: P_app.toString(),
+          startDate,
+          endDate: calculatedEndDate,
+          interestType,
+          interestRate: interestRate.toString(),
+          totalInterest: totals.totalInterest.toString(),
+          totalPayable: totals.totalPayable.toString(),
+          repaymentFrequency: frequency,
+          numberOfRepayments,
+          installmentAmount: totals.installmentAmount.toString(),
+          outstandingPrincipal: newOutstandingPrincipal.toString(),
+          outstandingTotal: newOutstandingTotal.toString(),
+          purpose,
+          notes,
+          status,
+        },
+        include: {
+          client: true,
+          fundings: {
+            include: {
+              investor: true,
+              partner: true,
+            },
+          },
+          schedules: {
+            orderBy: { installmentNumber: 'asc' },
+          },
+          repayments: {
+            orderBy: { paymentDate: 'desc' },
+          },
+          distributionRules: true,
+        },
+      });
+
+      // 6. Record Audit Log
+      await recordAuditLog({
+        companyId,
+        userId: userId || undefined,
+        action: 'UPDATE_DEAL',
+        entity: 'FinanceDeal',
+        entityId: id,
+        oldValues: {
+          clientId: existing.clientId,
+          financeAmountApproved: existing.financeAmountApproved.toString(),
+          interestRate: existing.interestRate.toString(),
+          numberOfRepayments: existing.numberOfRepayments,
+          status: existing.status,
+        },
+        newValues: {
+          clientId,
+          financeAmountApproved: P_app.toString(),
+          interestRate: interestRate.toString(),
+          numberOfRepayments,
+          status,
+        },
+      }, tx);
+
+      return updatedDeal;
+    });
   }
+
 
   static async deleteDeal(companyId: string, id: string) {
     const existing = await prisma.financeDeal.findFirst({

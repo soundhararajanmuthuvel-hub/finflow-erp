@@ -17,6 +17,7 @@ import apiClient from '../../api/client';
 import { StatusBadge } from '../../components/common/Badge';
 import { Modal } from '../../components/common/Modal';
 import { ConfirmDeleteModal } from '../../components/common/ConfirmDeleteModal';
+import { EditDealModal } from './EditDealModal';
 import {
   AccessibleButton,
   AccessibleInput,
@@ -364,68 +365,18 @@ export const DealList: React.FC = () => {
         )}
       </div>
 
-      {/* Edit Deal Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        title="Edit Finance Deal"
-        subtitle={`Updating status and metadata for ${dealToEdit?.dealNumber}`}
-      >
-        <form onSubmit={handleUpdate} className="space-y-6">
-          <AccessibleInput
-            label="Deal Purpose"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
-            placeholder="e.g. Working Capital / Inventory Purchase"
-          />
-
-          <AccessibleSelect
-            label="Deal Status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            options={[
-              { value: 'DRAFT', label: 'DRAFT' },
-              { value: 'PENDING_APPROVAL', label: 'PENDING_APPROVAL' },
-              { value: 'APPROVED', label: 'APPROVED' },
-              { value: 'ACTIVE', label: 'ACTIVE' },
-              { value: 'COMPLETED', label: 'COMPLETED' },
-              { value: 'OVERDUE', label: 'OVERDUE' },
-              { value: 'DEFAULTED', label: 'DEFAULTED' },
-              { value: 'CANCELLED', label: 'CANCELLED' },
-            ]}
-          />
-
-          <div className="space-y-2">
-            <label className="block text-base sm:text-lg font-bold text-[#1A1A1A]">
-              Internal Notes / Covenants
-            </label>
-            <textarea
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Special covenants, collateral notes, or borrower terms..."
-              className="w-full bg-white text-[#1A1A1A] text-lg font-medium rounded-xl border-2 border-[#A8A29E] focus:border-[#8B1A1A] focus:ring-4 focus:ring-[#8B1A1A]/20 p-4 transition-all"
-            />
-          </div>
-
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-5 border-t border-slate-100">
-            <AccessibleButton
-              type="button"
-              variant="outline"
-              onClick={() => setIsEditModalOpen(false)}
-            >
-              Cancel
-            </AccessibleButton>
-            <AccessibleButton
-              type="submit"
-              variant="primary"
-              isLoading={updateDealMutation.isPending}
-            >
-              Save Changes
-            </AccessibleButton>
-          </div>
-        </form>
-      </Modal>
+      {/* Comprehensive Edit Deal Modal */}
+      {dealToEdit && (
+        <EditDealModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setDealToEdit(null);
+          }}
+          dealId={dealToEdit.id}
+          onSuccess={() => refetch()}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       <ConfirmDeleteModal

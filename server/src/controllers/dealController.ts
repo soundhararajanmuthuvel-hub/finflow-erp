@@ -90,8 +90,9 @@ export class DealController {
   static async update(req: AuthenticatedRequest, res: Response) {
     try {
       const companyId = req.user!.companyId;
+      const userId = req.user!.id;
       const id = req.params.id as string;
-      const deal = await DealService.updateDeal(companyId, id, req.body);
+      const deal = await DealService.updateDeal(companyId, id, req.body, userId);
       sendSuccess(res, deal, 'Deal updated successfully');
     } catch (error: any) {
       sendError(res, error.message);

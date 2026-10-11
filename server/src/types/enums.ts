@@ -95,6 +95,7 @@ export enum TransactionType {
   COMPANY_COMMISSION = 'COMPANY_COMMISSION',
   EXPENSE = 'EXPENSE',
   ADJUSTMENT = 'ADJUSTMENT',
+  REPAYMENT_REVERSED = 'REPAYMENT_REVERSED',
 }
 
 export enum NotificationType {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Role, InterestType, RepaymentFrequency, PaymentMethod, FundingSourceType } from '../types/enums.js';
+import { Role, DealStatus, InterestType, RepaymentFrequency, PaymentMethod, FundingSourceType } from '../types/enums.js';
 
 export const LoginSchema = z.object({
   body: z.object({
@@ -84,6 +84,42 @@ export const CreateDealSchema = z.object({
     }),
   }),
 });
+
+export const UpdateDealSchema = z.object({
+  body: z.object({
+    clientId: z.string().uuid().optional(),
+    financeAmountRequired: z.number().positive().optional(),
+    financeAmountApproved: z.number().positive().optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    interestType: z.nativeEnum(InterestType).optional(),
+    interestRate: z.number().nonnegative().optional(),
+    repaymentFrequency: z.nativeEnum(RepaymentFrequency).optional(),
+    numberOfRepayments: z.number().int().positive().optional(),
+    purpose: z.string().optional().nullable(),
+    notes: z.string().optional().nullable(),
+    status: z.nativeEnum(DealStatus).optional(),
+    customInstallmentAmount: z.number().positive().optional(),
+    fundings: z.array(FundingItemSchema).optional(),
+    distributionRule: z
+      .object({
+        companyCommissionRate: z.number().min(0).max(100).default(0),
+        outsideInvestorReturnRate: z.number().min(0).max(100).default(0),
+        partnerProfitShareRate: z.number().min(0).max(100).default(0),
+        ruleDescription: z.string().optional(),
+      })
+      .optional(),
+  }),
+});
+
+export const UpdateRepaymentSchema = z.object({
+  body: z.object({
+    paymentMethod: z.nativeEnum(PaymentMethod).optional(),
+    referenceNumber: z.string().optional().nullable(),
+    notes: z.string().optional().nullable(),
+  }),
+});
+
 
 export const RecordRepaymentSchema = z.object({
   body: z.object({

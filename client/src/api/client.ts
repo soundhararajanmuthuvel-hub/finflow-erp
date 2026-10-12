@@ -11,6 +11,20 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
+    // Financial Safety Guard: prevent mutating financial operations while offline
+    if (
+      typeof navigator !== 'undefined' &&
+      !navigator.onLine &&
+      config.method &&
+      ['post', 'put', 'patch', 'delete'].includes(config.method.toLowerCase())
+    ) {
+      return Promise.reject(
+        new Error(
+          'You are offline. This financial transaction requires an active connection. Please reconnect and try again.'
+        )
+      );
+    }
+
     const token = localStorage.getItem('finance_erp_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

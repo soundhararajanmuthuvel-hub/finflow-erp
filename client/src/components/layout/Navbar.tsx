@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../../api/client';
 import { formatRole } from '../../utils/formatters';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 interface NavbarProps {
   onOpenMobileMenu?: () => void;
@@ -51,8 +52,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
         </div>
       </div>
 
-      {/* Right Area: Alerts, User Session, and Sign Out */}
+      {/* Right Area: Alerts, PWA Install, User Session, and Sign Out */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* PWA Install Button (Unobtrusive) */}
+        <PWAInstallButton className="hidden sm:inline-flex" />
+
         {/* In-App Notifications */}
         <div className="relative">
           <button

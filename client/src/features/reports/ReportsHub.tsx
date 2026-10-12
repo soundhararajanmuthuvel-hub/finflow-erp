@@ -12,6 +12,7 @@ import {
 } from '../../components/common/AccessibleComponents';
 import { ContinuousTabs } from '../../components/common/ContinuousTabs';
 import { IndividualInvestorReport } from './IndividualInvestorReport';
+import { IndividualPartnerReport } from './IndividualPartnerReport';
 
 export const ReportsHub: React.FC = () => {
   const [reportType, setReportType] = useState('client-finance');
@@ -28,7 +29,7 @@ export const ReportsHub: React.FC = () => {
       const res: any = await apiClient.get(endpoint);
       return res.data || [];
     },
-    enabled: reportType !== 'investor-returns',
+    enabled: reportType !== 'investor-returns' && reportType !== 'partner-capital',
   });
 
   const exportCSV = () => {
@@ -80,7 +81,7 @@ export const ReportsHub: React.FC = () => {
           </p>
         </div>
 
-        {reportType !== 'investor-returns' && (
+        {reportType !== 'investor-returns' && reportType !== 'partner-capital' && (
           <div className="flex flex-wrap items-center gap-3">
             <AccessibleButton
               variant="outline"
@@ -113,6 +114,8 @@ export const ReportsHub: React.FC = () => {
 
       {reportType === 'investor-returns' ? (
         <IndividualInvestorReport />
+      ) : reportType === 'partner-capital' ? (
+        <IndividualPartnerReport />
       ) : (
         <>
           {/* Report Selector & Date Filters Card */}

@@ -69,9 +69,54 @@ export class ReportController {
     }
   }
 
+  static async getPartnerOptions(req: AuthenticatedRequest, res: Response) {
+    try {
+      const companyId = req.user!.companyId;
+      const { search } = req.query;
+      const data = await ReportService.getPartnerOptions(companyId, search as string);
+      sendSuccess(res, data, 'Partner dropdown options retrieved');
+    } catch (error: any) {
+      sendError(res, error.message);
+    }
+  }
+
+  static async getIndividualPartnerReport(req: AuthenticatedRequest, res: Response) {
+    try {
+      const companyId = req.user!.companyId;
+      const partnerId = (req.params.partnerId || req.query.partnerId) as string;
+      const { startDate, endDate, period } = req.query;
+
+      if (!partnerId) {
+        sendError(res, 'Partner ID is required for individual partner statement', 400);
+        return;
+      }
+
+      const data = await ReportService.getIndividualPartnerReport(companyId, partnerId, {
+        startDate: startDate as string,
+        endDate: endDate as string,
+        period: period as string,
+      });
+      sendSuccess(res, data, 'Individual partner statement retrieved');
+    } catch (error: any) {
+      sendError(res, error.message);
+    }
+  }
+
   static async getPartnerReport(req: AuthenticatedRequest, res: Response) {
     try {
       const companyId = req.user!.companyId;
+      const { partnerId, startDate, endDate, period } = req.query;
+
+      if (partnerId) {
+        const data = await ReportService.getIndividualPartnerReport(companyId, partnerId as string, {
+          startDate: startDate as string,
+          endDate: endDate as string,
+          period: period as string,
+        });
+        sendSuccess(res, data, 'Individual partner statement retrieved');
+        return;
+      }
+
       const data = await ReportService.getPartnerReport(companyId);
       sendSuccess(res, data, 'Partner capital report retrieved');
     } catch (error: any) {

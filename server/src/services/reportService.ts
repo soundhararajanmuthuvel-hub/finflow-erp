@@ -656,6 +656,549 @@ export class ReportService {
     });
   }
 
+  static async getPartnerOptions(companyId: string, search?: string) {
+    const where: any = { companyId };
+    if (search && search.trim()) {
+      const q = search.trim();
+      where.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { partnerCode: { contains: q, mode: 'insensitive' } },
+        { phone: { contains: q } },
+        { pan: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
+    const partners = await prisma.partner.findMany({
+      where,
+      orderBy: { partnerCode: 'asc' },
+      select: {
+        id: true,
+        partnerCode: true,
+        name: true,
+        phone: true,
+        email: true,
+        pan: true,
+        capitalContribution: true,
+        sharePercentage: true,
+        status: true,
+        _count: {
+          select: { fundings: true, partnerReturns: true },
+        },
+      },
+    });
+
+    return partners.map((p) => ({
+      ...p,
+      capitalContribution: Number(p.capitalContribution),
+      sharePercentage: Number(p.sharePercentage),
+    }));
+  }
+
+  static async getIndividualPartnerReport(
+    companyId: string,
+    partnerId: string,
+    options: { startDate?: string; endDate?: string; period?: string } = {}
+  ) {
+    // 1. Multi-tenant company security check
+    const partner = await prisma.partner.findFirst({
+      where: { id: partnerId, companyId },
+      select: {
+        id: true,
+        partnerCode: true,
+        name: true,
+        phone: true,
+        email: true,
+        address: true,
+        pan: true,
+        capitalContribution: true,
+        sharePercentage: true,
+        status: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!partner) {
+      throw new Error('Partner not found or unauthorized for this organization');
+    }
+
+    // 2. Determine date range boundaries based on period filter
+    const { startDate, endDate, period = 'all-time' } = options;
+    const now = new Date();
+    let periodStart: Date | null = null;
+    let periodEnd: Date | null = null;
+    let periodLabel = 'All-Time Partner Capital & Profit Summary';
+
+    if (period === 'this-week') {
+      const d = new Date(now);
+      const day = d.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1) - day;
+      periodStart = new Date(d.setDate(d.getDate() + diffToMonday));
+      periodStart.setHours(0, 0, 0, 0);
+
+      periodEnd = new Date(periodStart);
+      periodEnd.setDate(periodEnd.getDate() + 6);
+      periodEnd.setHours(23, 59, 59, 999);
+      periodLabel = `This Week (${periodStart.toLocaleDateString('en-IN')} – ${periodEnd.toLocaleDateString('en-IN')})`;
+    } else if (period === 'previous-week') {
+      const d = new Date(now);
+      const day = d.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1) - day - 7;
+      periodStart = new Date(d.setDate(d.getDate() + diffToMonday));
+      periodStart.setHours(0, 0, 0, 0);
+
+      periodEnd = new Date(periodStart);
+      periodEnd.setDate(periodEnd.getDate() + 6);
+      periodEnd.setHours(23, 59, 59, 999);
+      periodLabel = `Previous Week (${periodStart.toLocaleDateString('en-IN')} – ${periodEnd.toLocaleDateString('en-IN')})`;
+    } else if (period === 'this-month') {
+      periodStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+      periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+      periodLabel = `This Month (${periodStart.toLocaleDateString('en-IN')} – ${periodEnd.toLocaleDateString('en-IN')})`;
+    } else if (period === 'previous-month') {
+      periodStart = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
+      periodEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+      periodLabel = `Previous Month (${periodStart.toLocaleDateString('en-IN')} – ${periodEnd.toLocaleDateString('en-IN')})`;
+    } else if (startDate || endDate || period === 'custom') {
+      if (startDate) {
+        periodStart = new Date(startDate);
+        periodStart.setHours(0, 0, 0, 0);
+      }
+      if (endDate) {
+        periodEnd = new Date(endDate);
+        periodEnd.setHours(23, 59, 59, 999);
+      }
+      periodLabel = `Custom Range (${periodStart ? periodStart.toLocaleDateString('en-IN') : 'Start'} – ${periodEnd ? periodEnd.toLocaleDateString('en-IN') : 'Present'})`;
+    }
+
+    // 3. Fetch deal fundings belonging strictly to this partner and company
+    const fundings = await prisma.dealFunding.findMany({
+      where: {
+        partnerId,
+        deal: { companyId },
+      },
+      include: {
+        deal: {
+          include: {
+            client: {
+              select: { id: true, clientCode: true, fullName: true, phone: true },
+            },
+            distributionRules: true,
+          },
+        },
+      },
+      orderBy: { investmentDate: 'asc' },
+    });
+
+    // 4. Fetch partner returns distributed to this partner
+    const returns = await prisma.partnerReturn.findMany({
+      where: {
+        partnerId,
+        distribution: {
+          deal: { companyId },
+        },
+      },
+      include: {
+        distribution: {
+          include: {
+            repayment: {
+              include: {
+                client: { select: { fullName: true } },
+                recordedBy: { select: { fullName: true } },
+              },
+            },
+            deal: {
+              include: {
+                client: { select: { fullName: true } },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // 5. Calculate cumulative and period financial metrics using Prisma Decimal
+    const baseCapital = roundMoney(new Prisma.Decimal(partner.capitalContribution));
+    const equitySharePercentage = roundMoney(new Prisma.Decimal(partner.sharePercentage));
+
+    let allTimeFundedToDeals = new Prisma.Decimal(0);
+    let allTimePrincipalReturned = new Prisma.Decimal(0);
+    let allTimeProfitEarned = new Prisma.Decimal(0);
+    let allTimeProfitPaid = new Prisma.Decimal(0);
+
+    // Opening balances (prior to periodStart)
+    let openingFundedToDeals = new Prisma.Decimal(0);
+    let openingPrincipalReturned = new Prisma.Decimal(0);
+    let openingProfitEarned = new Prisma.Decimal(0);
+    let openingProfitPaid = new Prisma.Decimal(0);
+
+    // Activity during selected period
+    let periodFundedToDeals = new Prisma.Decimal(0);
+    let periodPrincipalReturned = new Prisma.Decimal(0);
+    let periodProfitEarned = new Prisma.Decimal(0);
+    let periodProfitPaid = new Prisma.Decimal(0);
+
+    // Track per-deal aggregates
+    const dealStatsMap = new Map<string, {
+      fundedAmount: Prisma.Decimal;
+      sharePercentage: Prisma.Decimal;
+      principalReturned: Prisma.Decimal;
+      profitEarned: Prisma.Decimal;
+    }>();
+
+    fundings.forEach((f) => {
+      const amt = roundMoney(f.amount);
+      allTimeFundedToDeals = allTimeFundedToDeals.plus(amt);
+
+      const invDate = new Date(f.investmentDate);
+      if (periodStart && invDate < periodStart) {
+        openingFundedToDeals = openingFundedToDeals.plus(amt);
+      } else if ((!periodStart || invDate >= periodStart) && (!periodEnd || invDate <= periodEnd)) {
+        periodFundedToDeals = periodFundedToDeals.plus(amt);
+      }
+
+      dealStatsMap.set(f.dealId, {
+        fundedAmount: amt,
+        sharePercentage: roundMoney(f.percentage),
+        principalReturned: new Prisma.Decimal(0),
+        profitEarned: new Prisma.Decimal(0),
+      });
+    });
+
+    // Process distributions
+    returns.forEach((r) => {
+      const rep = r.distribution.repayment;
+      const isReversed = rep.status === 'REVERSED' || rep.status === 'VOIDED';
+
+      if (!isReversed) {
+        const pRet = roundMoney(r.principalReturned);
+        const pShare = roundMoney(r.profitShare);
+
+        allTimePrincipalReturned = allTimePrincipalReturned.plus(pRet);
+        allTimeProfitEarned = allTimeProfitEarned.plus(pShare);
+        allTimeProfitPaid = allTimeProfitPaid.plus(pShare);
+
+        const repDate = new Date(rep.paymentDate);
+        if (periodStart && repDate < periodStart) {
+          openingPrincipalReturned = openingPrincipalReturned.plus(pRet);
+          openingProfitEarned = openingProfitEarned.plus(pShare);
+          openingProfitPaid = openingProfitPaid.plus(pShare);
+        } else if ((!periodStart || repDate >= periodStart) && (!periodEnd || repDate <= periodEnd)) {
+          periodPrincipalReturned = periodPrincipalReturned.plus(pRet);
+          periodProfitEarned = periodProfitEarned.plus(pShare);
+          periodProfitPaid = periodProfitPaid.plus(pShare);
+        }
+
+        const dStat = dealStatsMap.get(r.distribution.dealId);
+        if (dStat) {
+          dStat.principalReturned = dStat.principalReturned.plus(pRet);
+          dStat.profitEarned = dStat.profitEarned.plus(pShare);
+        }
+      }
+    });
+
+    // Balances
+    const totalCapitalContributed = baseCapital;
+    const remainingCapitalInDeals = roundMoney(allTimeFundedToDeals.minus(allTimePrincipalReturned));
+    const currentCapitalBalance = roundMoney(baseCapital.minus(allTimePrincipalReturned));
+    const pendingProfitShare = new Prisma.Decimal(0); // All recorded returns are approved payouts
+    const totalAmountPaid = roundMoney(allTimePrincipalReturned.plus(allTimeProfitPaid));
+    const totalOutstandingPayable = roundMoney(currentCapitalBalance.plus(pendingProfitShare));
+
+    // Opening balances
+    const openingRemainingInDeals = roundMoney(openingFundedToDeals.minus(openingPrincipalReturned));
+    const openingCapitalBalance = roundMoney(baseCapital.minus(openingPrincipalReturned));
+    const openingTotalAmountPaid = roundMoney(openingPrincipalReturned.plus(openingProfitPaid));
+    const openingTotalOutstanding = roundMoney(openingCapitalBalance.plus(new Prisma.Decimal(0)));
+
+    // Period summary
+    const periodTotalPayout = roundMoney(periodPrincipalReturned.plus(periodProfitPaid));
+
+    // Closing balances
+    const closingRemainingInDeals = roundMoney(openingRemainingInDeals.plus(periodFundedToDeals).minus(periodPrincipalReturned));
+    const closingCapitalBalance = roundMoney(openingCapitalBalance.minus(periodPrincipalReturned));
+    const closingTotalAmountPaid = roundMoney(openingTotalAmountPaid.plus(periodTotalPayout));
+    const closingTotalOutstanding = roundMoney(closingCapitalBalance.plus(new Prisma.Decimal(0)));
+
+    const isPeriodActive = period !== 'all-time' || !!startDate || !!endDate;
+
+    // 6. Section 1: Deal Fundings
+    const sectionDealFundings = fundings.map((f) => {
+      const dStat = dealStatsMap.get(f.dealId);
+      const pRet = dStat ? dStat.principalReturned : new Prisma.Decimal(0);
+      const pEarned = dStat ? dStat.profitEarned : new Prisma.Decimal(0);
+      const remPrin = roundMoney(f.amount.minus(pRet));
+
+      return {
+        fundingId: f.id,
+        dealId: f.deal.id,
+        dealNumber: f.deal.dealNumber,
+        clientName: f.deal.client.fullName,
+        clientCode: f.deal.client.clientCode,
+        investmentDate: f.investmentDate,
+        partnerAmount: roundMoney(f.amount).toNumber(),
+        sharePercentage: roundMoney(f.percentage).toNumber(),
+        expectedReturnRate: roundMoney(f.expectedReturnRate).toNumber(),
+        principalReturned: roundMoney(pRet).toNumber(),
+        profitShareEarned: roundMoney(pEarned).toNumber(),
+        remainingPrincipal: remPrin.toNumber(),
+        dealStatus: f.deal.status,
+        fundingStatus: f.status,
+      };
+    });
+
+    // 7. Section 2: Repayment Distributions
+    const sectionRepaymentDistributions = returns.map((r) => {
+      const rep = r.distribution.repayment;
+      const isReversed = rep.status === 'REVERSED' || rep.status === 'VOIDED';
+      const repDate = new Date(rep.paymentDate);
+      const inPeriod =
+        (!periodStart || repDate >= periodStart) && (!periodEnd || repDate <= periodEnd);
+
+      return {
+        returnId: r.id,
+        repaymentId: rep.id,
+        date: rep.paymentDate,
+        receiptNumber: rep.receiptNumber,
+        referenceNumber: rep.referenceNumber || '—',
+        dealNumber: r.distribution.deal.dealNumber,
+        dealId: r.distribution.deal.id,
+        clientName: r.distribution.deal.client?.fullName || '—',
+        totalClientRepayment: roundMoney(rep.amountReceived).toNumber(),
+        partnerPrincipalShare: roundMoney(r.principalReturned).toNumber(),
+        partnerProfitShare: roundMoney(r.profitShare).toNumber(),
+        partnerTotalPayout: roundMoney(r.totalPayout).toNumber(),
+        paymentMethod: rep.paymentMethod,
+        status: rep.status,
+        isReversed,
+        inPeriod,
+      };
+    });
+
+    // 8. Section 3: Verified Payouts Disbursed
+    const sectionPayouts = sectionRepaymentDistributions
+      .filter((c) => !c.isReversed)
+      .map((c) => ({
+        date: c.date,
+        receiptNumber: c.receiptNumber,
+        referenceNumber: c.referenceNumber,
+        dealNumber: c.dealNumber,
+        clientName: c.clientName,
+        paymentMethod: c.paymentMethod,
+        principalPaid: c.partnerPrincipalShare,
+        profitSharePaid: c.partnerProfitShare,
+        totalPaid: c.partnerTotalPayout,
+        status: c.status,
+        inPeriod: c.inPeriod,
+      }));
+
+    // 9. Master Chronological Transaction Ledger with Running Balance
+    const allTransactions: Array<{
+      id: string;
+      date: Date | string;
+      reference: string;
+      dealNumber: string;
+      dealId?: string;
+      clientName: string;
+      transactionType: 'INITIAL_CAPITAL' | 'DEAL_FUNDING' | 'COLLECTION_DISTRIBUTION' | 'REVERSAL';
+      typeLabel: string;
+      description: string;
+      credit: number;
+      debit: number;
+      principalAllocation: number;
+      profitShare: number;
+      balance: number;
+      paymentStatus: string;
+      isReversed: boolean;
+      inPeriod: boolean;
+      paymentMethod?: string;
+    }> = [];
+
+    // Add Initial Capital Contribution if > 0
+    if (!baseCapital.isZero()) {
+      const capDate = new Date(partner.createdAt);
+      const inPeriod =
+        (!periodStart || capDate >= periodStart) && (!periodEnd || capDate <= periodEnd);
+
+      allTransactions.push({
+        id: `init-${partner.id}`,
+        date: partner.createdAt,
+        reference: partner.partnerCode,
+        dealNumber: '—',
+        clientName: '—',
+        transactionType: 'INITIAL_CAPITAL',
+        typeLabel: 'Base Capital Contribution',
+        description: 'Initial Equity Capital Committed',
+        credit: baseCapital.toNumber(),
+        debit: 0,
+        principalAllocation: baseCapital.toNumber(),
+        profitShare: 0,
+        balance: baseCapital.toNumber(),
+        paymentStatus: 'COMPLETED',
+        isReversed: false,
+        inPeriod,
+      });
+    }
+
+    // Add Deal Funding deployments
+    fundings.forEach((f) => {
+      const invDate = new Date(f.investmentDate);
+      const inPeriod =
+        (!periodStart || invDate >= periodStart) && (!periodEnd || invDate <= periodEnd);
+
+      allTransactions.push({
+        id: `fnd-${f.id}`,
+        date: f.investmentDate,
+        reference: f.deal.dealNumber,
+        dealNumber: f.deal.dealNumber,
+        dealId: f.deal.id,
+        clientName: f.deal.client.fullName,
+        transactionType: 'DEAL_FUNDING',
+        typeLabel: 'Deal Capital Deployment',
+        description: `Allocated to Deal ${f.deal.dealNumber} (${f.deal.client.fullName})`,
+        credit: 0,
+        debit: roundMoney(f.amount).toNumber(),
+        principalAllocation: roundMoney(f.amount).toNumber(),
+        profitShare: 0,
+        balance: 0, // calculated below
+        paymentStatus: f.status,
+        isReversed: false,
+        inPeriod,
+      });
+    });
+
+    // Add Distribution return entries
+    returns.forEach((r) => {
+      const rep = r.distribution.repayment;
+      const isReversed = rep.status === 'REVERSED' || rep.status === 'VOIDED';
+      const repDate = new Date(rep.paymentDate);
+      const inPeriod =
+        (!periodStart || repDate >= periodStart) && (!periodEnd || repDate <= periodEnd);
+
+      allTransactions.push({
+        id: `ret-${r.id}`,
+        date: rep.paymentDate,
+        reference: rep.receiptNumber,
+        dealNumber: r.distribution.deal.dealNumber,
+        dealId: r.distribution.deal.id,
+        clientName: r.distribution.deal.client?.fullName || '—',
+        transactionType: isReversed ? 'REVERSAL' : 'COLLECTION_DISTRIBUTION',
+        typeLabel: isReversed ? 'Collection Reversal' : 'Repayment Distribution',
+        description: isReversed
+          ? `Reversal of Receipt ${rep.receiptNumber} (${r.distribution.deal.dealNumber})`
+          : `Collection Payout — Deal ${r.distribution.deal.dealNumber} (${r.distribution.deal.client?.fullName})`,
+        credit: isReversed ? 0 : roundMoney(r.totalPayout).toNumber(),
+        debit: isReversed ? roundMoney(r.totalPayout).toNumber() : 0,
+        principalAllocation: isReversed ? -roundMoney(r.principalReturned).toNumber() : roundMoney(r.principalReturned).toNumber(),
+        profitShare: isReversed ? -roundMoney(r.profitShare).toNumber() : roundMoney(r.profitShare).toNumber(),
+        balance: 0, // calculated below
+        paymentStatus: rep.status,
+        isReversed,
+        inPeriod,
+        paymentMethod: rep.paymentMethod,
+      });
+    });
+
+    // Sort chronologically ascending to compute running capital balance
+    allTransactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    let runningCapital = new Prisma.Decimal(0);
+    allTransactions.forEach((tx) => {
+      if (tx.transactionType === 'INITIAL_CAPITAL') {
+        runningCapital = runningCapital.plus(new Prisma.Decimal(tx.credit));
+      } else if (tx.transactionType === 'COLLECTION_DISTRIBUTION' && !tx.isReversed) {
+        runningCapital = runningCapital.minus(new Prisma.Decimal(tx.principalAllocation));
+      } else if (tx.transactionType === 'REVERSAL') {
+        runningCapital = runningCapital.plus(new Prisma.Decimal(Math.abs(tx.principalAllocation)));
+      }
+      tx.balance = roundMoney(runningCapital).toNumber();
+    });
+
+    // Now sort chronologically descending for display
+    allTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const periodTransactions = isPeriodActive
+      ? allTransactions.filter((t) => t.inPeriod)
+      : allTransactions;
+
+    return {
+      partner: {
+        ...partner,
+        capitalContribution: baseCapital.toNumber(),
+        sharePercentage: equitySharePercentage.toNumber(),
+      },
+      period: {
+        type: period,
+        startDate: periodStart ? periodStart.toISOString() : null,
+        endDate: periodEnd ? periodEnd.toISOString() : null,
+        label: periodLabel,
+        isPeriodActive,
+      },
+      generatedAt: now.toISOString(),
+      summary: {
+        totalCapitalContribution: baseCapital.toNumber(),
+        additionalCapitalAdded: periodFundedToDeals.toNumber(),
+        totalFundedToDeals: allTimeFundedToDeals.toNumber(),
+        capitalWithdrawn: allTimePrincipalReturned.toNumber(),
+        currentCapitalBalance: currentCapitalBalance.toNumber(),
+        activeCapitalInDeals: remainingCapitalInDeals.toNumber(),
+        profitShareEarned: allTimeProfitEarned.toNumber(),
+        profitSharePaid: allTimeProfitPaid.toNumber(),
+        pendingProfitShare: pendingProfitShare.toNumber(),
+        totalAmountPaid: totalAmountPaid.toNumber(),
+        totalOutstandingPayable: totalOutstandingPayable.toNumber(),
+        totalDealsParticipated: fundings.length,
+        activeDealsCount: fundings.filter((f) => f.deal.status === 'ACTIVE' || f.deal.status === 'OVERDUE').length,
+      },
+      periodSummary: {
+        opening: {
+          capitalBalance: openingCapitalBalance.toNumber(),
+          activeInDeals: openingRemainingInDeals.toNumber(),
+          principalReturned: openingPrincipalReturned.toNumber(),
+          profitShareEarned: openingProfitEarned.toNumber(),
+          profitSharePaid: openingProfitPaid.toNumber(),
+          totalAmountPaid: openingTotalAmountPaid.toNumber(),
+          totalOutstandingPayable: openingTotalOutstanding.toNumber(),
+        },
+        period: {
+          fundedToDeals: periodFundedToDeals.toNumber(),
+          principalReturned: periodPrincipalReturned.toNumber(),
+          profitShareEarned: periodProfitEarned.toNumber(),
+          profitSharePaid: periodProfitPaid.toNumber(),
+          totalPayout: periodTotalPayout.toNumber(),
+        },
+        closing: {
+          capitalBalance: closingCapitalBalance.toNumber(),
+          activeInDeals: closingRemainingInDeals.toNumber(),
+          principalReturned: roundMoney(openingPrincipalReturned.plus(periodPrincipalReturned)).toNumber(),
+          profitShareEarned: roundMoney(openingProfitEarned.plus(periodProfitEarned)).toNumber(),
+          profitSharePaid: roundMoney(openingProfitPaid.plus(periodProfitPaid)).toNumber(),
+          totalAmountPaid: closingTotalAmountPaid.toNumber(),
+          totalOutstandingPayable: closingTotalOutstanding.toNumber(),
+        },
+      },
+      transactions: allTransactions,
+      periodTransactions,
+      sections: {
+        dealFundings: sectionDealFundings,
+        repaymentDistributions: isPeriodActive ? sectionRepaymentDistributions.filter((c) => c.inPeriod) : sectionRepaymentDistributions,
+        payouts: isPeriodActive ? sectionPayouts.filter((p) => p.inPeriod) : sectionPayouts,
+        reconciliation: {
+          openingCapitalBalance: openingCapitalBalance.toNumber(),
+          periodPrincipalReturned: periodPrincipalReturned.toNumber(),
+          closingCapitalBalance: closingCapitalBalance.toNumber(),
+          openingProfitShareEarned: openingProfitEarned.toNumber(),
+          periodProfitShareEarned: periodProfitEarned.toNumber(),
+          closingProfitShareEarned: roundMoney(openingProfitEarned.plus(periodProfitEarned)).toNumber(),
+          closingTotalAmountPaid: closingTotalAmountPaid.toNumber(),
+          closingOutstandingPayable: closingTotalOutstanding.toNumber(),
+        },
+      },
+    };
+  }
+
   static async getPartnerReport(companyId: string) {
     const partners = await prisma.partner.findMany({
       where: { companyId },

@@ -18,6 +18,7 @@ import clsx from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 import { useCompanyProfile } from '../../context/CompanyProfileContext';
 import { formatRole } from '../../utils/formatters';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 export const navigationItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, section: 'Core' },
@@ -140,6 +141,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
 
       {/* Product By MSR Solutions Footer & User Session */}
       <div className="border-t border-slate-100 bg-slate-50/50 p-3 space-y-2">
+        <PWAInstallButton variant="full" />
+
         {user && (
           <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200/80 shadow-sm">
             <div className="h-8 w-8 rounded-lg bg-[#8B1A1A] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">

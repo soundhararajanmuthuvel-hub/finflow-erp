@@ -40,3 +40,6 @@ Thumbs.db
 *.db-journal
 server/prisma/*.db
 server/prisma/*.db-journal
+
+# Server runtime push & data storage
+server/data/*.json

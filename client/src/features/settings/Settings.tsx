@@ -22,6 +22,7 @@ import {
 } from '../../components/common/AccessibleComponents';
 import { ContinuousTabs } from '../../components/common/ContinuousTabs';
 import { formatRole } from '../../utils/formatters';
+import { NotificationSettingsSection } from './NotificationSettingsSection';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
@@ -97,12 +98,13 @@ export const Settings: React.FC = () => {
     }
   };
 
-  const [activeSection, setActiveSection] = useState<'all' | 'branding' | 'financial' | 'session'>('all');
+  const [activeSection, setActiveSection] = useState<'all' | 'branding' | 'financial' | 'notifications' | 'session'>('all');
 
   const settingsTabs = [
     { id: 'all', label: 'All Settings' },
     { id: 'branding', label: 'Company Profile & Branding' },
     { id: 'financial', label: 'Financial Defaults' },
+    { id: 'notifications', label: 'Push Notifications' },
     { id: 'session', label: 'Operator Session' },
   ];
 
@@ -287,6 +289,11 @@ export const Settings: React.FC = () => {
           </div>
         </form>
       </AccessibleCard>
+      )}
+
+      {/* Push Notifications Configuration */}
+      {(activeSection === 'all' || activeSection === 'notifications') && (
+        <NotificationSettingsSection />
       )}
 
       {/* Operator Session Details */}

@@ -66,12 +66,20 @@ app.use('/api', routes);
 // Global Error Handler
 app.use(errorHandler);
 
+import { WebPushService } from './services/webPushService.js';
+import { SchedulerService } from './services/schedulerService.js';
+
 const server = app.listen(config.port, () => {
   console.log(`🚀 Finance ERP Backend running in ${config.nodeEnv} mode on port ${config.port}`);
+  
+  // Initialize Web Push VAPID & Financial Reminders Scheduler
+  WebPushService.initialize();
+  SchedulerService.initScheduler();
 });
 
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
+  SchedulerService.stopScheduler();
   server.close(() => {
     console.log('HTTP server closed');
   });

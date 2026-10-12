@@ -56,11 +56,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCloseMobile, isMobile = fals
       <div className="p-4 border-b border-slate-100 bg-white space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img
-              src="/brand/apple-touch-icon.png"
-              alt="FinFlow Logo"
-              className="h-9 w-9 rounded-xl object-contain shadow-sm shrink-0 bg-[#072661] p-0.5 border border-[#8B1A1A]/20"
-            />
+            <div className="h-9 w-9 rounded-xl overflow-hidden shadow-sm shrink-0 flex items-center justify-center border border-slate-200/80 bg-transparent">
+              <img
+                src="/brand/finflow-logo.svg"
+                alt="FinFlow Official Logo"
+                className="h-full w-full object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  if (target.src.endsWith('.svg')) {
+                    target.src = '/brand/pwa-192x192.png';
+                  }
+                }}
+              />
+            </div>
             <div className="min-w-0 flex-1">
               <h1 className="font-bold text-slate-900 text-lg tracking-tight leading-tight">
                 FinFlow

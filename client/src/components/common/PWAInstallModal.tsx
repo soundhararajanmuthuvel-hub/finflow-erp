@@ -27,9 +27,15 @@ export const PWAInstallModal: React.FC<PWAInstallModalProps> = ({
       <div className="space-y-5 py-2">
         <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-200/80 flex items-center gap-3.5">
           <img
-            src="/brand/apple-touch-icon.png"
+            src="/brand/finflow-logo.svg"
             alt="FinFlow App Icon"
-            className="h-12 w-12 rounded-xl object-contain shadow-sm bg-[#072661] p-1 border border-purple-300 shrink-0"
+            className="h-12 w-12 rounded-xl object-contain shadow-sm shrink-0"
+            onError={(e) => {
+              const target = e.currentTarget as HTMLImageElement;
+              if (target.src.endsWith('.svg')) {
+                target.src = '/brand/pwa-192x192.png';
+              }
+            }}
           />
           <div>
             <h4 className="font-extrabold text-slate-900 text-sm">FinFlow ERP</h4>

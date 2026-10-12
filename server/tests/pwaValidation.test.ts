@@ -45,7 +45,7 @@ runTest('Test 1: Web App Manifest Standards & Schema Compliance', () => {
   assert(manifest.name === 'FinFlow — Private Finance Management', 'Application name is FinFlow — Private Finance Management');
   assert(manifest.short_name === 'FinFlow', 'Application short_name is FinFlow');
   assert(manifest.display === 'standalone', 'Display mode is standalone');
-  assert(manifest.theme_color === '#8B1A1A', 'Theme color is #8B1A1A (brand crimson)');
+  assert(manifest.theme_color === '#072661', 'Theme color is #072661 (FinFlow navy brand color)');
   assert(manifest.background_color === '#FAF7F2', 'Background color is #FAF7F2 (warm ivory canvas)');
   assert(manifest.start_url === '/', 'Start URL is root /');
   assert(Array.isArray(manifest.icons) && manifest.icons.length >= 4, 'Manifest defines at least 4 icons');

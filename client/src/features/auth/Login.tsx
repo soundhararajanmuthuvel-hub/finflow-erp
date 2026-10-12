@@ -42,9 +42,15 @@ export const Login: React.FC = () => {
         <div className="text-center mb-6">
           <div className="inline-block p-2 bg-white rounded-2xl border border-slate-200 shadow-sm mb-3">
             <img
-              src="/brand/apple-touch-icon.png"
+              src="/brand/finflow-logo.svg"
               alt="FinFlow Official Logo"
-              className="h-12 w-12 rounded-xl object-contain bg-[#072661] p-1"
+              className="h-12 w-12 rounded-xl object-contain shadow-sm"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                if (target.src.endsWith('.svg')) {
+                  target.src = '/brand/pwa-192x192.png';
+                }
+              }}
             />
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

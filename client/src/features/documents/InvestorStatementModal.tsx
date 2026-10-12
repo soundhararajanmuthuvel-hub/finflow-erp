@@ -175,9 +175,15 @@ export const InvestorStatementModal: React.FC<InvestorStatementModalProps> = ({
             <div className="space-y-1">
               <div className="flex items-center gap-3">
                 <img
-                  src="/brand/apple-touch-icon.png"
+                  src="/brand/finflow-logo.svg"
                   alt="FinFlow Official Logo"
-                  className="h-12 w-12 rounded-xl object-contain shadow-sm bg-[#072661] p-0.5 border border-stone-300"
+                  className="h-12 w-12 rounded-xl object-contain shadow-sm"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    if (target.src.endsWith('.svg')) {
+                      target.src = '/brand/pwa-192x192.png';
+                    }
+                  }}
                 />
                 <div>
                   <h1 className="text-2xl font-black text-stone-900 tracking-tight leading-none">FinFlow</h1>
